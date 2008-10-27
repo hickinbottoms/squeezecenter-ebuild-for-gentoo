@@ -10,10 +10,6 @@ EBUILD_PREFIX=squeezecenter
 EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
-DIST_DIR=dist
-DIST_FILE=$(DIST_DIR)/$(EBUILD_PREFIX)-ebuild-`date +%Y%m%d`.tgz
-STAGE_DIR=/tmp/$(EBUILD_PREFIX)-ebuild-`date +%Y%m%d`-stage
-
 PATCHES= mDNSResponder-gentoo.patch \
 		filepaths-gentoo.patch \build-perl-modules-gentoo.patch
 
@@ -73,17 +69,6 @@ vmkill:
 	echo Killing VM...
 	-[ -f $(PIDFILE) ] && xargs sudo pkill < $(PIDFILE)
 	-[ -f $(PIDFILE) ] && sudo rm $(PIDFILE)
-
-distfile: patches
-	echo Creating ebuild distribution file
-	-rm -fr $(STAGE_DIR) 2>/dev/null
-	mkdir -p $(STAGE_DIR)/files
-	cp files/* $(STAGE_DIR)/files
-	cp patch_dest/* $(STAGE_DIR)/files
-	cp *.ebuild $(STAGE_DIR)
-	cp metadata.xml $(STAGE_DIR)
-	(cd $(STAGE_DIR); tar czvf - .) > $(DIST_FILE)
-	-rm -fr $(STAGE_DIR) 2>/dev/null
 
 uninstall:
 	[ -f $(PIDFILE) ] || echo error: VM not running

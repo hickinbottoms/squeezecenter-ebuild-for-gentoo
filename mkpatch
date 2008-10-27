@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PATCH=$1
+shift
+
+> "patch_dest/${PATCH}"
+
+until [ -z "$1" ]
+do
+	(cd patch_source; diff -Naur -I "\$Id:" "$1.old" "$1") >> "patch_dest/${PATCH}"
+	shift
+done
+
+exit 0

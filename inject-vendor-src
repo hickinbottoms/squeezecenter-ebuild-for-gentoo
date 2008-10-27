@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DIR=$1
+DEST_HOST=$2
+
+cd $DIR
+for FILE in *.gz; do
+	scp $FILE root@$DEST_HOST:/usr/portage/distfiles/SqueezeCenter-$FILE
+done

@@ -1,11 +1,13 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-sound/squeezecenter/squeezecenter-7.2.0.ebuild,v 1.2 2008/09/10 19:55:53 lavajoe Exp $
+# $Header$
 
 inherit eutils
 
 SRC_DIR="SqueezeCenter_v${PV}"
 MY_P="squeezecenter-${PV}-noCPAN"
+#@@TODO@@
+MY_P="squeezecenter-${PV}-23951-noCPAN"
 
 DESCRIPTION="Logitech SqueezeCenter music server"
 HOMEPAGE="http://www.slimdevices.com/pi_features.html"
@@ -14,9 +16,9 @@ SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"
 IUSE="lame wavpack musepack alac ogg bonjour flac avahi"
 
-SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
+#@@TODO: SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
+SRC_URI="http://downloads.slimdevices.com/nightly/SqueezeCenter_7.3_trunk_v2008-11-18/squeezecenter-7.3-23951-noCPAN.tgz
 	mirror://gentoo/SqueezeCenter-AutoXS-Header-0.03.tar.gz
-	mirror://gentoo/SqueezeCenter-Class-C3-XS-0.08.tar.gz
 	mirror://gentoo/SqueezeCenter-Class-XSAccessor-Array-0.05.tar.gz
 	mirror://gentoo/SqueezeCenter-Compress-Zlib-1.41.tar.gz
 	mirror://gentoo/SqueezeCenter-DBD-mysql-3.0002.tar.gz
@@ -35,7 +37,7 @@ SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
 # (http://bugs.slimdevices.com/show_bug.cgi?id=5882).
 DEPEND="
 	dev-perl/File-Which
-	dev-perl/module-build
+	virtual/perl-Module-Build
 	virtual/logger
 	virtual/mysql
 	avahi? ( net-dns/avahi )
@@ -86,7 +88,6 @@ src_unpack() {
 
 	# Apply patches
 	epatch "${FILESDIR}/mDNSResponder-gentoo.patch"
-	epatch "${FILESDIR}/filepaths-gentoo.patch"
 	epatch "${FILESDIR}/build-perl-modules-gentoo.patch"
 
 	# Prune GD from the SqueezeCenter local CPAN. This is due to
@@ -108,27 +109,36 @@ src_install() {
 	exeinto /usr/sbin
 	newexe slimserver.pl squeezecenter-server
 	newexe scanner.pl squeezecenter-scanner
+	newexe cleanup.pl squeezecenter-cleanup
 
 	# Get the Perl package name and version
 	eval `perl '-V:package'`
 	eval `perl '-V:version'`
 
+	# The custom OS module for Gentoo - provides OS-specific path details
+	cp "${FILESDIR}/gentoo-filepaths.pm" "Slim/Utils/OS/Custom.pm" || die "Unable to install Gentoo custom OS module"
+
 	# The server Perl modules
 	dodir "/usr/lib/${package}/vendor_perl/${version}"
-	cp -r Slim "${D}/usr/lib/${package}/vendor_perl/${version}"
+	cp -r Slim "${D}/usr/lib/${package}/vendor_perl/${version}" || die "Unable to install server Perl modules"
+
+	# Compiled CPAN module go under lib as they are arch-specific
+	dodir "/usr/lib/squeezecenter/CPAN"
+	cp -r CPAN/arch "${D}/usr/lib/squeezecenter/CPAN" || die "Unable to install compiled CPAN modules"
+	rm -r CPAN/arch || die "Unable to remove compiled CPAN modules from source"
 
 	# Various directories of architecture-independent static files
 	dodir "${SHAREDIR}"
-	cp -r Firmware "${D}/${SHAREDIR}"
-	cp -r Graphics "${D}/${SHAREDIR}"
-	cp -r HTML "${D}/${SHAREDIR}"
-	cp -r IR "${D}/${SHAREDIR}"
-	cp -r SQL "${D}/${SHAREDIR}"
-	cp -r CPAN "${D}/${SHAREDIR}"
+	cp -r Firmware "${D}/${SHAREDIR}"	|| die "Unable to install firmware"
+	cp -r Graphics "${D}/${SHAREDIR}"	|| die "Unable to install Graphics"
+	cp -r HTML "${D}/${SHAREDIR}"		|| die "Unable to install HTML"
+	cp -r IR "${D}/${SHAREDIR}"			|| die "Unable to install IR"
+	cp -r SQL "${D}/${SHAREDIR}"		|| die "Unable to install SQL"
+	cp -r CPAN "${D}/${SHAREDIR}"		|| die "Unable to install CPAN"
 
 	# Architecture-dependent static files
 	dodir "${LIBDIR}"
-	cp -r lib/* "${D}/${LIBDIR}"
+	cp -r lib/* "${D}/${LIBDIR}" || die "Unable to install architecture-dependent files"
 
 	# Strings and version identification
 	insinto "${SHAREDIR}"

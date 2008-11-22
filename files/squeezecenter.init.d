@@ -21,20 +21,21 @@ depend() {
 start() {
 	ebegin "Starting SqueezeCenter"
 
+	export SSD_NICELEVEL=${SC_NICENESS}
 	cd /
-	/usr/bin/nice --adjustment=${SC_NICENESS:-0} sudo -u ${scuser} \
-		start-stop-daemon \
-			--start --exec /usr/bin/perl /usr/sbin/${scname} \
-			-- \
-			--quiet --daemon \
-			--pidfile=${pidfile} \
-			--cachedir=${cachedir} \
-			--prefsfile=${prefsfile} \
-			--prefsdir=${prefsdir} \
-			--logdir=${logdir} \
-			--audiodir=${SC_MUSIC_DIR} \
-			--playlistdir=${SC_PLAYLISTS_DIR} \
-			${SC_OPTS}
+	start-stop-daemon \
+		--start --exec /usr/bin/perl /usr/sbin/${scname} --chuid ${scuser} \
+		-- \
+		--quiet --daemon \
+		--pidfile=${pidfile} \
+		--cachedir=${cachedir} \
+		--prefsfile=${prefsfile} \
+		--prefsdir=${prefsdir} \
+		--logdir=${logdir} \
+		--audiodir=${SC_MUSIC_DIR} \
+		--playlistdir=${SC_PLAYLISTS_DIR} \
+		${SC_OPTS}
+
 
 	eend $? "Failed to start SqueezeCenter"
 }

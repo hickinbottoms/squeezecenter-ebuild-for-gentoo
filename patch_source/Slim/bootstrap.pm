@@ -1,6 +1,6 @@
 package Slim::bootstrap;
 
-# $Id: bootstrap.pm 19178 2008-04-25 20:19:07Z andy $
+# $Id: bootstrap.pm 23670 2008-10-23 15:32:50Z mherger $
 #
 # SqueezeCenter Copyright 2001-2007 Logitech.
 # This program is free software; you can redistribute it and/or
@@ -97,10 +97,11 @@ sub loadModules {
 
 	my @SlimINC = ();
 	
-	if (Slim::Utils::OSDetect::isDebian() || Slim::Utils::OSDetect::isRHorSUSE() || Slim::Utils::OSDetect::isGentoo()) {
-		# On Debian, Gentoo, RH and SUSE, our CPAN directory is located in the
-		# same dir as strings.txt
-		$libPath = Slim::Utils::OSDetect::dirsFor('strings');
+	Slim::Utils::OSDetect::init();
+	
+	if (my $libs = Slim::Utils::OSDetect::dirsFor('libpath')) {
+		# On Debian, RH and SUSE, our CPAN directory is located in the same dir as strings.txt
+		$libPath = $libs;
 	}
 
 	# NB: The user may be on a platform who's perl reports a
@@ -125,14 +126,6 @@ sub loadModules {
 		catdir($libPath,'CPAN'), 
 		$libPath,
 	);
-
-	if (Slim::Utils::OSDetect::isGentoo()) {
-		# On Gentoo, the lib directory is located separately to the CPAN
-		# directory as it's not architecture-independent, and make sure we
-		# also look at the separate user plugins directory.
-		push @SlimINC, Slim::Utils::OSDetect::dirsFor('lib');
-		push @SlimINC, Slim::Utils::OSDetect::dirsFor('UserPluginRoot');
-	}
 
 	$d_startup && printf("Got \@INC containing:\n%s\n\n", join("\n", @INC));
 
@@ -183,7 +176,6 @@ sub loadModules {
 
 		print "The following modules failed to load: $failed\n\n";
 
-		print "To download and compile them, please run: $libPath/Bin/build-perl-modules.pl $failed\n\n";
 		print "Exiting..\n";
 
 		exit;
@@ -335,6 +327,9 @@ sub tryModuleLoad {
 sub check_valid_versions {
 	my $modules;
 	my $failed = {};
+	
+	# don't check validity on Windows binary - it's all built in
+	return $failed if $0 =~ /scanner\.exe/i;
 	
 	my ($dir) = Slim::Utils::OSDetect::dirsFor('types');
 	

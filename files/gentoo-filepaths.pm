@@ -6,35 +6,6 @@
 # installation structure on Gentoo. It is based on the Debian OS equivalent
 # that is built into SqueezeCenter.
 
-# @@DONE@@
-# INC
-# 	/usr/share/squeezecenter/CPAN
-# :Firmware|Graphics|HTML|IR|MySQL|SQL
-#  	/usr/share/squeezecenter/$dir
-# Plugins
-# 	/var/lib/squeezecenter/Plugins
-# 	/usr/lib/" . $Config{'package'} . "/vendor_perl/" . $Config{'version'} . "/Slim/Plugin
-# strings|revision
-# 	/usr/share/squeezecenter
-# lib
-# 	/usr/lib/squeezecenter
-# mysql-language
-# 	/usr/share/mysql/english
-# types|convert
-# 	/etc/squeezecenter
-# prefs
-# 	/var/lib/squeezecenter/prefs
-# log
-# 	/var/log/squeezecenter
-# cache
-# 	/var/lib/squeezecenter/cache
-# music|playlists
-# 	''
-# scanner
-# 	/usr/libexec/squeezecenter-scanner
-# UserPluginRoot
-# 	/var/lib/squeezecenter
-
 package Slim::Utils::OS::Custom;
 
 use strict;
@@ -53,6 +24,9 @@ sub initDetails {
 
 	# Make sure we can find any CPAN modules packaged with SqueezeCenter.
 	unshift @INC, '/usr/share/squeezecenter/CPAN';
+
+	# Make sure plugin files are found.
+	push @INC, '/var/lib/squeezecenter';
 	
 	return $class->{osDetails};
 }

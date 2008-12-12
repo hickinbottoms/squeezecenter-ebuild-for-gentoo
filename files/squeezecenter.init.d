@@ -24,7 +24,10 @@ start() {
 	export SSD_NICELEVEL=${SC_NICENESS}
 	cd /
 	start-stop-daemon \
-		--start --exec /usr/bin/perl /usr/sbin/${scname} --chuid ${scuser} \
+		--start --exec /usr/bin/perl /usr/sbin/${scname} \
+		--pidfile ${pidfile} \
+		--startas /usr/sbin/${scname} \
+		--chuid ${scuser} \
 		-- \
 		--quiet --daemon \
 		--pidfile=${pidfile} \

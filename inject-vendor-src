@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SqueezeCenter CPAN modules are originally from here:
+# http://svn.slimdevices.com/repos/slim/vendor/src
+
 DIR=$1
 DEST_HOST=$2
 

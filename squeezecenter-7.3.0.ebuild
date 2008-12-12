@@ -4,10 +4,10 @@
 
 inherit eutils
 
-SRC_DIR="SqueezeCenter_v${PV}"
-MY_P="squeezecenter-${PV}-noCPAN"
-#@@TODO@@
-MY_P="squeezecenter-${PV}-23951-noCPAN"
+MAJOR_VER="${PV:0:3}"
+MINOR_VER="${PV:4:1}"
+SRC_DIR="SqueezeCenter_v${MAJOR_VER}.${MINOR_VER}"
+MY_P="squeezecenter-${MAJOR_VER}-noCPAN"
 
 DESCRIPTION="Logitech SqueezeCenter music server"
 HOMEPAGE="http://www.slimdevices.com/pi_features.html"
@@ -16,8 +16,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"
 IUSE="lame wavpack musepack alac ogg bonjour flac avahi"
 
-#@@TODO: SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
-SRC_URI="http://downloads.slimdevices.com/nightly/SqueezeCenter_7.3_trunk_v2008-11-18/squeezecenter-7.3-23951-noCPAN.tgz
+SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
 	mirror://gentoo/SqueezeCenter-AutoXS-Header-0.03.tar.gz
 	mirror://gentoo/SqueezeCenter-Class-XSAccessor-Array-0.05.tar.gz
 	mirror://gentoo/SqueezeCenter-Compress-Zlib-1.41.tar.gz

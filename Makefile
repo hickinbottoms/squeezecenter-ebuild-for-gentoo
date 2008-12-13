@@ -4,6 +4,8 @@ HDB_IMG=media.cow
 VM_MEM=256
 PIDFILE=qemu.pid
 VMHOST=chandra
+SSH=ssh -i ~/.ssh/chandra root@$(VMHOST)
+SCP=scp -i ~/.ssh/chandra
 
 LOCAL_PORTAGE=/usr/local/portage
 EBUILD_PREFIX=squeezecenter
@@ -11,7 +13,7 @@ EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
 PATCHES= mDNSResponder-gentoo.patch \
-		filepaths-gentoo.patch \build-perl-modules-gentoo.patch
+		build-perl-modules-gentoo.patch
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -20,26 +22,27 @@ FILES=dbdrop-gentoo.sql \
 	  squeezecenter.conf.d \
 	  squeezecenter.logrotate.d \
 	  avahi-squeezecenter.service \
-	  Gentoo-plugins-README.txt
+	  Gentoo-plugins-README.txt \
+	  gentoo-filepaths.pm
 
 all: inject
 
 inject: patches
 	[ -f $(PIDFILE) ] || echo error: VM not running
 	[ -f $(PIDFILE) ] && echo Injecting ebuilds...
-	ssh root@$(VMHOST) "rm -r $(EBUILD_DIR)/* >/dev/null 2>&1 || true"
-	ssh root@$(VMHOST) mkdir -p $(EBUILD_DIR) $(EBUILD_DIR)/files
-	scp metadata.xml *.ebuild root@$(VMHOST):$(EBUILD_DIR)
-	(cd files; scp $(FILES) root@$(VMHOST):$(EBUILD_DIR)/files)
-	(cd patch_dest; scp $(PATCHES) root@$(VMHOST):$(EBUILD_DIR)/files)
+	$(SSH) "rm -r $(EBUILD_DIR)/* >/dev/null 2>&1 || true"
+	$(SSH) mkdir -p $(EBUILD_DIR) $(EBUILD_DIR)/files
+	$(SCP) metadata.xml *.ebuild root@$(VMHOST):$(EBUILD_DIR)
+	(cd files; $(SCP) $(FILES) root@$(VMHOST):$(EBUILD_DIR)/files)
+	(cd patch_dest; $(SCP) $(PATCHES) root@$(VMHOST):$(EBUILD_DIR)/files)
 	./inject-vendor-src vendor-src $(VMHOST)
-	ssh root@$(VMHOST) 'cd $(EBUILD_DIR); ebuild `ls *.ebuild | head -n 1` manifest'
+	$(SSH) 'cd $(EBUILD_DIR); ebuild `ls *.ebuild | head -n 1` manifest'
 	echo Unmasking ebuild...
-	ssh root@$(VMHOST) mkdir -p /etc/portage
-	ssh root@$(VMHOST) "grep -q '$(EBUILD_CATEGORY)' /etc/portage/package.keywords >/dev/null 2>&1 || echo '$(EBUILD_CATEGORY) ~x86' >> /etc/portage/package.keywords"
-	ssh root@$(VMHOST) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
-	ssh root@$(VMHOST) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
-	ssh root@$(VMHOST) "echo 'media-sound/squeezecenter flac lame' >> /etc/portage/package.use"
+	$(SSH) mkdir -p /etc/portage
+	$(SSH) "grep -q '$(EBUILD_CATEGORY)' /etc/portage/package.keywords >/dev/null 2>&1 || echo '$(EBUILD_CATEGORY) ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
+	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
+	$(SSH) "echo 'media-sound/squeezecenter flac lame' >> /etc/portage/package.use"
 
 vmreset: vmstop
 	sudo ls >/dev/null
@@ -61,7 +64,7 @@ vmstart:
 vmstop:
 	sudo ls >/dev/null
 	echo Stopping VM...
-	-[ -f $(PIDFILE) ] && ssh root@$(VMHOST) poweroff
+	-[ -f $(PIDFILE) ] && $(SSH) poweroff
 	-[ -f $(PIDFILE) ] && export QPID=`cat $(PIDFILE)`; [ -f $(PIDFILE) ] && while [ -d /proc/$$QPID ]; do sleep 1; done
 
 vmkill:
@@ -72,12 +75,11 @@ vmkill:
 
 uninstall:
 	[ -f $(PIDFILE) ] || echo error: VM not running
-	-ssh root@$(VMHOST) /etc/init.d/squeezecenter stop
-	-ssh root@$(VMHOST) emerge --unmerge squeezecenter
-	-ssh root@$(VMHOST) rm -f /etc/init.d/sqeezecenter /etc/conf.d/squeezecenter /etc/logrotate.d/squeezecenter /etc/squeezecenter.prefs
-	-ssh root@$(VMHOST) rm -fr /var/log/squeezecenter /var/cache/squeezecenter /var/lib/squeezecenter/cache /var/lib/squeezecenter/prefs /etc/squeezecenter
+	-$(SSH) /etc/init.d/squeezecenter stop
+	-$(SSH) emerge --unmerge squeezecenter
+	-$(SSH) rm -f /etc/init.d/sqeezecenter /etc/conf.d/squeezecenter /etc/logrotate.d/squeezecenter /etc/squeezecenter.prefs
+	-$(SSH) rm -fr /var/log/squeezecenter /var/cache/squeezecenter /var/lib/squeezecenter/cache /var/lib/squeezecenter/prefs /etc/squeezecenter
 
 patches:
 	./mkpatch mDNSResponder-gentoo.patch Slim/Networking/mDNS.pm
-	./mkpatch filepaths-gentoo.patch Slim/Utils/OSDetect.pm Slim/Music/Import.pm Slim/bootstrap.pm Slim/Utils/MySQLHelper.pm
-	./mkpatch build-perl-modules-gentoo.patch Bin/build-perl-modules.pl
+	./mkpatch build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm

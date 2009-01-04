@@ -1,6 +1,6 @@
 package Slim::Networking::mDNS;
 
-# $Id: mDNS.pm 19472 2008-05-06 15:38:00Z mherger $
+# $Id: mDNS.pm 23115 2008-09-09 05:51:43Z andy $
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License,
@@ -39,7 +39,7 @@ my %services = ();
 sub init {
 	my $class = shift;
 
-	if (Slim::Utils::OSDetect::OS() eq 'win') {
+	if (Slim::Utils::OSDetect::isWindows()) {
 
 		$log->debug("Skipping initialization on Windows.");
 

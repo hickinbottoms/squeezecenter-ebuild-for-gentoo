@@ -19,18 +19,7 @@ IUSE="lame wavpack musepack alac ogg bonjour flac avahi"
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
 	mirror://gentoo/SqueezeCenter-AutoXS-Header-0.03.tar.gz
 	mirror://gentoo/SqueezeCenter-Class-XSAccessor-Array-0.05.tar.gz
-	mirror://gentoo/SqueezeCenter-Compress-Zlib-1.41.tar.gz
-	mirror://gentoo/SqueezeCenter-DBD-mysql-3.0002.tar.gz
-	mirror://gentoo/SqueezeCenter-DBI-1.604.tar.gz
-	mirror://gentoo/SqueezeCenter-Digest-SHA1-2.11.tar.gz
-	mirror://gentoo/SqueezeCenter-Encode-Detect-1.00.tar.gz
-	mirror://gentoo/SqueezeCenter-HTML-Parser-3.48.tar.gz
-	mirror://gentoo/SqueezeCenter-JSON-XS-1.5.tar.gz
-	mirror://gentoo/SqueezeCenter-POE-XS-Queue-Array-0.002.tar.gz
-	mirror://gentoo/SqueezeCenter-Template-Toolkit-2.15.tar.gz
-	mirror://gentoo/SqueezeCenter-Time-HiRes-1.86.tar.gz
-	mirror://gentoo/SqueezeCenter-XML-Parser-2.34.tar.gz
-	mirror://gentoo/SqueezeCenter-YAML-Syck-0.64.tar.gz"
+	mirror://gentoo/SqueezeCenter-POE-XS-Queue-Array-0.002.tar.gz"
 
 # Note: dev-perl/module-build necessary because of SC bug#5882
 # (http://bugs.slimdevices.com/show_bug.cgi?id=5882).
@@ -46,8 +35,23 @@ DEPEND="
 # (http://bugs.slimdevices.com/show_bug.cgi?id=6143).
 RDEPEND="${DEPEND}
 	>=dev-lang/perl-5.8.8
-	>=dev-perl/GD-2.35
 	>=app-admin/sudo-1.6.8
+	>=dev-perl/GD-2.35
+	>=virtual/perl-Compress-Zlib-2.015
+	>=dev-perl/YAML-Syck-1.05
+	>=dev-perl/DBD-mysql-4.00.5
+	>=dev-perl/DBI-1.607
+	>=dev-perl/Digest-SHA1-2.11
+	>=dev-perl/Encode-Detect-1.01
+	>=dev-perl/HTML-Parser-3.56
+	>=dev-perl/JSON-XS-2.2.3.1
+	>=dev-perl/Template-Toolkit-2.19
+	>=virtual/perl-Time-HiRes-1.97.15
+	>=dev-perl/XML-Parser-2.36
+	>=dev-perl/Cache-Cache-1.04
+	>=dev-perl/Class-Data-Inheritable-0.08
+	>=dev-perl/Class-Inspector-1.23
+	>=dev-perl/File-Next-1.02
 	alac? ( media-sound/alac_decoder )
 	lame? ( media-sound/lame )
 	wavpack? ( media-sound/wavpack )
@@ -89,12 +93,30 @@ src_unpack() {
 	epatch "${FILESDIR}/mDNSResponder-gentoo.patch"
 	epatch "${FILESDIR}/build-perl-modules-gentoo.patch"
 
-	# Prune GD from the SqueezeCenter local CPAN. This is due to
-	# SC bug#5882 which means we need to bring in Portage's version of GD,
-	# which will fail if it is different to the version in the local CPAN
-	# tree.  SqueezeCenter will then use the system-installed dev-perl/GD.
+	# Prune modules from the SqueezeCenter local CPAN that are brought in
+	# through Portage dependencies instead.
 	# (This fixes Gentoo bug #237548)
-	rm -r CPAN/GD.pm CPAN/GD || die "Unable to remove local CPAN GD"
+	rm -r CPAN/GD.pm CPAN/GD   || die "Unable to remove local CPAN GD"
+	rm -r CPAN/Compress        || die "Unable to remove local CPAN Compress"
+	rm -r CPAN/YAML            || die "Unable to remove local CPAN YAML"
+	rm -r CPAN/DBD             || die "Unable to remove local CPAN DBD"
+	rm -r CPAN/DBI.pm CPAN/DBI || die "Unable to remove local CPAN DBI"
+	rm -r CPAN/Digest          || die "Unable to remove local CPAN Digest"
+	rm -r CPAN/Encode          || die "Unable to remove local CPAN Encode"
+	rm -r CPAN/HTML            || die "Unable to remove local CPAN HTML"
+	rm -r CPAN/JSON/XS.pm CPAN/JSON/XS/Boolean.pm \
+	   || die "Unable to remove local CPAN JSON::XS"
+	rm -r CPAN/Template.pm CPAN/Template \
+	   || die "Unable to remove local CPAN Template"
+	rm -r CPAN/Time/HiRes.pm   || die "Unable to remove local CPAN Time::HiRes"
+	rm -r CPAN/XML/Parser.pm CPAN/XML/Parser \
+	   || die "Unable to remove local CPAN XML::Parser"
+	rm -r CPAN/Cache           || die "Unable to remove local CPAN Cache"
+	rm -r CPAN/Class/Data/Inheritable.pm \
+	   || die "Unable to remove local CPAN Class::Data::Inheritable"
+	rm -r CPAN/Class/Inspector.pm \
+	   || die "Unable to remove local CPAN Class::Inspector"
+	rm -r CPAN/File/Next.pm    || die "Unable to remove local CPAN File::Next"
 }
 
 src_compile() {

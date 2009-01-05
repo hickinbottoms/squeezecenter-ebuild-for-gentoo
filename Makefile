@@ -40,6 +40,10 @@ inject: patches
 	echo Unmasking ebuild...
 	$(SSH) mkdir -p /etc/portage
 	$(SSH) "grep -q '$(EBUILD_CATEGORY)' /etc/portage/package.keywords >/dev/null 2>&1 || echo '$(EBUILD_CATEGORY) ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'devl-perl/YAML-Syck' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/YAML-Syck ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'devl-perl/Encode-Detect' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Encode-Detect ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'devl-perl/DBI' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DBI ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'devl-perl/JSON-XS' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-XS ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/squeezecenter flac lame' >> /etc/portage/package.use"

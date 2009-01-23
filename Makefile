@@ -12,8 +12,12 @@ EBUILD_PREFIX=squeezecenter
 EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
+P=squeezecenter-7.3.2
+
 PATCHES= mDNSResponder-gentoo.patch \
-		build-perl-modules-gentoo.patch
+		squeezecenter-7.3.1-build-perl-modules-gentoo.patch \
+		$(P)-aac-transcode-gentoo.patch \
+		squeezecenter-7.3.1-json-xs-gentoo.patch
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -40,10 +44,12 @@ inject: patches
 	echo Unmasking ebuild...
 	$(SSH) mkdir -p /etc/portage
 	$(SSH) "grep -q '$(EBUILD_CATEGORY)' /etc/portage/package.keywords >/dev/null 2>&1 || echo '$(EBUILD_CATEGORY) ~x86' >> /etc/portage/package.keywords"
-	$(SSH) "grep -q 'devl-perl/YAML-Syck' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/YAML-Syck ~x86' >> /etc/portage/package.keywords"
-	$(SSH) "grep -q 'devl-perl/Encode-Detect' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Encode-Detect ~x86' >> /etc/portage/package.keywords"
-	$(SSH) "grep -q 'devl-perl/DBI' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DBI ~x86' >> /etc/portage/package.keywords"
-	$(SSH) "grep -q 'devl-perl/JSON-XS' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-XS ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/YAML-Syck' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/YAML-Syck ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Encode-Detect' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Encode-Detect ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DBI' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DBI ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/JSON-XS' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-XS ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/JSON-XS' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-XS ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/SQL-Abstract-Limit' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/SQL-Abstract-Limit' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/squeezecenter flac lame' >> /etc/portage/package.use"
@@ -86,4 +92,6 @@ uninstall:
 
 patches:
 	./mkpatch mDNSResponder-gentoo.patch Slim/Networking/mDNS.pm
-	./mkpatch build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm
+	./mkpatch squeezecenter-7.3.1-build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm
+	./mkpatch $(P)-aac-transcode-gentoo.patch convert.conf
+	./mkpatch squeezecenter-7.3.1-json-xs-gentoo.patch Slim/Formats/XML.pm

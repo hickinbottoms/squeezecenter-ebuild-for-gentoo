@@ -1,4 +1,4 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header$
 
@@ -13,8 +13,8 @@ DESCRIPTION="Logitech SqueezeCenter music server"
 HOMEPAGE="http://www.slimdevices.com/pi_features.html"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc ~x86"
-IUSE="lame wavpack musepack alac ogg bonjour flac avahi"
+KEYWORDS="~amd64 ~x86"
+IUSE="lame wavpack musepack alac ogg bonjour flac avahi aac"
 
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
 	mirror://gentoo/SqueezeCenter-AutoXS-Header-0.03.tar.gz
@@ -29,7 +29,6 @@ DEPEND="
 	virtual/logger
 	virtual/mysql
 	avahi? ( net-dns/avahi )
-	ogg? ( media-sound/sox )
 	"
 # Note: dev-perl/GD necessary because of SC bug#6143
 # (http://bugs.slimdevices.com/show_bug.cgi?id=6143).
@@ -52,15 +51,77 @@ RDEPEND="${DEPEND}
 	>=dev-perl/Class-Data-Inheritable-0.08
 	>=dev-perl/Class-Inspector-1.23
 	>=dev-perl/File-Next-1.02
-	alac? ( media-sound/alac_decoder )
+	>=virtual/perl-File-Temp-0.20
+	>=dev-perl/File-Which-0.05
+	>=perl-core/i18n-langtags-0.35
+	>=dev-perl/IO-String-1.08
+	>=dev-perl/Log-Log4perl-1.13
+	>=dev-perl/libwww-perl-5.805
+	>=perl-core/CGI-3.29
+	>=dev-perl/TimeDate-1.16
+	>=dev-perl/Math-VecStat-0.08
+	>=dev-perl/Net-DNS-0.63
+	>=dev-perl/Net-IP-1.25
+	>=dev-perl/Path-Class-0.16
+	>=dev-perl/SQL-Abstract-1.22
+	>=dev-perl/SQL-Abstract-Limit-0.12
+	>=dev-perl/TimeDate-1.16
+	>=dev-perl/URI-1.35
+	>=dev-perl/XML-Simple-2.18
+	>=perl-core/version-0.76
+	>=dev-perl/Carp-Clan-5.9
+	>=dev-perl/Readonly-1.03
+	>=dev-perl/Carp-Assert-0.20
+	>=dev-perl/Class-Virtual-0.06
+	>=dev-perl/File-Slurp-9999.13
+	>=dev-perl/Exporter-Lite-0.02
+	>=dev-perl/Tie-IxHash-1.21
+	>=virtual/perl-Module-Pluggable-3.6
+	>=dev-perl/Archive-Zip-1.23
 	lame? ( media-sound/lame )
+	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
 	bonjour? ( net-misc/mDNSResponder )
 	flac? ( media-libs/flac )
 	musepack? ( media-sound/musepack-tools )
+	ogg? ( media-sound/sox )
+	aac? ( media-libs/faad2 )
 	"
 
 S="${WORKDIR}/${MY_P}"
+
+# Selected contents of SqueezeCenter's local CPAN collection that we include
+# in the installation. This removes duplication of CPAN modules. (See Gentoo
+# bug #251494).
+CPANKEEP="
+	Class/XSAccessor/Array.pm
+	POE/XS/Queue/Array.pm
+
+	JSON/XS/VersionOneAndTwo.pm
+	Class/Accessor/
+	Class/Accessor.pm
+	Class/C3.pm
+	Class/Data/Accessor.pm
+	Algorithm/C3.pm
+	Data/
+	DBIx/
+	File/BOM.pm
+	Net/UPnP/
+	Net/UPnP.pm
+	POE/Queue/Array.pm
+	Proc/Background/
+	Proc/Background.pm
+	Text/Unidecode/
+	Text/Unidecode.pm
+	Tie/Cache/LRU/
+	Tie/Cache/LRU.pm
+	Tie/LLHash.pm
+	Tie/RegexpHash.pm
+	URI/Find.pm
+	PAR/
+	PAR.pm
+	enum.pm
+	"
 
 PREFS="/var/lib/squeezecenter/prefs/squeezecenter.prefs"
 LIVE_PREFS="/var/lib/squeezecenter/prefs/server.prefs"
@@ -91,32 +152,9 @@ src_unpack() {
 
 	# Apply patches
 	epatch "${FILESDIR}/mDNSResponder-gentoo.patch"
-	epatch "${FILESDIR}/build-perl-modules-gentoo.patch"
-
-	# Prune modules from the SqueezeCenter local CPAN that are brought in
-	# through Portage dependencies instead.
-	# (This fixes Gentoo bug #237548)
-	rm -r CPAN/GD.pm CPAN/GD   || die "Unable to remove local CPAN GD"
-	rm -r CPAN/Compress        || die "Unable to remove local CPAN Compress"
-	rm -r CPAN/YAML            || die "Unable to remove local CPAN YAML"
-	rm -r CPAN/DBD             || die "Unable to remove local CPAN DBD"
-	rm -r CPAN/DBI.pm CPAN/DBI || die "Unable to remove local CPAN DBI"
-	rm -r CPAN/Digest          || die "Unable to remove local CPAN Digest"
-	rm -r CPAN/Encode          || die "Unable to remove local CPAN Encode"
-	rm -r CPAN/HTML            || die "Unable to remove local CPAN HTML"
-	rm -r CPAN/JSON/XS.pm CPAN/JSON/XS/Boolean.pm \
-	   || die "Unable to remove local CPAN JSON::XS"
-	rm -r CPAN/Template.pm CPAN/Template \
-	   || die "Unable to remove local CPAN Template"
-	rm -r CPAN/Time/HiRes.pm   || die "Unable to remove local CPAN Time::HiRes"
-	rm -r CPAN/XML/Parser.pm CPAN/XML/Parser \
-	   || die "Unable to remove local CPAN XML::Parser"
-	rm -r CPAN/Cache           || die "Unable to remove local CPAN Cache"
-	rm -r CPAN/Class/Data/Inheritable.pm \
-	   || die "Unable to remove local CPAN Class::Data::Inheritable"
-	rm -r CPAN/Class/Inspector.pm \
-	   || die "Unable to remove local CPAN Class::Inspector"
-	rm -r CPAN/File/Next.pm    || die "Unable to remove local CPAN File::Next"
+	epatch "${FILESDIR}/squeezecenter-7.3.1-build-perl-modules-gentoo.patch"
+	epatch "${FILESDIR}/${P}-aac-transcode-gentoo.patch"
+	epatch "${FILESDIR}/squeezecenter-7.3.1-json-xs-gentoo.patch"
 }
 
 src_compile() {
@@ -146,7 +184,13 @@ src_install() {
 	# Compiled CPAN module go under lib as they are arch-specific
 	dodir "/usr/lib/squeezecenter/CPAN"
 	cp -r CPAN/arch "${D}/usr/lib/squeezecenter/CPAN" || die "Unable to install compiled CPAN modules"
-	rm -r CPAN/arch || die "Unable to remove compiled CPAN modules from source"
+
+	# Preseve some of the SqueezeCenter-packaged CPAN modules that Gentoo
+	# doesn't provide ebuilds for.
+	for ITEM in ${CPANKEEP}; do
+		dodir "/usr/lib/squeezecenter/CPAN/$(dirname ${ITEM})"
+		cp -r "CPAN/${ITEM}" "${D}/usr/lib/squeezecenter/CPAN/${ITEM}" || die "Unable to preserve CPAN item ${ITEM}"
+	done
 
 	# Various directories of architecture-independent static files
 	dodir "${SHAREDIR}"
@@ -155,7 +199,6 @@ src_install() {
 	cp -r HTML "${D}/${SHAREDIR}"		|| die "Unable to install HTML"
 	cp -r IR "${D}/${SHAREDIR}"			|| die "Unable to install IR"
 	cp -r SQL "${D}/${SHAREDIR}"		|| die "Unable to install SQL"
-	cp -r CPAN "${D}/${SHAREDIR}"		|| die "Unable to install CPAN"
 
 	# Architecture-dependent static files
 	dodir "${LIBDIR}"

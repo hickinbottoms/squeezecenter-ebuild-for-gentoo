@@ -31,14 +31,19 @@ FILES=dbdrop-gentoo.sql \
 
 all: inject
 
-inject: patches
+stage: patches
+	-rm -r stage/*
+	mkdir stage/files
+	cp metadata.xml *.ebuild stage
+	cp files/* stage/files
+	cp patch_dest/* stage/files
+
+inject: stage
 	[ -f $(PIDFILE) ] || echo error: VM not running
 	[ -f $(PIDFILE) ] && echo Injecting ebuilds...
 	$(SSH) "rm -r $(EBUILD_DIR)/* >/dev/null 2>&1 || true"
-	$(SSH) mkdir -p $(EBUILD_DIR) $(EBUILD_DIR)/files
-	$(SCP) metadata.xml *.ebuild root@$(VMHOST):$(EBUILD_DIR)
-	(cd files; $(SCP) $(FILES) root@$(VMHOST):$(EBUILD_DIR)/files)
-	(cd patch_dest; $(SCP) $(PATCHES) root@$(VMHOST):$(EBUILD_DIR)/files)
+	$(SSH) mkdir -p $(EBUILD_DIR)
+	$(SCP) -r stage/* root@$(VMHOST):$(EBUILD_DIR)
 	./inject-vendor-src vendor-src $(VMHOST)
 	$(SSH) 'cd $(EBUILD_DIR); ebuild `ls *.ebuild | head -n 1` manifest'
 	echo Unmasking ebuild...

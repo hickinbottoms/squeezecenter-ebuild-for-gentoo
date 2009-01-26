@@ -15,9 +15,9 @@ EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 P=squeezecenter-7.3.2
 
 PATCHES= mDNSResponder-gentoo.patch \
-		squeezecenter-7.3.1-build-perl-modules-gentoo.patch \
+		$(P)-build-perl-modules-gentoo.patch \
 		$(P)-aac-transcode-gentoo.patch \
-		squeezecenter-7.3.1-json-xs-gentoo.patch
+		$(P)-json-xs-gentoo.patch
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -97,6 +97,6 @@ uninstall:
 
 patches:
 	./mkpatch mDNSResponder-gentoo.patch Slim/Networking/mDNS.pm
-	./mkpatch squeezecenter-7.3.1-build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm
+	./mkpatch $(P)-build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm
 	./mkpatch $(P)-aac-transcode-gentoo.patch convert.conf
-	./mkpatch squeezecenter-7.3.1-json-xs-gentoo.patch Slim/Formats/XML.pm
+	./mkpatch $(P)-json-xs-gentoo.patch Slim/Formats/XML.pm

@@ -152,9 +152,9 @@ src_unpack() {
 
 	# Apply patches
 	epatch "${FILESDIR}/mDNSResponder-gentoo.patch"
-	epatch "${FILESDIR}/squeezecenter-7.3.1-build-perl-modules-gentoo.patch"
+	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
 	epatch "${FILESDIR}/${P}-aac-transcode-gentoo.patch"
-	epatch "${FILESDIR}/squeezecenter-7.3.1-json-xs-gentoo.patch"
+	epatch "${FILESDIR}/${P}-json-xs-gentoo.patch"
 }
 
 src_compile() {

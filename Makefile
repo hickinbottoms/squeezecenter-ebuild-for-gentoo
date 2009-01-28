@@ -4,8 +4,8 @@ HDB_IMG=media.cow
 VM_MEM=256
 PIDFILE=qemu.pid
 VMHOST=chandra
-SSH=ssh -i ~/.ssh/chandra root@$(VMHOST)
-SCP=scp -i ~/.ssh/chandra
+SSH=ssh root@$(VMHOST)
+SCP=scp
 
 LOCAL_PORTAGE=/usr/local/portage
 EBUILD_PREFIX=squeezecenter

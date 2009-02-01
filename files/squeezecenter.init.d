@@ -1,7 +1,7 @@
 #!/sbin/runscript
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-sound/squeezecenter/files/squeezecenter-7.0.init.d,v 1.2 2008/04/20 17:27:13 lavajoe Exp $
+# $Header$
 
 # These fit the SqueezeCenter ebuild and so shouldn't need to be changed;
 # user-servicable parts go in /etc/conf.d/squeezecenter.

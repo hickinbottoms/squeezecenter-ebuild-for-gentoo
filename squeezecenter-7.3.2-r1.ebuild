@@ -34,7 +34,6 @@ DEPEND="
 # (http://bugs.slimdevices.com/show_bug.cgi?id=6143).
 RDEPEND="${DEPEND}
 	>=dev-lang/perl-5.8.8
-	>=app-admin/sudo-1.6.8
 	>=dev-perl/GD-2.35
 	>=virtual/perl-Compress-Zlib-2.015
 	>=dev-perl/YAML-Syck-1.05

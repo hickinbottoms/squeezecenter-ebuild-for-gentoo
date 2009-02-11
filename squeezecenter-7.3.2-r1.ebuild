@@ -64,7 +64,6 @@ RDEPEND="${DEPEND}
 	>=dev-perl/Path-Class-0.16
 	>=dev-perl/SQL-Abstract-1.22
 	>=dev-perl/SQL-Abstract-Limit-0.12
-	>=dev-perl/TimeDate-1.16
 	>=dev-perl/URI-1.35
 	>=dev-perl/XML-Simple-2.18
 	>=perl-core/version-0.76

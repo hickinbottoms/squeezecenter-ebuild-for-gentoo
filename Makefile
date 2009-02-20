@@ -58,6 +58,7 @@ inject: stage
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/squeezecenter flac lame' >> /etc/portage/package.use"
+	$(SSH) "echo 'media-sound/sox flac' >> /etc/portage/package.use"
 
 vmreset: vmstop
 	sudo ls >/dev/null

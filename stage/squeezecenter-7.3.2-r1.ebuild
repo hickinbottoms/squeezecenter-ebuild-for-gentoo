@@ -64,7 +64,6 @@ RDEPEND="${DEPEND}
 	>=dev-perl/Path-Class-0.16
 	>=dev-perl/SQL-Abstract-1.22
 	>=dev-perl/SQL-Abstract-Limit-0.12
-	>=dev-perl/TimeDate-1.16
 	>=dev-perl/URI-1.35
 	>=dev-perl/XML-Simple-2.18
 	>=perl-core/version-0.76
@@ -81,7 +80,10 @@ RDEPEND="${DEPEND}
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
 	bonjour? ( net-misc/mDNSResponder )
-	flac? ( media-libs/flac )
+	flac? (
+		media-libs/flac
+		media-sound/sox
+		)
 	musepack? ( media-sound/musepack-tools )
 	ogg? ( media-sound/sox )
 	aac? ( media-libs/faad2 )
@@ -132,11 +134,18 @@ OLDPLUGINSDIR=/opt/squeezecenter/Plugins
 NEWPLUGINSDIR=/var/lib/squeezecenter/Plugins
 
 pkg_setup() {
-	# Sox has optional OGG support, so make sure it has been built that way
+	# Sox has optional OGG and FLAC support, so make sure it has that included
+	# if required
 	if use ogg; then
 		if ! built_with_use media-sound/sox ogg; then
 			eerror "media-sound/sox not built with USE=ogg"
-			die "media-sound/sox not built with USE=ogg"
+			die "SqueezeCenter needs media-sound/sox to be built with USE=ogg"
+		fi
+	fi
+	if use flac; then
+		if ! built_with_use media-sound/sox flac; then
+			eerror "media-sound/sox not built with USE=flac"
+			die "SqueezeCenter needs media-sound/sox to be built with USE=flac"
 		fi
 	fi
 

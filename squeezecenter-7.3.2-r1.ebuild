@@ -76,7 +76,6 @@ RDEPEND="${DEPEND}
 	>=dev-perl/Tie-IxHash-1.21
 	>=virtual/perl-Module-Pluggable-3.6
 	>=dev-perl/Archive-Zip-1.23
-	>=dev-perl/Linux-Inotify2-1.2
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )

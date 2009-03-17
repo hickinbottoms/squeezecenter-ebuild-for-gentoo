@@ -1,5 +1,5 @@
---- Slim/Formats/XML.pm.old	2009-02-05 08:06:17.000000000 +0000
-+++ Slim/Formats/XML.pm	2009-02-05 08:06:17.000000000 +0000
+--- Slim/Formats/XML.pm.old	2009-03-10 21:09:33.000000000 +0000
++++ Slim/Formats/XML.pm	2009-03-10 21:09:33.000000000 +0000
 @@ -1,6 +1,6 @@
  package Slim::Formats::XML;
  

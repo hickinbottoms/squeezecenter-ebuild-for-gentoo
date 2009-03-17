@@ -21,7 +21,7 @@ SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
 	mirror://gentoo/SqueezeCenter-Class-XSAccessor-Array-0.05.tar.gz
 	mirror://gentoo/SqueezeCenter-POE-XS-Queue-Array-0.002.tar.gz"
 
-# Note: dev-perl/module-build necessary because of SC bug#5882
+# Note: virtual/perl-Module-Build necessary because of SC bug#5882
 # (http://bugs.slimdevices.com/show_bug.cgi?id=5882).
 DEPEND="
 	dev-perl/File-Which
@@ -32,7 +32,11 @@ DEPEND="
 	"
 # Note: dev-perl/GD necessary because of SC bug#6143
 # (http://bugs.slimdevices.com/show_bug.cgi?id=6143).
-RDEPEND="${DEPEND}
+RDEPEND="
+	dev-perl/File-Which
+	virtual/logger
+	virtual/mysql
+	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
 	>=dev-perl/GD-2.35
 	>=virtual/perl-Compress-Zlib-2.015

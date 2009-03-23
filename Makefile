@@ -99,4 +99,4 @@ patches:
 	./mkpatch mDNSResponder-gentoo.patch Slim/Networking/mDNS.pm
 	./mkpatch $(P)-build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm
 	./mkpatch $(P)-aac-transcode-gentoo.patch convert.conf
-	./mkpatch $(P)-json-xs-gentoo.patch Slim/Formats/XML.pm
+	./mkpatch $(P)-json-xs-gentoo.patch Slim/Formats/XML.pm Slim/Plugin/LastFM/ProtocolHandler.pm Slim/Plugin/Sirius/ProtocolHandler.pm

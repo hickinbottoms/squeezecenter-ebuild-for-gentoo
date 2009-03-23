@@ -1,6 +1,6 @@
 package Slim::Formats::XML;
 
-# $Id$
+# $Id: XML.pm 24083 2008-11-25 17:56:36Z andy $
 
 # Copyright 2006-2007 Logitech
 
@@ -13,7 +13,7 @@ package Slim::Formats::XML;
 use strict;
 use File::Slurp;
 use HTML::Entities;
-use JSON::XS qw(decode_json);
+use JSON::XS::VersionOneAndTwo;
 use Scalar::Util qw(weaken);
 use URI::Escape qw(uri_escape);
 use XML::Simple;
@@ -288,7 +288,7 @@ sub parseXMLIntoFeed {
 	my $xml;
 	
 	if ( $type =~ /json/ ) {
-		$xml = decode_json($$content);
+		$xml = from_json($$content);
 	}
 	else {
 		$xml = xmlToHash($content);

@@ -12,7 +12,7 @@ EBUILD_PREFIX=squeezecenter
 EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
-P=squeezecenter-7.3.2
+P=squeezecenter-7.4.0
 
 PATCHES= mDNSResponder-gentoo.patch \
 		$(P)-build-perl-modules-gentoo.patch \

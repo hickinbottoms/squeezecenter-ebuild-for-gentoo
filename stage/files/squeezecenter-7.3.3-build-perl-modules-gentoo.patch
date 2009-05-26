@@ -1,6 +1,6 @@
---- Bin/build-perl-modules.pl.old	2009-03-10 21:09:33.000000000 +0000
-+++ Bin/build-perl-modules.pl	2009-03-10 21:09:33.000000000 +0000
-@@ -21,24 +21,12 @@
+--- Bin/build-perl-modules.pl.old	2009-05-26 12:33:05.000000000 +0100
++++ Bin/build-perl-modules.pl	2009-05-26 12:37:27.000000000 +0100
+@@ -21,25 +21,12 @@
  
  # NOTE: If you change this in a future version of SC, create a new
  # versioned directory under vendor/src for all files for that version
@@ -22,10 +22,11 @@
 -	'Time::HiRes'              => 'Time-HiRes-1.86.tar.gz',
 -	'XML::Parser::Expat'       => 'XML-Parser-2.34.tar.gz',
 -	'YAML::Syck'               => 'YAML-Syck-0.64.tar.gz',
+-	'GD'                       => 'GD-2.35.tar.gz',
  );
  
  # Don't need Class::C3::XS if you're running 5.10
-@@ -196,36 +184,16 @@
+@@ -197,36 +184,16 @@
  		}
  	}
  
@@ -68,8 +69,8 @@
  
  		# Just the directory name.
  		my ($packageDir) = ($package =~ /(\S+?)\.tar\.gz/);
---- Slim/bootstrap.pm.old	2009-02-05 08:06:17.000000000 +0000
-+++ Slim/bootstrap.pm	2009-02-05 08:06:17.000000000 +0000
+--- Slim/bootstrap.pm.old	2009-05-26 12:39:44.000000000 +0100
++++ Slim/bootstrap.pm	2009-05-26 12:40:03.000000000 +0100
 @@ -176,7 +176,6 @@
  
  		print "The following modules failed to load: $failed\n\n";

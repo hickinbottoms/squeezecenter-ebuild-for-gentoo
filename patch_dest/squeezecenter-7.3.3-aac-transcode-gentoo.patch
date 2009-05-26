@@ -1,7 +1,7 @@
---- convert.conf.old	2009-03-10 21:09:33.000000000 +0000
-+++ convert.conf	2009-03-10 21:09:33.000000000 +0000
-@@ -74,8 +74,8 @@
- # specific combinations match before wildcards
+--- convert.conf.old	2009-05-26 12:43:24.000000000 +0100
++++ convert.conf	2009-05-26 12:49:37.000000000 +0100
+@@ -82,8 +82,8 @@
+ 	[faad] -q -w -f 1 $FILE$ | [lame] --silent -q $QUALITY$ $BITRATE - -
  
  mov mp3 * *
 -	# FRB:{BITRATE=-B %B}D:{RESAMPLE=--resample %D}
@@ -11,24 +11,21 @@
  
  alc mp3 * *
  	# FB:{BITRATE=-B %B}D:{RESAMPLE=--resample %D}
-@@ -158,9 +158,12 @@
- 	[wvunpack] $FILE$ -rq $START$ $END$ -o -
+@@ -173,9 +173,9 @@
+ 	# IF
+ 	[faad] -q -w -f 2 -b 1 -s 44100 $FILE$
  
- ## you can comment this out if you want to use LAME to transcode AAC/MOV files to MP3.
 -mov aif * *
 -	# FR
 -	[mov123] $FILE$
-+#mov aif * *
-+#	# FR
-+#	[mov123] $FILE$
 +mov wav * *
 +	# F
 +	[faad] -q -w -f 2 $FILE$
  
  wma wma * *
  	-
-@@ -198,8 +201,8 @@
- 	[mac] $FILE$ - -d | [flac] -cs --totally-silent --compression-level-0 -
+@@ -221,8 +221,8 @@
+ 	[faad] -q -w -f 1 $FILE$ | [flac] -cs --totally-silent --compression-level-0 --ignore-chunk-sizes -
  
  mov flc * *
 -	# FR

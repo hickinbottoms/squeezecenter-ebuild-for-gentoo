@@ -1,6 +1,6 @@
 package Slim::bootstrap;
 
-# $Id: bootstrap.pm 23670 2008-10-23 15:32:50Z mherger $
+# $Id: bootstrap.pm 26009 2009-04-16 16:31:59Z andy $
 #
 # SqueezeCenter Copyright 2001-2007 Logitech.
 # This program is free software; you can redistribute it and/or
@@ -192,7 +192,12 @@ sub loadModules {
 		print "The following CPAN modules were found but cannot work with SqueezeCenter:\n";
 		
 		for my $module ( sort keys %{$failed} ) {
-			print "  $module (loaded " . $failed->{$module}->{loaded} . ", need " . $failed->{$module}->{need} . ")\n";
+			if ( $failed->{$module}->{loaded} eq $failed->{$module}->{need} && $failed->{$module}->{msg} ) {
+				print "  $module:\n" . $failed->{$module}->{msg} . "\n";
+			}
+			else {
+				print "  $module (loaded " . $failed->{$module}->{loaded} . ", need " . $failed->{$module}->{need} . ")\n";
+			}
 		}
 		
 		print "\n";		
@@ -328,6 +333,9 @@ sub tryModuleLoad {
 sub check_valid_versions {
 	my $modules;
 	my $failed = {};
+
+	# Don't load all these modules in the scanner
+	return $failed if main::SCANNER;
 	
 	# don't check validity on Windows binary - it's all built in
 	return $failed if $0 =~ /scanner\.exe/i;
@@ -351,8 +359,10 @@ sub check_valid_versions {
 			eval { $mod->VERSION( $ver || 0 ); 1; };
 		}
 		if ( $@ ) {
+			my $msg = $@;
+
 			# If the object file is missing we'll get an error but the versions will match
-			if ( $@ =~ /Can't locate loadable object/ ) {
+			if ( $msg =~ /Can't locate loadable object/ ) {
 				$failed->{$mod} = {
 					loaded => $mod->VERSION . ' but missing object file',
 					need   => $ver,
@@ -362,6 +372,7 @@ sub check_valid_versions {
 				$failed->{$mod} = {
 					loaded => $mod->VERSION || '<not found>',
 					need   => $ver,
+					msg    => $msg,
 				};
 			}
 		}

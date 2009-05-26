@@ -1,4 +1,4 @@
-# $Id: convert.conf 24695 2009-01-16 22:58:14Z andy $
+# $Id: convert.conf 25391 2009-03-07 13:22:05Z adrian $
 #
 # Configuration file for transcoding
 #
@@ -73,6 +73,14 @@
 
 # specific combinations match before wildcards
 
+mp4 mp3 * *
+	# FB:{BITRATE=-B %B}
+	[faad] -q -w -f 1 $FILE$ | [lame] --silent -q $QUALITY$ $BITRATE - -
+
+aac mp3 * *
+	# IFB:{BITRATE=-B %B}
+	[faad] -q -w -f 1 $FILE$ | [lame] --silent -q $QUALITY$ $BITRATE - -
+
 mov mp3 * *
 	# FRB:{BITRATE=-B %B}D:{RESAMPLE=--resample %D}
 	[mov123] $FILE$ | [lame] -s 44100 --silent -q $QUALITY$ $RESAMPLE$ -v $BITRATE$ -r --big-endian - -
@@ -131,7 +139,7 @@ ogg ogg * *
 	-
 
 ogg aif * *
-	[sox] -q -t ogg $FILE$ -t raw -r 44100 -c 2 -w -s $-x$ -
+	[sox] -q -t ogg $FILE$ -t raw -r 44100 -c 2 -2 -s $-x$ -
 
 wma wav * *
 	# F:{PATH=%f}R:{PATH=%F}
@@ -157,7 +165,14 @@ wvp wav * *
 	# FT:{START=--skip=%t}U:{END=--until=%v}
 	[wvunpack] $FILE$ -rq $START$ $END$ -o -
 
-## you can comment this out if you want to use LAME to transcode AAC/MOV files to MP3.
+mp4 wav * *
+	# F
+	[faad] -q -w -f 2 -b 1 -s 44100 $FILE$
+
+aac wav * *
+	# IF
+	[faad] -q -w -f 2 -b 1 -s 44100 $FILE$
+
 mov aif * *
 	# FR
 	[mov123] $FILE$
@@ -183,7 +198,7 @@ wav flc * *
 
 ogg flc * *
 	# IFRD:{RESAMPLE=-r %d}
-	[sox] -t ogg $FILE$ -t wav $RESAMPLE$ - | [flac] -cs --compression-level-0 --totally-silent -
+	[sox] -t ogg $FILE$ -t flac -C 0 $RESAMPLE$ -
 
 wma flc * *
 	# F:{PATH=%f}R:{PATH=%F}
@@ -196,6 +211,14 @@ mpc flc * *
 ape flc * *
 	# F
 	[mac] $FILE$ - -d | [flac] -cs --totally-silent --compression-level-0 -
+
+mp4 flc * *
+	# F
+	[faad] -q -w -f 1 $FILE$ | [flac] -cs --totally-silent --compression-level-0 --ignore-chunk-sizes -
+
+aac flc * *
+	# IF
+	[faad] -q -w -f 1 $FILE$ | [flac] -cs --totally-silent --compression-level-0 --ignore-chunk-sizes -
 
 mov flc * *
 	# FR

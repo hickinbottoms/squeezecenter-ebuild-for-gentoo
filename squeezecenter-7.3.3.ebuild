@@ -175,6 +175,7 @@ src_unpack() {
 	epatch "${FILESDIR}/${PF}-json-xs-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-squeezeslave.patch"
 	epatch "${FILESDIR}/${PF}-squeezeslave-2.patch"
+	epatch "${FILESDIR}/${PF}-squeezeslave-3.patch"
 }
 
 src_compile() {

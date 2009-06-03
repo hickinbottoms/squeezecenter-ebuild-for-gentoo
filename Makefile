@@ -14,11 +14,6 @@ EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
 P=squeezecenter-7.3.3
 
-PATCHES= $(P)-mDNSResponder-gentoo.patch \
-		$(P)-build-perl-modules-gentoo.patch \
-		$(P)-aac-transcode-gentoo.patch \
-		$(P)-json-xs-gentoo.patch
-
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
 	  squeezecenter.prefs \
@@ -27,7 +22,8 @@ FILES=dbdrop-gentoo.sql \
 	  squeezecenter.logrotate.d \
 	  avahi-squeezecenter.service \
 	  Gentoo-plugins-README.txt \
-	  gentoo-filepaths.pm
+	  gentoo-filepaths.pm \
+	  $(P)-squeezeslave.patch
 
 all: inject
 

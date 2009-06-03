@@ -24,7 +24,8 @@ FILES=dbdrop-gentoo.sql \
 	  Gentoo-plugins-README.txt \
 	  gentoo-filepaths.pm \
 	  $(P)-squeezeslave.patch \
-	  $(P)-squeezeslave-2.patch
+	  $(P)-squeezeslave-2.patch \
+	  $(P)-squeezeslave-3.patch
 
 all: inject
 

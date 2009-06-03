@@ -23,7 +23,8 @@ FILES=dbdrop-gentoo.sql \
 	  avahi-squeezecenter.service \
 	  Gentoo-plugins-README.txt \
 	  gentoo-filepaths.pm \
-	  $(P)-squeezeslave.patch
+	  $(P)-squeezeslave.patch \
+	  $(P)-squeezeslave-2.patch
 
 all: inject
 

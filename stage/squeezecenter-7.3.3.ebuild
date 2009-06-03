@@ -174,6 +174,7 @@ src_unpack() {
 	epatch "${FILESDIR}/${PF}-aac-transcode-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-json-xs-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-squeezeslave.patch"
+	epatch "${FILESDIR}/${PF}-squeezeslave-2.patch"
 }
 
 src_compile() {

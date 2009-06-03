@@ -169,10 +169,11 @@ src_unpack() {
 	cd "${S}"
 
 	# Apply patches
-	epatch "${FILESDIR}/mDNSResponder-gentoo.patch"
-	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
-	epatch "${FILESDIR}/${P}-aac-transcode-gentoo.patch"
+	epatch "${FILESDIR}/${PF}-mDNSResponder-gentoo.patch"
+	epatch "${FILESDIR}/${PF}-build-perl-modules-gentoo.patch"
+	epatch "${FILESDIR}/${PF}-aac-transcode-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-json-xs-gentoo.patch"
+	epatch "${FILESDIR}/${PF}-squeezeslave.patch"
 }
 
 src_compile() {

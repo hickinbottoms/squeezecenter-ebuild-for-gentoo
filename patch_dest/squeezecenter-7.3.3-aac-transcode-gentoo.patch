@@ -1,5 +1,5 @@
---- convert.conf.old	2009-05-26 12:43:24.000000000 +0100
-+++ convert.conf	2009-05-26 12:49:37.000000000 +0100
+--- convert.conf.old	2009-05-26 13:12:33.000000000 +0100
++++ convert.conf	2009-05-26 13:12:33.000000000 +0100
 @@ -82,8 +82,8 @@
  	[faad] -q -w -f 1 $FILE$ | [lame] --silent -q $QUALITY$ $BITRATE - -
  

@@ -1,5 +1,5 @@
---- Slim/Networking/mDNS.pm.old	2009-03-10 21:09:33.527505648 +0000
-+++ Slim/Networking/mDNS.pm	2009-03-10 21:09:33.533924058 +0000
+--- Slim/Networking/mDNS.pm.old	2009-03-10 21:09:33.000000000 +0000
++++ Slim/Networking/mDNS.pm	2009-03-10 21:09:33.000000000 +0000
 @@ -131,11 +131,10 @@
  
  		my ($name, $port) = @$data;

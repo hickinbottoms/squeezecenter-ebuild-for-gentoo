@@ -12,7 +12,7 @@ EBUILD_PREFIX=squeezecenter
 EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
-P=squeezecenter-7.3.3
+P=squeezecenter-7.3.3_beta
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -40,8 +40,10 @@ inject: stage
 	[ -f $(PIDFILE) ] || echo error: VM not running
 	[ -f $(PIDFILE) ] && echo Injecting ebuilds...
 	$(SSH) "rm -r $(EBUILD_DIR)/* >/dev/null 2>&1 || true"
-	$(SSH) mkdir -p $(EBUILD_DIR)
-	$(SCP) -r stage/* root@$(VMHOST):$(EBUILD_DIR)
+	$(SSH) mkdir -p $(EBUILD_DIR) $(EBUILD_DIR)/files
+	$(SCP) metadata.xml *.ebuild root@$(VMHOST):$(EBUILD_DIR)
+	(cd files; $(SCP) $(FILES) root@$(VMHOST):$(EBUILD_DIR)/files)
+	(cd patch_dest; $(SCP) *.patch root@$(VMHOST):$(EBUILD_DIR)/files)
 	./inject-vendor-src vendor-src $(VMHOST)
 	$(SSH) 'cd $(EBUILD_DIR); ebuild `ls *.ebuild | head -n 1` manifest'
 	echo Unmasking ebuild...

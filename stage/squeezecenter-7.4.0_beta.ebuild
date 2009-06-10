@@ -174,7 +174,6 @@ src_unpack() {
 	epatch "${FILESDIR}/mDNSResponder-gentoo.patch"
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
 	epatch "${FILESDIR}/${P}-aac-transcode-gentoo.patch"
-	epatch "${FILESDIR}/${P}-json-xs-gentoo.patch"
 }
 
 src_compile() {

@@ -10,7 +10,7 @@ MINOR_VER="${PV:4:1}"
 #@@TODO@@MY_P="squeezecenter-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 
 # http://downloads.slimdevices.com/nightly/7.3/sc/26709/squeezecenter-7.3.3-26709-noCPAN.tgz
-REV="26709"
+REV="27009"
 SRC_DIR="nightly/${MAJOR_VER}/sc/${REV}"
 MY_P="squeezecenter-${MAJOR_VER}.${MINOR_VER}-${REV}-noCPAN"
 

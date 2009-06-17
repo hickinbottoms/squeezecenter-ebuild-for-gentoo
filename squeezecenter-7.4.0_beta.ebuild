@@ -79,7 +79,6 @@ RDEPEND="
 	>=dev-perl/Exporter-Lite-0.02
 	>=dev-perl/Tie-IxHash-1.21
 	>=virtual/perl-Module-Pluggable-3.6
-	>=dev-perl/Archive-Zip-1.23
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )

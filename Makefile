@@ -36,7 +36,7 @@ inject: patches
 	$(SSH) mkdir -p $(EBUILD_DIR) $(EBUILD_DIR)/files
 	$(SCP) metadata.xml *.ebuild root@$(VMHOST):$(EBUILD_DIR)
 	(cd files; $(SCP) $(FILES) root@$(VMHOST):$(EBUILD_DIR)/files)
-	(cd patch_dest; $(SCP) $(PATCHES) root@$(VMHOST):$(EBUILD_DIR)/files)
+	(cd patch_dest; $(SCP) *.patch root@$(VMHOST):$(EBUILD_DIR)/files)
 	./inject-vendor-src vendor-src $(VMHOST)
 	$(SSH) 'cd $(EBUILD_DIR); ebuild `ls *.ebuild | head -n 1` manifest'
 	echo Unmasking ebuild...

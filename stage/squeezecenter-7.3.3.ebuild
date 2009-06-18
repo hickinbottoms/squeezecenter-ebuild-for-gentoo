@@ -6,13 +6,8 @@ inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
-#@@TODO@@SRC_DIR="SqueezeCenter_v${MAJOR_VER}.${MINOR_VER}"
-#@@TODO@@MY_P="squeezecenter-${MAJOR_VER}.${MINOR_VER}-noCPAN"
-
-# http://downloads.slimdevices.com/nightly/7.3/sc/26709/squeezecenter-7.3.3-26709-noCPAN.tgz
-REV="26709"
-SRC_DIR="nightly/${MAJOR_VER}/sc/${REV}"
-MY_P="squeezecenter-${MAJOR_VER}.${MINOR_VER}-${REV}-noCPAN"
+SRC_DIR="SqueezeCenter_v${MAJOR_VER}.${MINOR_VER}"
+MY_P="squeezecenter-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 
 DESCRIPTION="Logitech SqueezeCenter music server"
 HOMEPAGE="http://www.slimdevices.com/pi_features.html"

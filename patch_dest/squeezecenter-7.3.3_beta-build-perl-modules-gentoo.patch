@@ -1,5 +1,5 @@
---- Bin/build-perl-modules.pl.old	2009-06-17 10:48:13.513324795 +0100
-+++ Bin/build-perl-modules.pl	2009-05-26 12:37:27.147159782 +0100
+--- Bin/build-perl-modules.pl.old	2009-06-10 08:34:40.000000000 +0100
++++ Bin/build-perl-modules.pl	2009-05-26 12:37:27.000000000 +0100
 @@ -21,25 +21,12 @@
  
  # NOTE: If you change this in a future version of SC, create a new
@@ -69,8 +69,8 @@
  
  		# Just the directory name.
  		my ($packageDir) = ($package =~ /(\S+?)\.tar\.gz/);
---- Slim/bootstrap.pm.old	2009-06-17 10:48:13.000000000 +0100
-+++ Slim/bootstrap.pm	2009-06-17 10:48:13.581149121 +0100
+--- Slim/bootstrap.pm.old	2009-06-10 08:34:40.000000000 +0100
++++ Slim/bootstrap.pm	2009-06-10 08:34:40.000000000 +0100
 @@ -176,7 +176,6 @@
  
  		print "The following modules failed to load: $failed\n\n";

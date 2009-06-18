@@ -12,7 +12,7 @@ EBUILD_PREFIX=squeezecenter
 EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
-P=squeezecenter-7.3.3_beta
+P=squeezecenter-7.3.3
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \

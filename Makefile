@@ -35,6 +35,7 @@ stage: patches
 	cp metadata.xml *.ebuild stage
 	cp files/* stage/files
 	cp patch_dest/* stage/files
+	A=`grep '$$Id' stage/files/*.patch | wc -l`; [ $$A -eq 0 ]
 
 inject: stage
 	[ -f $(PIDFILE) ] || echo error: VM not running

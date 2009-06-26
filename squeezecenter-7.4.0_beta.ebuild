@@ -78,6 +78,7 @@ RDEPEND="
 	>=dev-perl/File-Slurp-9999.13
 	>=dev-perl/Exporter-Lite-0.02
 	>=dev-perl/Tie-IxHash-1.21
+	>=dev-perl/POE-1.003
 	>=virtual/perl-Module-Pluggable-3.6
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )

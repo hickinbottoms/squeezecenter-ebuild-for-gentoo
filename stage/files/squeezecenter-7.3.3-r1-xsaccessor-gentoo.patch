@@ -1,4 +1,4 @@
---- Slim/Utils/Accessor.pm.old	2009-06-27 18:37:44.686978335 +0100
+--- Slim/Utils/Accessor.pm.old	2009-06-27 18:37:44.000000000 +0100
 +++ Slim/Utils/Accessor.pm	2009-06-27 18:38:08.000000000 +0100
 @@ -94,7 +94,7 @@
  		if ($type eq 'rw') {

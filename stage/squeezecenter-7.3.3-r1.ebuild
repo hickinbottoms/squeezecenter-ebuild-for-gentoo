@@ -110,7 +110,7 @@ RDEPEND="
 		)
 	musepack? ( media-sound/musepack-tools )
 	ogg? ( media-sound/sox )
-	aac? ( media-libs/faad2 )
+	aac? ( media-video/mplayer )
 	"
 
 S="${WORKDIR}/${MY_P}"
@@ -146,6 +146,12 @@ pkg_setup() {
 		if ! built_with_use media-sound/sox flac; then
 			eerror "media-sound/sox not built with USE=flac"
 			die "SqueezeCenter needs media-sound/sox to be built with USE=flac"
+		fi
+	fi
+	if use aac; then
+		if ! built_with_use media-video/mplayer aac; then
+			eerror "media-video/mplayer not built with USE=aac"
+			die "SqueezeCenter needs media-video/mplayer to be built with USE=aac"
 		fi
 	fi
 

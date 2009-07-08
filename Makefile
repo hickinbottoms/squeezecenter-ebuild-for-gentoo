@@ -12,7 +12,7 @@ EBUILD_PREFIX=squeezecenter
 EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 
-P=squeezecenter-7.3.3
+P=squeezecenter-7.3.3-r1
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -45,7 +45,6 @@ inject: stage
 	$(SCP) metadata.xml *.ebuild root@$(VMHOST):$(EBUILD_DIR)
 	(cd files; $(SCP) $(FILES) root@$(VMHOST):$(EBUILD_DIR)/files)
 	(cd patch_dest; $(SCP) *.patch root@$(VMHOST):$(EBUILD_DIR)/files)
-	./inject-vendor-src vendor-src $(VMHOST)
 	$(SSH) 'cd $(EBUILD_DIR); ebuild `ls *.ebuild | head -n 1` manifest'
 	echo Unmasking ebuild...
 	$(SSH) mkdir -p /etc/portage
@@ -55,9 +54,37 @@ inject: stage
 	$(SSH) "grep -q 'dev-perl/DBI' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DBI ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/JSON-XS' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-XS ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/SQL-Abstract-Limit' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/SQL-Abstract-Limit' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-Accessor-Chained' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Accessor-Chained' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/POE-XS-Queue-Array' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/POE-XS-Queue-Array' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-C3' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Algorithm-C3' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Algorithm-C3' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-C3-XS' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3-XS' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/JSON-XS-VersionOneAndTwo' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-XS-VersionOneAndTwo' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-XSAccessor-Array' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-XSAccessor-Array' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/AutoXS-Header' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/AutoXS-Header' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/File-BOM' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/File-BOM' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-Data-Accessor' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Data-Accessor' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Data-Page' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Data-Page' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Data-Dump' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Data-Dump' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/enum' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/enum' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/URI-Find' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/URI-Find' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Net-UPnP' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Net-UPnP **' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'virtual/perl-Module-Build' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-Module-Build' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'perl-core/Module-Build' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/Module-Build' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'virtual/perl-Test-Harness' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-Test-Harness' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'perl-core/Test-Harness' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/Test-Harness' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Tie-Cache-LRU' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-Cache-LRU' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Tie-LLHash' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-LLHash' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Tie-RegexpHash' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-RegexpHash' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Proc-Background' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Proc-Background' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/PAR' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/PAR' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'virtual/perl-AutoLoader' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-AutoLoader' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'perl-core/AutoLoader' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/AutoLoader' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/PAR-Dist' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/PAR-Dist' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Text-Unidecode' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Text-Unidecode' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
-	$(SSH) "echo 'media-sound/squeezecenter flac lame' >> /etc/portage/package.use"
+	$(SSH) "echo 'media-sound/squeezecenter flac lame aac' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/sox flac' >> /etc/portage/package.use"
 
 vmreset: vmstop
@@ -97,7 +124,8 @@ uninstall:
 	-$(SSH) rm -fr /var/log/squeezecenter /var/cache/squeezecenter /var/lib/squeezecenter/cache /var/lib/squeezecenter/prefs /etc/squeezecenter
 
 patches:
+	./mkpatch $(P)-xsaccessor-gentoo.patch Slim/Utils/Accessor.pm
 	./mkpatch $(P)-mDNSResponder-gentoo.patch Slim/Networking/mDNS.pm
-	./mkpatch $(P)-build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm
+	./mkpatch $(P)-build-perl-modules-gentoo.patch Slim/bootstrap.pm
 	./mkpatch $(P)-aac-transcode-gentoo.patch convert.conf
 	./mkpatch $(P)-json-xs-gentoo.patch Slim/Formats/XML.pm Slim/Plugin/LastFM/ProtocolHandler.pm Slim/Plugin/Sirius/ProtocolHandler.pm

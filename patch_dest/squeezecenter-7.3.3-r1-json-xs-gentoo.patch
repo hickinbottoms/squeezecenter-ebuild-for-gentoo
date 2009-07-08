@@ -9,8 +9,8 @@
  use Scalar::Util qw(weaken);
  use URI::Escape qw(uri_escape);
  use XML::Simple;
---- Slim/Plugin/LastFM/ProtocolHandler.pm.old	2009-03-23 21:44:12.000000000 +0000
-+++ Slim/Plugin/LastFM/ProtocolHandler.pm	2009-06-26 19:51:50.000000000 +0100
+--- Slim/Plugin/LastFM/ProtocolHandler.pm.old	2009-03-23 21:44:12.854112540 +0000
++++ Slim/Plugin/LastFM/ProtocolHandler.pm	2009-06-26 19:51:50.421592926 +0100
 @@ -7,7 +7,7 @@
  use strict;
  use base qw(Slim::Player::Protocols::HTTP);
@@ -21,7 +21,7 @@
  
  use Slim::Player::Playlist;
 --- Slim/Plugin/Sirius/ProtocolHandler.pm.old	2009-03-23 21:44:12.000000000 +0000
-+++ Slim/Plugin/Sirius/ProtocolHandler.pm	2009-06-26 19:51:50.000000000 +0100
++++ Slim/Plugin/Sirius/ProtocolHandler.pm	2009-06-26 19:51:50.074009435 +0100
 @@ -19,7 +19,7 @@
  use Slim::Utils::Timers;
  

@@ -10,7 +10,7 @@ shift
 until [ -z "$1" ]
 do
 	SRC_FULL=$1
-	SRC_DIR=${SRC_FULL%/*}
+	SRC_DIR=${SRC_FULL%%/*}
 	SRC_FILE=${SRC_FULL#*/}
 	(cd "${SRC_DIR}"; diff -Naur -I "\$Id:" "${SRC_FILE}.old" "${SRC_FILE}") >> "${PATCH_FULL}"
 	shift

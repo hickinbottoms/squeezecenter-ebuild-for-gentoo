@@ -129,16 +129,16 @@ uninstall:
 patches: $(PD)/$(P)-mDNSResponder-gentoo.patch $(PD)/$(P)-build-perl-modules-gentoo.patch $(PD)/$(P1)-aac-transcode-gentoo.patch $(PD)/$(P)-json-xs-gentoo.patch $(PD)/$(P)-xsaccessor-gentoo.patch
 
 $(PD)/$(P)-mDNSResponder-gentoo.patch: $(PS)/Slim/Networking/mDNS.pm
-	./mkpatch $(PD)/$(P)-mDNSResponder-gentoo.patch $(PS)/Slim/Networking/mDNS.pm
+	./mkpatch $@ $^
 
 $(PD)/$(P)-build-perl-modules-gentoo.patch: $(PS)/Slim/bootstrap.pm
-	./mkpatch $(PD)/$(P)-build-perl-modules-gentoo.patch $(PS)/Slim/bootstrap.pm
+	./mkpatch $@ $^
 
 $(PD)/$(P1)-aac-transcode-gentoo.patch: $(PS)/convert.conf
-	./mkpatch $(PD)/$(P1)-aac-transcode-gentoo.patch $(PS)/convert.conf
+	./mkpatch $@ $^
 
 $(PD)/$(P)-json-xs-gentoo.patch: $(PS)/Slim/Formats/XML.pm $(PS)/Slim/Plugin/LastFM/ProtocolHandler.pm $(PS)/Slim/Plugin/Sirius/ProtocolHandler.pm
-	./mkpatch $(PD)/$(P)-json-xs-gentoo.patch $(PS)/Slim/Formats/XML.pm $(PS)/Slim/Plugin/LastFM/ProtocolHandler.pm $(PS)/Slim/Plugin/Sirius/ProtocolHandler.pm
+	./mkpatch $@ $^
 
 $(PD)/$(P)-xsaccessor-gentoo.patch: $(PS)/Slim/Utils/Accessor.pm
-	./mkpatch $(PD)/$(P)-xsaccessor-gentoo.patch $(PS)/Slim/Utils/Accessor.pm
+	./mkpatch $@ $^

@@ -11,8 +11,11 @@ LOCAL_PORTAGE=/usr/local/portage
 EBUILD_PREFIX=squeezecenter
 EBUILD_CATEGORY=media-sound/$(EBUILD_PREFIX)
 EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
+PS=patch_source
+PD=patch_dest
 
 P=squeezecenter-7.3.3
+P1=squeezecenter-7.3.3-r1
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -88,8 +91,16 @@ uninstall:
 	-$(SSH) rm -f /etc/init.d/sqeezecenter /etc/conf.d/squeezecenter /etc/logrotate.d/squeezecenter /etc/squeezecenter.prefs
 	-$(SSH) rm -fr /var/log/squeezecenter /var/cache/squeezecenter /var/lib/squeezecenter/cache /var/lib/squeezecenter/prefs /etc/squeezecenter
 
-patches:
-	./mkpatch $(P)-mDNSResponder-gentoo.patch Slim/Networking/mDNS.pm
-	./mkpatch $(P)-build-perl-modules-gentoo.patch Bin/build-perl-modules.pl Slim/bootstrap.pm
-	./mkpatch $(P)-aac-transcode-gentoo.patch convert.conf
-	./mkpatch $(P)-json-xs-gentoo.patch Slim/Formats/XML.pm Slim/Plugin/LastFM/ProtocolHandler.pm Slim/Plugin/Sirius/ProtocolHandler.pm
+patches: $(PD)/$(P)-mDNSResponder-gentoo.patch $(PD)/$(P)-build-perl-modules-gentoo.patch $(PD)/$(P1)-aac-transcode-gentoo.patch $(PD)/$(P)-json-xs-gentoo.patch
+
+$(PD)/$(P)-mDNSResponder-gentoo.patch: $(PS)/Slim/Networking/mDNS.pm
+	./mkpatch $(PD)/$(P)-mDNSResponder-gentoo.patch $(PS)/Slim/Networking/mDNS.pm
+
+$(PD)/$(P)-build-perl-modules-gentoo.patch: $(PS)/Bin/build-perl-modules.pl $(PS)/Slim/bootstrap.pm
+	./mkpatch $(PD)/$(P)-build-perl-modules-gentoo.patch $(PS)/Bin/build-perl-modules.pl $(PS)/Slim/bootstrap.pm
+
+$(PD)/$(P1)-aac-transcode-gentoo.patch: $(PS)/convert.conf
+	./mkpatch $(PD)/$(P1)-aac-transcode-gentoo.patch $(PS)/convert.conf
+
+$(PD)/$(P)-json-xs-gentoo.patch: $(PS)/Slim/Formats/XML.pm $(PS)/Slim/Plugin/LastFM/ProtocolHandler.pm $(PS)/Slim/Plugin/Sirius/ProtocolHandler.pm
+	./mkpatch $(PD)/$(P)-json-xs-gentoo.patch $(PS)/Slim/Formats/XML.pm $(PS)/Slim/Plugin/LastFM/ProtocolHandler.pm $(PS)/Slim/Plugin/Sirius/ProtocolHandler.pm

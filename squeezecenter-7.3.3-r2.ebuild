@@ -165,14 +165,14 @@ src_unpack() {
 	cd "${S}"
 
 	# Apply patches
-	epatch "${FILESDIR}/${PF}-mDNSResponder-gentoo.patch"
+	epatch "${FILESDIR}/${P}-mDNSResponder-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-build-perl-modules-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-aac-transcode-gentoo.patch"
-	epatch "${FILESDIR}/${PF}-json-xs-gentoo.patch"
+	epatch "${FILESDIR}/${P}-json-xs-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-xsaccessor-gentoo.patch"
-	epatch "${FILESDIR}/${PF}-squeezeslave.patch"
-	epatch "${FILESDIR}/${PF}-squeezeslave-2.patch"
-	epatch "${FILESDIR}/${PF}-squeezeslave-3.patch"
+	epatch "${FILESDIR}/${P}-squeezeslave.patch"
+	epatch "${FILESDIR}/${P}-squeezeslave-2.patch"
+	epatch "${FILESDIR}/${P}-squeezeslave-3.patch"
 }
 
 src_install() {

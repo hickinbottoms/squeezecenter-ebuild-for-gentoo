@@ -30,7 +30,15 @@ FILES=dbdrop-gentoo.sql \
 	  $(P)-squeezeslave-2.patch \
 	  $(P)-squeezeslave-3.patch
 
-all: inject
+all: stage
+
+stage: patches
+	-rm -r stage/*
+	mkdir stage/files
+	cp metadata.xml *.ebuild stage
+	cp files/* stage/files
+	cp patch_dest/* stage/files
+	A=`grep '$$Id' stage/files/*.patch | wc -l`; [ $$A -eq 0 ]
 
 inject: patches
 	[ -f $(PIDFILE) ] || echo error: VM not running

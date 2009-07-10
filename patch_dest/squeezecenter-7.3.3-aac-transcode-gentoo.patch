@@ -1,5 +1,10 @@
+<<<<<<< HEAD:patch_dest/squeezecenter-7.3.3-aac-transcode-gentoo.patch
 --- convert.conf.old	2009-06-26 19:51:50.000000000 +0100
 +++ convert.conf	2009-06-26 19:51:50.000000000 +0100
+=======
+--- convert.conf.old	2009-06-17 10:48:13.077584838 +0100
++++ convert.conf	2009-06-17 10:48:13.077584838 +0100
+>>>>>>> develop-7.3.3-r1:patch_dest/squeezecenter-7.3.3-aac-transcode-gentoo.patch
 @@ -82,8 +82,8 @@
  	[faad] -q -w -f 1 $FILE$ | [lame] --silent -q $QUALITY$ $BITRATE - -
  

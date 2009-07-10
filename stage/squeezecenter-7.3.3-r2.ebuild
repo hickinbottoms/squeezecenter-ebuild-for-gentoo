@@ -17,10 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="lame wavpack musepack alac ogg bonjour flac avahi aac"
 
 #SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
-SRC_URI="http://downloads.slimdevices.com/${SRC_DIR}/${MY_P}.tgz
-	mirror://gentoo/SqueezeCenter-AutoXS-Header-0.03.tar.gz
-	mirror://gentoo/SqueezeCenter-Class-XSAccessor-Array-0.05.tar.gz
-	mirror://gentoo/SqueezeCenter-POE-XS-Queue-Array-0.002.tar.gz"
+SRC_URI="http://downloads.slimdevices.com/${SRC_DIR}/${MY_P}.tgz"
 
 # Note: virtual/perl-Module-Build necessary because of SC bug#5882
 # (http://bugs.slimdevices.com/show_bug.cgi?id=5882).
@@ -81,6 +78,28 @@ RDEPEND="
 	>=dev-perl/Tie-IxHash-1.21
 	>=virtual/perl-Module-Pluggable-3.6
 	>=dev-perl/Archive-Zip-1.23
+	>=dev-perl/POE-1.003
+	>=dev-perl/Class-XSAccessor-Array-1.04
+	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
+	>=dev-perl/File-BOM-0.14
+	>=dev-perl/Class-Data-Accessor-0.04004
+	>=dev-perl/Class-Accessor-0.31
+	>=dev-perl/Class-Accessor-Chained-0.01
+	>=dev-perl/POE-XS-Queue-Array-0.006
+	>=dev-perl/Class-C3-0.21
+	>=dev-perl/Class-C3-XS-0.11
+	>=dev-perl/Algorithm-C3-0.08
+	>=dev-perl/Net-UPnP-1.41
+	>=dev-perl/Data-Page-2.01
+	>=dev-perl/Data-Dump-1.14
+	>=dev-perl/enum-1.016
+	>=dev-perl/URI-Find-20090319
+	>=dev-perl/Tie-Cache-LRU-20081023.2116
+	>=dev-perl/Tie-LLHash-1.003
+	>=dev-perl/Tie-RegexpHash-0.15
+	>=dev-perl/Proc-Background-1.08
+	>=dev-perl/PAR-0.992
+	>=dev-perl/Text-Unidecode-0.04
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -100,33 +119,9 @@ S="${WORKDIR}/${MY_P}"
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
 CPANKEEP="
-	Class/XSAccessor/Array.pm
-	POE/XS/Queue/Array.pm
-
-	JSON/XS/VersionOneAndTwo.pm
-	Class/Accessor/
-	Class/Accessor.pm
-	Class/C3.pm
-	Class/Data/Accessor.pm
-	Algorithm/C3.pm
-	Data/
 	DBIx/
-	File/BOM.pm
-	Net/UPnP/
-	Net/UPnP.pm
-	POE/Queue/Array.pm
-	Proc/Background/
-	Proc/Background.pm
-	Text/Unidecode/
-	Text/Unidecode.pm
-	Tie/Cache/LRU/
-	Tie/Cache/LRU.pm
-	Tie/LLHash.pm
-	Tie/RegexpHash.pm
-	URI/Find.pm
-	PAR/
-	PAR.pm
-	enum.pm
+	Data/URIEncode.pm
+	Tie/Cache/LRU/Expires.pm
 	"
 
 PREFS="/var/lib/squeezecenter/prefs/squeezecenter.prefs"
@@ -171,17 +166,13 @@ src_unpack() {
 
 	# Apply patches
 	epatch "${FILESDIR}/${P}-mDNSResponder-gentoo.patch"
-	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
+	epatch "${FILESDIR}/${PF}-build-perl-modules-gentoo.patch"
 	epatch "${FILESDIR}/${PF}-aac-transcode-gentoo.patch"
 	epatch "${FILESDIR}/${P}-json-xs-gentoo.patch"
+	epatch "${FILESDIR}/${PF}-xsaccessor-gentoo.patch"
 	epatch "${FILESDIR}/${P}-squeezeslave.patch"
 	epatch "${FILESDIR}/${P}-squeezeslave-2.patch"
 	epatch "${FILESDIR}/${P}-squeezeslave-3.patch"
-}
-
-src_compile() {
-	einfo "Building required Perl modules (some warnings are normal here) ..."
-	echo -e "\n${S}\n${WORKDIR}" | Bin/build-perl-modules.pl || die "Unable to build Perl modules"
 }
 
 src_install() {
@@ -203,12 +194,8 @@ src_install() {
 	dodir "/usr/lib/${package}/vendor_perl/${version}"
 	cp -r Slim "${D}/usr/lib/${package}/vendor_perl/${version}" || die "Unable to install server Perl modules"
 
-	# Compiled CPAN module go under lib as they are arch-specific
-	dodir "/usr/lib/squeezecenter/CPAN"
-	cp -r CPAN/arch "${D}/usr/lib/squeezecenter/CPAN" || die "Unable to install compiled CPAN modules"
-
 	# Preseve some of the SqueezeCenter-packaged CPAN modules that Gentoo
-	# doesn't provide ebuilds for.
+	# doesn't provide ebuilds for (see Gentoo bug#251494).
 	for ITEM in ${CPANKEEP}; do
 		dodir "/usr/lib/squeezecenter/CPAN/$(dirname ${ITEM})"
 		cp -r "CPAN/${ITEM}" "${D}/usr/lib/squeezecenter/CPAN/${ITEM}" || die "Unable to preserve CPAN item ${ITEM}"
@@ -222,7 +209,9 @@ src_install() {
 	cp -r IR "${D}/${SHAREDIR}"			|| die "Unable to install IR"
 	cp -r SQL "${D}/${SHAREDIR}"		|| die "Unable to install SQL"
 
-	# Architecture-dependent static files
+	# Architecture-dependent static files. Under Gentoo bug#251494 these should
+	# be moved away from and the stock CPAN modules used instead (assuming that
+	# the bugs reportedly fixed here aren't significant or outstanding)
 	dodir "${LIBDIR}"
 	cp -r lib/* "${D}/${LIBDIR}" || die "Unable to install architecture-dependent files"
 

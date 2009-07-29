@@ -14,7 +14,7 @@ HOMEPAGE="http://www.slimdevices.com/pi_features.html"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="lame wavpack musepack alac ogg bonjour flac avahi aac"
+IUSE="lame wavpack alac ogg bonjour flac avahi aac"
 
 #SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
 SRC_URI="http://downloads.slimdevices.com/${SRC_DIR}/${MY_P}.tgz"
@@ -108,7 +108,6 @@ RDEPEND="
 		media-libs/flac
 		media-sound/sox
 		)
-	musepack? ( media-sound/musepack-tools )
 	ogg? ( media-sound/sox )
 	aac? ( media-video/mplayer )
 	"

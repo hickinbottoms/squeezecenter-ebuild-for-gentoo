@@ -9,16 +9,17 @@ module and has caused bug#251494.
 Keywords: request
 
 CPAN modules to request for:
-Data/URIEncode.pm
-DBIx/
-Tie/Cache/LRU/Expires.pm
 
 Requested:
+277332 - Data/URIEncode.pm
+277335 - Tie/Cache/LRU/Expires.pm
+277338 - DBIx/Migration
 
 EBuild exists:
 
 Ebuild used (done):
 (reported and closed bugs)
+277337 - DBIx/Class
 275939 - Text/Unidecode/
  "     - Text/Unidecode.pm
 275932 - PAR/

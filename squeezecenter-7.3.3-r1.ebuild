@@ -40,7 +40,7 @@ RDEPEND="
 	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
 	>=dev-perl/GD-2.35
-	>=virtual/perl-Compress-Zlib-2.015
+	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
 	>=dev-perl/DBD-mysql-4.00.5
 	>=dev-perl/DBI-1.607

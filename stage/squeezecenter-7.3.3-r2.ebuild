@@ -37,7 +37,7 @@ RDEPEND="
 	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
 	>=dev-perl/GD-2.35
-	>=virtual/perl-Compress-Zlib-2.015
+	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
 	>=dev-perl/DBD-mysql-4.00.5
 	>=dev-perl/DBI-1.607
@@ -100,6 +100,7 @@ RDEPEND="
 	>=dev-perl/Proc-Background-1.08
 	>=dev-perl/PAR-0.992
 	>=dev-perl/Text-Unidecode-0.04
+	>=dev-perl/DBIx-Class-0.08107
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -119,9 +120,9 @@ S="${WORKDIR}/${MY_P}"
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
 CPANKEEP="
-	DBIx/
 	Data/URIEncode.pm
 	Tie/Cache/LRU/Expires.pm
+	DBIx/Migration.pm
 	"
 
 PREFS="/var/lib/squeezecenter/prefs/squeezecenter.prefs"

@@ -11,11 +11,12 @@ Keywords: request
 CPAN modules to request for:
 
 Requested:
+287264 - Audio::Scan
+
+EBuild exists:
 277332 - Data/URIEncode.pm
 277335 - Tie/Cache/LRU/Expires.pm
 277338 - DBIx/Migration
-
-EBuild exists:
 
 Ebuild used (done):
 (reported and closed bugs)

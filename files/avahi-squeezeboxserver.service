@@ -3,7 +3,7 @@
 
 <service-group>
 
-  <name>SqueezeCenter</name>
+  <name>Squeezebox Server</name>
 
   <service>
     <type>_http._tcp</type>

@@ -22,11 +22,11 @@ sub initDetails {
 
 	$class->{osDetails}->{isGentoo} = 1 ;
 
-	# Make sure we can find any CPAN modules packaged with SqueezeCenter.
-	unshift @INC, '/usr/share/squeezecenter/CPAN';
+	# Make sure we can find any CPAN modules packaged with Squeezebox Server.
+	unshift @INC, '/usr/share/squeezeboxserver/CPAN';
 
 	# Make sure plugin files are found.
-	push @INC, '/var/lib/squeezecenter';
+	push @INC, '/var/lib/squeezeboxserver';
 	
 	return $class->{osDetails};
 }
@@ -35,7 +35,7 @@ sub initDetails {
 
 Return OS Specific directories.
 
-Argument $dir is a string to indicate which of the SqueezeCenter directories we
+Argument $dir is a string to indicate which of the Squeezebox Server directories we
 need information for.
 
 =cut
@@ -51,20 +51,20 @@ sub dirsFor {
 
 	} elsif ($dir =~ /^(?:Firmware|Graphics|HTML|IR|MySQL|SQL|lib|Bin)$/) {
 
-		push @dirs, "/usr/share/squeezecenter/$dir";
+		push @dirs, "/usr/share/squeezeboxserver/$dir";
 
 	} elsif ($dir eq 'Plugins') {
 			
 		push @dirs, $class->SUPER::dirsFor($dir);
-		push @dirs, "/var/lib/squeezecenter/Plugins", "/usr/lib/" . $Config{'package'} . "/vendor_perl/" . $Config{'version'} . "/Slim/Plugin";
+		push @dirs, "/var/lib/squeezeboxserver/Plugins", "/usr/lib/" . $Config{'package'} . "/vendor_perl/" . $Config{'version'} . "/Slim/Plugin";
 		
 	} elsif ($dir =~ /^(?:strings|revision)$/) {
 
-		push @dirs, "/usr/share/squeezecenter";
+		push @dirs, "/usr/share/squeezeboxserver";
 
 	} elsif ($dir eq 'libpath') {
 
-		push @dirs, "/usr/lib/squeezecenter";
+		push @dirs, "/usr/lib/squeezeboxserver";
 
 	# Because we use the system MySQL, we need to point to the right
 	# directory for the errmsg. files. Default to english.
@@ -74,19 +74,19 @@ sub dirsFor {
 
 	} elsif ($dir =~ /^(?:types|convert)$/) {
 
-		push @dirs, "/etc/squeezecenter";
+		push @dirs, "/etc/squeezeboxserver";
 
 	} elsif ($dir =~ /^(?:prefs)$/) {
 
-		push @dirs, $::prefsdir || "/var/lib/squeezecenter/prefs";
+		push @dirs, $::prefsdir || "/var/lib/squeezeboxserver/prefs";
 
 	} elsif ($dir eq 'log') {
 
-		push @dirs, $::logdir || "/var/log/squeezecenter";
+		push @dirs, $::logdir || "/var/log/squeezeboxserver";
 
 	} elsif ($dir eq 'cache') {
 
-		push @dirs, $::cachedir || "/var/lib/squeezecenter/cache";
+		push @dirs, $::cachedir || "/var/lib/squeezeboxserver/cache";
 
 	} elsif ($dir =~ /^(?:music|playlists)$/) {
 
@@ -106,7 +106,7 @@ sub decodeExternalHelperPath {
 }
 
 sub scanner {
-	return '/usr/sbin/squeezecenter-scanner';
+	return '/usr/sbin/squeezeboxserver-scanner';
 }
 
 

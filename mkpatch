@@ -1,13 +1,18 @@
 #!/bin/bash
 
-PATCH=$1
+PATCH_FULL=$1
+PATCH_SRC=${PATCH_FULL%/*}
+PATCH=${PATCH_FULL#*/}
 shift
 
-> "patch_dest/${PATCH}"
+> "${PATCH_FULL}"
 
 until [ -z "$1" ]
 do
-	(cd patch_source; diff -Naur -I "\$Id:" "$1.old" "$1") >> "patch_dest/${PATCH}"
+	SRC_FULL=$1
+	SRC_DIR=${SRC_FULL%%/*}
+	SRC_FILE=${SRC_FULL#*/}
+	(cd "${SRC_DIR}"; diff -Naur -I "\$Id:" "${SRC_FILE}.old" "${SRC_FILE}") >> "${PATCH_FULL}"
 	shift
 done
 

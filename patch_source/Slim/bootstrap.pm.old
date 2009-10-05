@@ -1,8 +1,8 @@
 package Slim::bootstrap;
 
-# $Id: bootstrap.pm 23670 2008-10-23 15:32:50Z mherger $
+# $Id: bootstrap.pm 27992 2009-08-01 17:47:20Z andy $
 #
-# SqueezeCenter Copyright 2001-2007 Logitech.
+# Squeezebox Server Copyright 2001-2009 Logitech.
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License, version 2
 
@@ -39,7 +39,7 @@ use Slim::Utils::OSDetect;
 # same, Dynaloader fails.
 #
 # The workaround is to munge @INC and eval'ing the known modules that
-# we include with SqueezeCenter, first checking our CPAN path, then if
+# we include with Squeezebox Server, first checking our CPAN path, then if
 # there are any modules that couldn't be loaded, splicing CPAN/ out,
 # and attempting to load the system version of the module. When we are
 # done, put our CPAN/ path back in @INC.
@@ -53,10 +53,11 @@ use Slim::Utils::OSDetect;
 
 # Here's what we want to try and load. This will need to be updated
 # when a new XS based module is added to our CPAN tree.
-my @default_required_modules = qw(version Time::HiRes DBD::mysql DBI XML::Parser::Expat HTML::Parser JSON::XS Compress::Zlib Digest::SHA1 YAML::Syck GD);
+my @default_required_modules = qw(version Time::HiRes DBI DBD::mysql EV XML::Parser::Expat HTML::Parser JSON::XS Digest::SHA1 YAML::Syck GD Sub::Name);
 my @default_optional_modules = qw(Locale::Hebrew);
 
 my $d_startup                = (grep { /d_startup/ } @ARGV) ? 1 : 0;
+my $noweb                    = (grep { /noweb/ }     @ARGV) ? 1 : 0;
 
 my $sigINTcalled             = 0;
 
@@ -175,8 +176,15 @@ sub loadModules {
 		my $failed = join(' ', @required_really_failed);
 
 		print "The following modules failed to load: $failed\n\n";
-
-		print "To download and compile them, please run: $libPath/Bin/build-perl-modules.pl $failed\n\n";
+		
+		if ( main::ISWINDOWS ) {
+			print "To run from source on Windows, please install ActivePerl 5.10.  ActivePerl 5.8.8 is no longer supported.\n";
+			print "http://www.activestate.com/activeperl/\n\n";
+		}
+		else {
+			print "To download and compile them, please run: $libPath/Bin/build-perl-modules.pl $failed\n\n";
+		}
+		
 		print "Exiting..\n";
 
 		exit;
@@ -189,20 +197,30 @@ sub loadModules {
 	my $failed = check_valid_versions();
 	if ( scalar keys %{$failed} ) {
 	
-		print "The following CPAN modules were found but cannot work with SqueezeCenter:\n";
+		print "The following CPAN modules were found but cannot work with Squeezebox Server:\n";
 		
 		for my $module ( sort keys %{$failed} ) {
-			print "  $module (loaded " . $failed->{$module}->{loaded} . ", need " . $failed->{$module}->{need} . ")\n";
+			if ( $failed->{$module}->{loaded} eq $failed->{$module}->{need} && $failed->{$module}->{msg} ) {
+				print "  $module:\n" . $failed->{$module}->{msg} . "\n";
+			}
+			else {
+				print "  $module (loaded " . $failed->{$module}->{loaded} . ", need " . $failed->{$module}->{need} . ")\n";
+			}
 		}
 		
 		print "\n";		
 		print "To fix this problem you have several options:\n";
 		print "1. Install the latest version of the module(s) using CPAN: sudo cpan Some::Module\n";
 		print "2. Update the module's package using apt-get, yum, etc.\n";
-		print "3. Run the .tar.gz version of SqueezeCenter which includes all required CPAN modules.\n";
+		print "3. Run the .tar.gz version of Squeezebox Server which includes all required CPAN modules.\n";
 		print "\n";
 		
 		exit;
+	}
+	
+	# Load PerfMon if enabled
+	if ( main::PERFMON ) {
+		require Slim::Utils::PerfMon;
 	}
 	
 	sub REAPER {
@@ -278,8 +296,8 @@ sub tryModuleLoad {
 			# NB: More FC5 / SELinux - in case the above chcon doesn't work.
 			if ($@ =~ /cannot restore segment prot after reloc/) {
 
-				print STDERR "** SqueezeCenter Error:\n";
-				print STDERR "** SELinux settings prevented SqueezeCenter from starting.\n";
+				print STDERR "** Squeezebox Server Error:\n";
+				print STDERR "** SELinux settings prevented Squeezebox Server from starting.\n";
 				print STDERR "** See http://wiki.slimdevices.com/index.cgi?RPM for more information.\n\n";
 				exit;
 			}
@@ -328,6 +346,9 @@ sub tryModuleLoad {
 sub check_valid_versions {
 	my $modules;
 	my $failed = {};
+
+	# Don't load all these modules in the scanner
+	return $failed if main::SCANNER || main::RESIZER;
 	
 	# don't check validity on Windows binary - it's all built in
 	return $failed if $0 =~ /scanner\.exe/i;
@@ -339,6 +360,9 @@ sub check_valid_versions {
 	close $fh;
 
 	for my $line ( split /\n/, $modules ) {
+		
+		next if $noweb && $line =~ /Template/;
+		
 		next unless $line =~ /^\w+/;
 		chomp $line;
 		
@@ -351,8 +375,10 @@ sub check_valid_versions {
 			eval { $mod->VERSION( $ver || 0 ); 1; };
 		}
 		if ( $@ ) {
+			my $msg = $@;
+
 			# If the object file is missing we'll get an error but the versions will match
-			if ( $@ =~ /Can't locate loadable object/ ) {
+			if ( $msg =~ /Can't locate loadable object/ ) {
 				$failed->{$mod} = {
 					loaded => $mod->VERSION . ' but missing object file',
 					need   => $ver,
@@ -362,6 +388,7 @@ sub check_valid_versions {
 				$failed->{$mod} = {
 					loaded => $mod->VERSION || '<not found>',
 					need   => $ver,
+					msg    => $msg,
 				};
 			}
 		}
@@ -403,7 +430,7 @@ sub sigquit {
 	exit();
 }
 
-# Aliased to END in SqueezeCenter & scanner, as Log::Log4perl installs an END
+# Aliased to END in Squeezebox Server & scanner, as Log::Log4perl installs an END
 # handler, which needs to run last.
 sub theEND {
 

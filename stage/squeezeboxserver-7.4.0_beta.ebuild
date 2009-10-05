@@ -2,30 +2,36 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header$
 
+#@@TODO@@
+#SqueezeCenter-->SqueezeboxServer
+#	init scripts
+#	contents of all files in 'files'
+#	server/scanner main binaries
+#	config/lib/var etc
+#Migration of SqueezeCenter-->SqueezeboxServer preferences if they exist
+#Check dependencies are correct
+#Audio::Scan ebuild dependency
+#Check there's nothing else in 7.3.3-r2 ebuild that should be in here
+
 inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
-SRC_DIR="SqueezeCenter_v${MAJOR_VER}.${MINOR_VER}"
-MY_P="squeezecenter-${MAJOR_VER}.${MINOR_VER}-noCPAN"
+SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
+SBS_BUILD=28672
+MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${SBS_BUILD}-noCPAN"
 
-DESCRIPTION="Logitech SqueezeCenter music server"
-HOMEPAGE="http://www.slimdevices.com/pi_features.html"
+DESCRIPTION="Logitech SqueezeboxServer music server"
+HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.html"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="lame wavpack musepack alac ogg bonjour flac avahi aac"
+IUSE="lame wavpack musepack alac ogg flac avahi aac"
 
-SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
-	mirror://gentoo/SqueezeCenter-AutoXS-Header-0.03.tar.gz
-	mirror://gentoo/SqueezeCenter-Class-XSAccessor-Array-0.05.tar.gz
-	mirror://gentoo/SqueezeCenter-POE-XS-Queue-Array-0.002.tar.gz"
+SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz"
 
-# Note: virtual/perl-Module-Build necessary because of SC bug#5882
-# (http://bugs.slimdevices.com/show_bug.cgi?id=5882).
 DEPEND="
-	dev-perl/File-Which
-	virtual/perl-Module-Build
+	!media-sound/squeezecenter
 	virtual/logger
 	virtual/mysql
 	avahi? ( net-dns/avahi )
@@ -38,6 +44,9 @@ RDEPEND="
 	virtual/mysql
 	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
+	>=dev-perl/POE-XS-Queue-Array-0.006
+	>=dev-perl/Class-XSAccessor-Array-1.04
+	>=dev-perl/Audio-Scan-0.38
 	>=dev-perl/GD-2.35
 	>=virtual/perl-Compress-Zlib-2.015
 	>=dev-perl/YAML-Syck-1.05
@@ -78,12 +87,11 @@ RDEPEND="
 	>=dev-perl/File-Slurp-9999.13
 	>=dev-perl/Exporter-Lite-0.02
 	>=dev-perl/Tie-IxHash-1.21
+	>=dev-perl/POE-1.003
 	>=virtual/perl-Module-Pluggable-3.6
-	>=dev-perl/Archive-Zip-1.23
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
-	bonjour? ( net-misc/mDNSResponder )
 	flac? (
 		media-libs/flac
 		media-sound/sox
@@ -92,6 +100,14 @@ RDEPEND="
 	ogg? ( media-sound/sox )
 	aac? ( media-libs/faad2 )
 	"
+
+#@@TODO - these appear to have been removed. Still OK without them?
+#      >=perl-core/CGI-3.29
+#      >=virtual/perl-Time-HiRes-1.97.15
+
+#@@TODO - add these, possibly 7.4 only
+# CPAN/Class/Member (Dynamic/GLOB/HASH)
+# CPAN/Linux/Smaps
 
 S="${WORKDIR}/${MY_P}"
 
@@ -128,14 +144,15 @@ CPANKEEP="
 	enum.pm
 	"
 
-PREFS="/var/lib/squeezecenter/prefs/squeezecenter.prefs"
-LIVE_PREFS="/var/lib/squeezecenter/prefs/server.prefs"
-DOCDIR="/usr/share/doc/squeezecenter-${PV}"
-SHAREDIR="/usr/share/squeezecenter"
-LIBDIR="/usr/lib/squeezecenter"
-DBUSER="squeezecenter"
-OLDPLUGINSDIR=/opt/squeezecenter/Plugins
-NEWPLUGINSDIR=/var/lib/squeezecenter/Plugins
+PREFS="/var/lib/squeezeboxserver/prefs/squeezeboxserver.prefs"
+LIVE_PREFS="/var/lib/squeezeboxserver/prefs/server.prefs"
+DOCDIR="/usr/share/doc/squeezeboxserver-${PV}"
+SHAREDIR="/usr/share/squeezeboxserver"
+LIBDIR="/usr/lib/squeezeboxserver"
+OLDDBUSER="squeezecenter"
+DBUSER="squeezeboxserver"
+OLDPLUGINSDIR=/var/lib/squeezecenter/Plugins
+NEWPLUGINSDIR=/var/lib/squeezeboxserver/Plugins
 
 pkg_setup() {
 	# Sox has optional OGG and FLAC support, so make sure it has that included
@@ -143,19 +160,19 @@ pkg_setup() {
 	if use ogg; then
 		if ! built_with_use media-sound/sox ogg; then
 			eerror "media-sound/sox not built with USE=ogg"
-			die "SqueezeCenter needs media-sound/sox to be built with USE=ogg"
+			die "Squeezebox Server needs media-sound/sox to be built with USE=ogg"
 		fi
 	fi
 	if use flac; then
 		if ! built_with_use media-sound/sox flac; then
 			eerror "media-sound/sox not built with USE=flac"
-			die "SqueezeCenter needs media-sound/sox to be built with USE=flac"
+			die "Squeezebox Server needs media-sound/sox to be built with USE=flac"
 		fi
 	fi
 
 	# Create the user and group if not already present
-	enewgroup squeezecenter
-	enewuser squeezecenter -1 -1 "/dev/null" squeezecenter
+	enewgroup squeezeboxserver
+	enewuser squeezeboxserver -1 -1 "/dev/null" squeezeboxserver
 }
 
 src_unpack() {
@@ -163,24 +180,16 @@ src_unpack() {
 	cd "${S}"
 
 	# Apply patches
-	epatch "${FILESDIR}/mDNSResponder-gentoo.patch"
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
-	epatch "${FILESDIR}/${P}-aac-transcode-gentoo.patch"
-	epatch "${FILESDIR}/${P}-json-xs-gentoo.patch"
-}
-
-src_compile() {
-	einfo "Building required Perl modules (some warnings are normal here) ..."
-	echo -e "\n${S}\n${WORKDIR}" | Bin/build-perl-modules.pl || die "Unable to build Perl modules"
 }
 
 src_install() {
 
 	# The main Perl executables
 	exeinto /usr/sbin
-	newexe slimserver.pl squeezecenter-server
-	newexe scanner.pl squeezecenter-scanner
-	newexe cleanup.pl squeezecenter-cleanup
+	newexe slimserver.pl squeezeboxserver
+	newexe scanner.pl squeezeboxserver-scanner
+	newexe cleanup.pl squeezeboxserver-cleanup
 
 	# Get the Perl package name and version
 	eval `perl '-V:package'`
@@ -194,14 +203,14 @@ src_install() {
 	cp -r Slim "${D}/usr/lib/${package}/vendor_perl/${version}" || die "Unable to install server Perl modules"
 
 	# Compiled CPAN module go under lib as they are arch-specific
-	dodir "/usr/lib/squeezecenter/CPAN"
-	cp -r CPAN/arch "${D}/usr/lib/squeezecenter/CPAN" || die "Unable to install compiled CPAN modules"
+	dodir "/usr/lib/squeezeboxserver/CPAN"
+	cp -r CPAN/arch "${D}/usr/lib/squeezeboxserver/CPAN" || die "Unable to install compiled CPAN modules"
 
-	# Preseve some of the SqueezeCenter-packaged CPAN modules that Gentoo
+	# Preseve some of the Squeezebox Server-packaged CPAN modules that Gentoo
 	# doesn't provide ebuilds for.
 	for ITEM in ${CPANKEEP}; do
-		dodir "/usr/lib/squeezecenter/CPAN/$(dirname ${ITEM})"
-		cp -r "CPAN/${ITEM}" "${D}/usr/lib/squeezecenter/CPAN/${ITEM}" || die "Unable to preserve CPAN item ${ITEM}"
+		dodir "/usr/lib/squeezeboxserver/CPAN/$(dirname ${ITEM})"
+		cp -r "CPAN/${ITEM}" "${D}/usr/lib/squeezeboxserver/CPAN/${ITEM}" || die "Unable to preserve CPAN item ${ITEM}"
 	done
 
 	# Various directories of architecture-independent static files
@@ -228,20 +237,20 @@ src_install() {
 	newdoc "${FILESDIR}/Gentoo-plugins-README.txt" Gentoo-plugins-README.txt
 
 	# Configuration files
-	insinto /etc/squeezecenter
+	insinto /etc/squeezeboxserver
 	doins convert.conf
 	doins types.conf
 	doins modules.conf
 
 	# Install init scripts
-	newconfd "${FILESDIR}/squeezecenter.conf.d" squeezecenter
-	newinitd "${FILESDIR}/squeezecenter.init.d" squeezecenter
+	newconfd "${FILESDIR}/squeezeboxserver.conf.d" squeezeboxserver
+	newinitd "${FILESDIR}/squeezeboxserver.init.d" squeezeboxserver
 
 	# Install default preferences
-	insinto /var/lib/squeezecenter/prefs
-	newins "${FILESDIR}/squeezecenter.prefs" squeezecenter.prefs
-	fowners squeezecenter:squeezecenter /var/lib/squeezecenter/prefs
-	fperms 770 /var/lib/squeezecenter/prefs
+	insinto /var/lib/squeezeboxserver/prefs
+	newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
+	fowners squeezeboxserver:squeezeboxserver /var/lib/squeezeboxserver/prefs
+	fperms 770 /var/lib/squeezeboxserver/prefs
 
 	# Install the SQL configuration scripts
 	insinto "${SHAREDIR}/SQL/mysql"
@@ -249,68 +258,67 @@ src_install() {
 	doins "${FILESDIR}/dbcreate-gentoo.sql"
 
 	# Initialize run directory (where the PID file lives)
-	dodir /var/run/squeezecenter
-	fowners squeezecenter:squeezecenter /var/run/squeezecenter
-	fperms 770 /var/run/squeezecenter
+	dodir /var/run/squeezeboxserver
+	fowners squeezeboxserver:squeezeboxserver /var/run/squeezeboxserver
+	fperms 770 /var/run/squeezeboxserver
 
 	# Initialize server cache directory
-	dodir /var/lib/squeezecenter/cache
-	fowners squeezecenter:squeezecenter /var/lib/squeezecenter/cache
-	fperms 770 /var/lib/squeezecenter/cache
+	dodir /var/lib/squeezeboxserver/cache
+	fowners squeezeboxserver:squeezeboxserver /var/lib/squeezeboxserver/cache
+	fperms 770 /var/lib/squeezeboxserver/cache
 
 	# Initialize the log directory
-	dodir /var/log/squeezecenter
-	fowners squeezecenter:squeezecenter /var/log/squeezecenter
-	fperms 770 /var/log/squeezecenter
-	touch "${D}/var/log/squeezecenter/server.log"
-	touch "${D}/var/log/squeezecenter/scanner.log"
-	touch "${D}/var/log/squeezecenter/perfmon.log"
-	fowners squeezecenter:squeezecenter /var/log/squeezecenter/server.log
-	fowners squeezecenter:squeezecenter /var/log/squeezecenter/scanner.log
-	fowners squeezecenter:squeezecenter /var/log/squeezecenter/perfmon.log
+	dodir /var/log/squeezeboxserver
+	fowners squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver
+	fperms 770 /var/log/squeezeboxserver
+	touch "${D}/var/log/squeezeboxserver/server.log"
+	touch "${D}/var/log/squeezeboxserver/scanner.log"
+	touch "${D}/var/log/squeezeboxserver/perfmon.log"
+	fowners squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver/server.log
+	fowners squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver/scanner.log
+	fowners squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver/perfmon.log
 
 	# Initialise the user-installed plugins directory
 	dodir "${NEWPLUGINSDIR}"
 
 	# Install logrotate support
 	insinto /etc/logrotate.d
-	newins "${FILESDIR}/squeezecenter.logrotate.d" squeezecenter
+	newins "${FILESDIR}/squeezeboxserver.logrotate.d" squeezeboxserver
 
 	# Install Avahi support (if USE flag is set)
 	if use avahi; then
 		insinto /etc/avahi/services
-		newins "${FILESDIR}/avahi-squeezecenter.service" squeezecenter.service
+		newins "${FILESDIR}/avahi-squeezeboxserver.service" squeezeboxserver.service
 	fi
 }
 
 sc_starting_instr() {
-	elog "SqueezeCenter can be started with the following command:"
-	elog "\t/etc/init.d/squeezecenter start"
+	elog "Squeezebox Server can be started with the following command:"
+	elog "\t/etc/init.d/squeezeboxserver start"
 	elog ""
-	elog "SqueezeCenter can be automatically started on each boot with the"
+	elog "Squeezebox Server can be automatically started on each boot with the"
 	elog "following command:"
-	elog "\trc-update add squeezecenter default"
+	elog "\trc-update add squeezeboxserver default"
 	elog ""
 	elog "You might want to examine and modify the following configuration"
-	elog "file before starting SqueezeCenter:"
-	elog "\t/etc/conf.d/squeezecenter"
+	elog "file before starting Squeezebox Server:"
+	elog "\t/etc/conf.d/squeezeboxserver"
 	elog ""
 
 	# Discover the port number from the preferences, but if it isn't there
 	# then report the standard one.
 	httpport=$(gawk '$1 == "httpport:" { print $2 }' "${ROOT}${LIVE_PREFS}" 2>/dev/null)
-	elog "You may access and configure SqueezeCenter by browsing to:"
+	elog "You may access and configure Squeezebox Server by browsing to:"
 	elog "\thttp://localhost:${httpport:-9000}/"
 }
 
 pkg_postinst() {
-	# FLAC and LAME are quite useful (but not essential) for SqueezeCenter -
+	# FLAC and LAME are quite useful (but not essential) for Squeezebox Server -
 	# if they're not enabled then make sure the user understands that.
 	if ! use flac; then
 		ewarn "'flac' USE flag is not set.  Although not essential, FLAC is required"
 		ewarn "for playing lossless WAV and FLAC (for Squeezebox 1), and for"
-		ewarn "playing other less common file types (if you have a Squeezebox 2, 3,"
-		ewarn "Receiver or Transporter)."
+		ewarn "playing other less common file types (if you have a Squeezebox 2 or newer)."
 		ewarn "For maximum flexibility you are recommended to set the 'flac' USE flag".
 		ewarn ""
 	fi
@@ -329,7 +337,7 @@ pkg_postinst() {
 	   ! built_with_use dev-perl/GD png || \
 	   ! built_with_use media-libs/gd jpeg || \
 	   ! built_with_use media-libs/gd png; then
-		ewarn "For correct operation of album art through SqueezeCenter's web"
+		ewarn "For correct operation of album art through Squeezebox Server's web"
 		ewarn "interface the GD library and Perl module must be built with PNG"
 		ewarn "and JPEG support.  If necessary you can add the following lines"
 		ewarn "to the file /etc/portage/package.use:"
@@ -341,7 +349,7 @@ pkg_postinst() {
 	fi
 
 	# Point user to database configuration step
-	elog "If this is a new installation of SqueezeCenter then the database"
+	elog "If this is a new installation of Squeezebox Server then the database"
 	elog "must be configured prior to use.  This can be done by running the"
 	elog "following command:"
 	elog "\temerge --config =${CATEGORY}/${PF}"
@@ -350,8 +358,8 @@ pkg_postinst() {
 	if use avahi; then
 		elog ""
 		elog "Avahi support installed.  Remember to edit the folowing file if"
-		elog "you run SqueezeCenter's web interface on a port other than 9000:"
-		elog "\t/etc/avahi/services/squeezecenter.service"
+		elog "you run Squeezebox Server's web interface on a port other than 9000:"
+		elog "\t/etc/avahi/services/squeezeboxserver.service"
 	fi
 
 	elog ""
@@ -361,12 +369,12 @@ pkg_postinst() {
 sc_remove_db_prefs() {
 	MY_PREFS=$1
 
-	einfo "Configuring SqueezeCenter database preferences (${MY_PREFS}) ..."
-	TMPPREFS="${T}"/squeezecenter-prefs-$$
+	einfo "Configuring Squeezebox Server database preferences (${MY_PREFS}) ..."
+	TMPPREFS="${T}"/squeezeboxserver-prefs-$$
 	touch "${ROOT}${MY_PREFS}"
 	sed -e '/^dbusername:/d' -e '/^dbpassword:/d' -e '/^dbsource:/d' < "${ROOT}${MY_PREFS}" > "${TMPPREFS}"
 	mv "${TMPPREFS}" "${ROOT}${MY_PREFS}"
-	chown squeezecenter:squeezecenter "${ROOT}${MY_PREFS}"
+	chown squeezeboxserver:squeezeboxserver "${ROOT}${MY_PREFS}"
 	chmod 660 "${ROOT}${MY_PREFS}"
 }
 
@@ -381,13 +389,13 @@ sc_update_prefs() {
 }
 
 pkg_config() {
-	einfo "Press ENTER to create the SqueezeCenter database and set proper"
+	einfo "Press ENTER to create the Squeezebox Server database and set proper"
 	einfo "permissions on it.  You will be prompted for the MySQL 'root' user's"
 	einfo "password during this process (note that the MySQL 'root' user is"
 	einfo "independent of the Linux 'root' user and so may have a different"
 	einfo "password)."
 	einfo ""
-	einfo "If you already have a SqueezeCenter database set up then this"
+	einfo "If you already have a Squeezebox Server database set up then this"
 	einfo "process will clear the existing database (your music files will not,"
 	einfo "however, be affected)."
 	einfo ""
@@ -396,7 +404,7 @@ pkg_config() {
 
 	# Get the MySQL root password from the user (not echoed to the terminal)
 	einfo "The MySQL 'root' user password is required to create the"
-	einfo "SqueezeCenter user and database."
+	einfo "Squeezebox Server user and database."
 	DONE=0
 	while [ $DONE -eq 0 ]; do
 		trap "stty echo; echo" EXIT
@@ -410,10 +418,10 @@ pkg_config() {
 		fi
 	done
 
-	# Get the new password for the SqueezeCenter MySQL database user, and
+	# Get the new password for the Squeezebox Server MySQL database user, and
 	# have it re-entered to confirm it.  We should trivially check it's not
 	# the same as the MySQL root password.
-	einfo "A new MySQL user will be added to own the SqueezeCenter database."
+	einfo "A new MySQL user will be added to own the Squeezebox Server database."
 	einfo "Please enter the password for this new user (${DBUSER})."
 	DONE=0
 	while [ $DONE -eq 0 ]; do
@@ -434,14 +442,14 @@ pkg_config() {
 	# Drop the existing database and user - note we don't care about errors
 	# from this as it probably just indicates that the database wasn't
 	# yet present.
-	einfo "Dropping old SqueezeCenter database and user ..."
+	einfo "Dropping old Squeezebox Server database and user ..."
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" < "${SHAREDIR}/SQL/mysql/dbdrop-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" >/dev/null 2>&1
 
-	# Drop and create the SqueezeCenter user and database.
-	einfo "Creating SqueezeCenter MySQL user and database (${DBUSER}) ..."
+	# Drop and create the Squeezebox Server user and database.
+	einfo "Creating Squeezebox Server MySQL user and database (${DBUSER}) ..."
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
 
-	# Remove the existing MySQL preferences from SqueezeCenter (if any).
+	# Remove the existing MySQL preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
 	[ -f "${LIVE_PREFS}" ] && sc_remove_db_prefs ${LIVE_PREFS}
 

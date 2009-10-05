@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header$
 
-The standard SqueezeCenter package is installed differently on Gentoo in order
-that the installation complies with Gentoo's filesystem layout. These notes
-are provided to give guidance for installing plugins within this modified
-layout.
+The standard Squeezebox Server package is installed differently on Gentoo in
+order that the installation complies with Gentoo's filesystem layout. These
+notes are provided to give guidance for installing plugins within this
+modified layout.
 
 INSTALLING PLUGINS
 
@@ -13,10 +13,10 @@ The installation instructions of plugins should be followed but with the
 following Gentoo specifics:
 
 * Plugins should be installed into the directory:
-  /var/lib/squeezecenter/Plugins
+  /var/lib/squeezeboxserver/Plugins
 * Extension binaries (which sometimes accompany plugins) should be installed
   into the directory:
-  /usr/lib/squeezecenter/Bin
+  /usr/lib/squeezeboxserver/Bin
 
 BACKGROUND
 

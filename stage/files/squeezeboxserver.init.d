@@ -3,25 +3,24 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header$
 
-# These fit the SqueezeCenter ebuild and so shouldn't need to be changed;
-# user-servicable parts go in /etc/conf.d/squeezecenter.
-pidfile=/var/run/squeezecenter/squeezecenter.pid
-logdir=/var/log/squeezecenter
-varlibdir=/var/lib/squeezecenter
+# These fit the Squeezebox Server ebuild and so shouldn't need to be changed;
+# user-servicable parts go in /etc/conf.d/squeezeboxserver.
+pidfile=/var/run/squeezeboxserver/squeezeboxserver.pid
+logdir=/var/log/squeezeboxserver
+varlibdir=/var/lib/squeezeboxserver
 prefsdir=${varlibdir}/prefs
 cachedir=${varlibdir}/cache
-prefsfile=${prefsdir}/squeezecenter.prefs
-scuser=squeezecenter
-scname=squeezecenter-server
+prefsfile=${prefsdir}/squeezeboxserver.prefs
+scuser=squeezeboxserver
+scname=squeezeboxserver
 
 depend() {
 	need net mysql
 }
 
 start() {
-	ebegin "Starting SqueezeCenter"
+	ebegin "Starting Squeezebox Server"
 
-	export SSD_NICELEVEL=${SC_NICENESS}
 	cd /
 	start-stop-daemon \
 		--start --exec /usr/bin/perl /usr/sbin/${scname} \
@@ -35,16 +34,16 @@ start() {
 		--prefsfile=${prefsfile} \
 		--prefsdir=${prefsdir} \
 		--logdir=${logdir} \
-		--audiodir=${SC_MUSIC_DIR} \
-		--playlistdir=${SC_PLAYLISTS_DIR} \
-		${SC_OPTS}
+		--audiodir=${SBS_MUSIC_DIR} \
+		--playlistdir=${SBS_PLAYLISTS_DIR} \
+		${SBS_OPTS}
 
 
-	eend $? "Failed to start SqueezeCenter"
+	eend $? "Failed to start Squeezebox Server"
 }
 
 stop() {
-	ebegin "Stopping SqueezeCenter"
+	ebegin "Stopping Squeezebox Server"
 	start-stop-daemon -o --stop --pidfile ${pidfile}
-	eend $? "Failed to stop SqueezeCenter"
+	eend $? "Failed to stop Squeezebox Server"
 }

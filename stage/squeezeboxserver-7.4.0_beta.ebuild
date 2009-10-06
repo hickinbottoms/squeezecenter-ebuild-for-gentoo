@@ -5,8 +5,6 @@
 #@@TODO@@
 #Migration of SqueezeCenter-->SqueezeboxServer preferences if they exist
 #Check dependencies are correct
-#Audio::Scan ebuild dependency
-#Check there's nothing else in 7.3.3-r2 ebuild that should be in here
 
 inherit eutils
 
@@ -39,7 +37,7 @@ RDEPEND="
 	virtual/mysql
 	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
-	>=dev-perl/GD-2.35
+	>=dev-perl/GD-2.41
 	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
 	>=dev-perl/DBD-mysql-4.00.5
@@ -67,7 +65,7 @@ RDEPEND="
 	>=dev-perl/Net-DNS-0.63
 	>=dev-perl/Net-IP-1.25
 	>=dev-perl/Path-Class-0.16
-	>=dev-perl/SQL-Abstract-1.22
+	>=dev-perl/SQL-Abstract-1.56
 	>=dev-perl/SQL-Abstract-Limit-0.12
 	>=dev-perl/URI-1.35
 	>=dev-perl/XML-Simple-2.18

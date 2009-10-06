@@ -3,11 +3,6 @@
 # $Header$
 
 #@@TODO@@
-#SqueezeCenter-->SqueezeboxServer
-#	init scripts
-#	contents of all files in 'files'
-#	server/scanner main binaries
-#	config/lib/var etc
 #Migration of SqueezeCenter-->SqueezeboxServer preferences if they exist
 #Check dependencies are correct
 #Audio::Scan ebuild dependency
@@ -44,11 +39,8 @@ RDEPEND="
 	virtual/mysql
 	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
-	>=dev-perl/POE-XS-Queue-Array-0.006
-	>=dev-perl/Class-XSAccessor-Array-1.04
-	>=dev-perl/Audio-Scan-0.38
 	>=dev-perl/GD-2.35
-	>=virtual/perl-Compress-Zlib-2.015
+	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
 	>=dev-perl/DBD-mysql-4.00.5
 	>=dev-perl/DBI-1.607
@@ -87,23 +79,26 @@ RDEPEND="
 	>=dev-perl/File-Slurp-9999.13
 	>=dev-perl/Exporter-Lite-0.02
 	>=dev-perl/Tie-IxHash-1.21
-	>=dev-perl/POE-1.003
 	>=virtual/perl-Module-Pluggable-3.6
+	>=dev-perl/Archive-Zip-1.23
+	>=dev-perl/AnyEvent-5.2
+	>=dev-perl/Sub-Name-0.04
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
+	bonjour? ( net-misc/mDNSResponder )
 	flac? (
 		media-libs/flac
 		media-sound/sox
 		)
-	musepack? ( media-sound/musepack-tools )
 	ogg? ( media-sound/sox )
-	aac? ( media-libs/faad2 )
+	aac? ( media-video/mplayer )
 	"
-
-#@@TODO - these appear to have been removed. Still OK without them?
-#      >=perl-core/CGI-3.29
-#      >=virtual/perl-Time-HiRes-1.97.15
+#@@TODO - still definitely need to do something with the following - either
+# get them in as ebuild dependencies or bundle them and build the associated
+# modules
+# >=dev-perl/Audio-Scan-0.40	(includes C so needs to be built if bundled)
+# >=dev-perl/EV-3.8				(includes C so needs to be built if bundle)
 
 #@@TODO - add these, possibly 7.4 only
 # CPAN/Class/Member (Dynamic/GLOB/HASH)
@@ -116,20 +111,17 @@ S="${WORKDIR}/${MY_P}"
 # bug #251494).
 CPANKEEP="
 	Class/XSAccessor/Array.pm
-	POE/XS/Queue/Array.pm
 
 	JSON/XS/VersionOneAndTwo.pm
 	Class/Accessor/
 	Class/Accessor.pm
 	Class/C3.pm
-	Class/Data/Accessor.pm
 	Algorithm/C3.pm
 	Data/
 	DBIx/
 	File/BOM.pm
 	Net/UPnP/
 	Net/UPnP.pm
-	POE/Queue/Array.pm
 	Proc/Background/
 	Proc/Background.pm
 	Text/Unidecode/

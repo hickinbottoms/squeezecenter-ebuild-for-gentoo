@@ -1,0 +1,43 @@
+For bug#251494.
+
+Request for @@ CPAN ebuild
+
+This CPAN module (see the URL) is required by the media-sound/squeezecenter
+ebuild. That ebuild is currently having to package its own copy of this CPAN
+module and has caused bug#251494.
+
+Keywords: request
+
+CPAN modules to request for:
+
+Requested:
+287264 - Audio::Scan
+287857 - EV
+
+EBuild exists:
+277332 - Data/URIEncode.pm
+277335 - Tie/Cache/LRU/Expires.pm
+277338 - DBIx/Migration
+
+Ebuild used (done):
+(reported and closed bugs)
+277337 - DBIx/Class
+275939 - Text/Unidecode/
+ "     - Text/Unidecode.pm
+275932 - PAR/
+ "     - PAR.pm
+275940 - Proc/Background/
+ "     - Proc/Background.pm
+275938 - Tie/RegexpHash.pm
+275936 - Tie/LLHash.pm
+275935 - Tie/Cache/LRU/
+ "     - Tie/Cache/LRU.pm
+275942 - Data/Dump.pm
+275931 - enum.pm
+275520 - Class-XSAccessor-Array
+275522 - JSON/XS/VersionOneAndTwo.pm
+275530 - File/BOM.pm
+275546 - Class/Data/Accessor.pm
+275548 - Net/UPnP/
+ "     - Net/UPnP.pm
+275933 - URI/Find.pm

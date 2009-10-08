@@ -81,6 +81,10 @@ RDEPEND="
 	>=dev-perl/Archive-Zip-1.23
 	>=dev-perl/AnyEvent-5.2
 	>=dev-perl/Sub-Name-0.04
+	>=dev-perl/Module-Find-0.08
+	>=dev-perl/Class-XSAccessor-1.03
+	>=dev-perl/Class-XSAccessor-Array-1.04
+	>=dev-perl/AutoXS-Header-1.02
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -113,7 +117,9 @@ CPANKEEP="
 	JSON/XS/VersionOneAndTwo.pm
 	Class/Accessor/
 	Class/Accessor.pm
+	Class/C3
 	Class/C3.pm
+	MRO/Compat.pm
 	Algorithm/C3.pm
 	Data/
 	DBIx/
@@ -128,6 +134,7 @@ CPANKEEP="
 	Tie/Cache/LRU.pm
 	Tie/LLHash.pm
 	Tie/RegexpHash.pm
+	UUID/Tiny.pm
 	URI/Find.pm
 	PAR/
 	PAR.pm
@@ -199,8 +206,8 @@ src_install() {
 	# Preseve some of the Squeezebox Server-packaged CPAN modules that Gentoo
 	# doesn't provide ebuilds for.
 	for ITEM in ${CPANKEEP}; do
-		dodir "/usr/lib/squeezeboxserver/CPAN/$(dirname ${ITEM})"
-		cp -r "CPAN/${ITEM}" "${D}/usr/lib/squeezeboxserver/CPAN/${ITEM}" || die "Unable to preserve CPAN item ${ITEM}"
+		dodir "/usr/share/squeezeboxserver/CPAN/$(dirname ${ITEM})"
+		cp -r "CPAN/${ITEM}" "${D}/usr/share/squeezeboxserver/CPAN/${ITEM}" || die "Unable to preserve CPAN item ${ITEM}"
 	done
 
 	# Various directories of architecture-independent static files

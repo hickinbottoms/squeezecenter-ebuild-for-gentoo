@@ -38,7 +38,6 @@ start() {
 		--playlistdir=${SBS_PLAYLISTS_DIR} \
 		${SBS_OPTS}
 
-
 	eend $? "Failed to start Squeezebox Server"
 }
 

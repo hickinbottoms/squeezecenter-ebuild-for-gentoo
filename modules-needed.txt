@@ -9,6 +9,7 @@ module and has caused bug#251494.
 Keywords: request
 
 CPAN modules to request for:
+UUID-Tiny
 
 Requested:
 287264 - Audio::Scan

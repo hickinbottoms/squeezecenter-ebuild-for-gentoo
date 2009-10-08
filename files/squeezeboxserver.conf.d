@@ -20,4 +20,4 @@
 # See "squeezeboxserver --help" for a full list of possible options,
 # but note that many of them are supplied by /etc/init.d/squeezeboxserver
 # and so don't need to be present here.
-#SBS_OPTS="--noupnp"
+SBS_OPTS="--d_startup"

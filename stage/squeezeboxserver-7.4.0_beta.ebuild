@@ -85,6 +85,10 @@ RDEPEND="
 	>=dev-perl/Class-XSAccessor-1.03
 	>=dev-perl/Class-XSAccessor-Array-1.04
 	>=dev-perl/AutoXS-Header-1.02
+	>=dev-perl/Scope-Guard-0.03
+	>=dev-perl/Class-C3-XS-0.13
+	>=dev-perl/Class-C3-0.21
+	>=dev-perl/Class-C3-Componentised-1.0006
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -117,8 +121,6 @@ CPANKEEP="
 	JSON/XS/VersionOneAndTwo.pm
 	Class/Accessor/
 	Class/Accessor.pm
-	Class/C3
-	Class/C3.pm
 	MRO/Compat.pm
 	Algorithm/C3.pm
 	Data/
@@ -140,6 +142,8 @@ CPANKEEP="
 	PAR.pm
 	enum.pm
 	"
+#	Class/C3
+#	Class/C3.pm
 
 PREFS="/var/lib/squeezeboxserver/prefs/squeezeboxserver.prefs"
 LIVE_PREFS="/var/lib/squeezeboxserver/prefs/server.prefs"

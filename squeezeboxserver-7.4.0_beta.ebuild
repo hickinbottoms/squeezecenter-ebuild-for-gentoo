@@ -4,7 +4,6 @@
 
 #@@TODO@@
 #Migration of SqueezeCenter-->SqueezeboxServer preferences if they exist
-#Check dependencies are correct
 
 inherit eutils
 
@@ -106,10 +105,6 @@ RDEPEND="
 # modules
 # >=dev-perl/Audio-Scan-0.40	(includes C so needs to be built if bundled)
 # >=dev-perl/EV-3.8				(includes C so needs to be built if bundle)
-
-#@@TODO - add these, possibly 7.4 only
-# CPAN/Class/Member (Dynamic/GLOB/HASH)
-# CPAN/Linux/Smaps
 
 S="${WORKDIR}/${MY_P}"
 

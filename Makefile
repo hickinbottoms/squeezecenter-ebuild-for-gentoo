@@ -1,4 +1,4 @@
-VM_DIR=/var/vm/squeezecenter
+VM_DIR=/var/vm/squeezeboxserver
 HDA_IMG=gentoo.cow
 HDB_IMG=media.cow
 VM_MEM=256

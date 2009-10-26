@@ -9,9 +9,10 @@ inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
+BUILD_NUM="28947"
 SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
-SBS_BUILD=28672
-MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${SBS_BUILD}-noCPAN"
+MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
+MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"
 
 DESCRIPTION="Logitech SqueezeboxServer music server"
 HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.html"
@@ -106,7 +107,7 @@ RDEPEND="
 # >=dev-perl/Audio-Scan-0.40	(includes C so needs to be built if bundled)
 # >=dev-perl/EV-3.8				(includes C so needs to be built if bundle)
 
-S="${WORKDIR}/${MY_P}"
+S="${WORKDIR}/${MY_P_BUILD_NUM}"
 
 # Selected contents of SqueezeCenter's local CPAN collection that we include
 # in the installation. This removes duplication of CPAN modules. (See Gentoo

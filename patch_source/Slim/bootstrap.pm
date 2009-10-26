@@ -1,6 +1,6 @@
 package Slim::bootstrap;
 
-# $Id: bootstrap.pm 27992 2009-08-01 17:47:20Z andy $
+# $Id: bootstrap.pm 28872 2009-10-15 20:53:57Z andy $
 #
 # Squeezebox Server Copyright 2001-2009 Logitech.
 # This program is free software; you can redistribute it and/or
@@ -111,6 +111,18 @@ sub loadModules {
 	my $arch = $Config::Config{'archname'};
 	   $arch =~ s/^i[3456]86-/i386-/;
 	   $arch =~ s/gnu-//;
+	
+	# Some ARM platforms use different arch strings, just assume any arm*linux system
+	# can run our binaries, this will fail for some people running invalid versions of Perl
+	# but that's OK, they'd be broken anyway.
+	if ( $arch =~ /^arm.*linux/ ) {
+		$arch = 'arm-linux-gnueabi-thread-multi';
+	}
+	
+	# Same thing with PPC
+	if ( $arch =~ /^(?:ppc|powerpc).*linux/ ) {
+		$arch = 'powerpc-linux-thread-multi';
+	}
 
 	my $perlmajorversion = $Config{'version'};
 	   $perlmajorversion =~ s/\.\d+$//;

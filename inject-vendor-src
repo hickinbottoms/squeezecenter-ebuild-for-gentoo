@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SqueezeCenter CPAN modules are originally from here:
+# Squeezebox Server CPAN modules are originally from here:
 # http://svn.slimdevices.com/repos/slim/vendor/src
 
 DIR=$1
@@ -8,5 +8,5 @@ DEST_HOST=$2
 
 cd $DIR
 for FILE in *.gz; do
-	scp -i ~/.ssh/chandra $FILE root@$DEST_HOST:/usr/portage/distfiles/SqueezeCenter-$FILE
+	scp -i ~/.ssh/$DEST_HOST $FILE root@$DEST_HOST:/usr/portage/distfiles/$FILE
 done

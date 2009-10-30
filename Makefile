@@ -23,7 +23,8 @@ FILES=dbdrop-gentoo.sql \
 	  squeezeboxserver.logrotate.d \
 	  avahi-squeezeboxserver.service \
 	  Gentoo-plugins-README.txt \
-	  gentoo-filepaths.pm
+	  gentoo-filepaths.pm \
+	  build-modules.sh
 
 all: inject
 
@@ -36,6 +37,8 @@ stage: patches
 	A=`grep '$$Id' stage/files/*.patch | wc -l`; [ $$A -eq 0 ]
 
 inject: stage
+	echo Injecting vendor source...
+	./inject-vendor-src vendor-src $(VMHOST)
 	echo Injecting ebuilds...
 	$(SSH) "rm -r $(EBUILD_DIR)/* >/dev/null 2>&1 || true"
 	$(SSH) mkdir -p $(EBUILD_DIR) $(EBUILD_DIR)/files

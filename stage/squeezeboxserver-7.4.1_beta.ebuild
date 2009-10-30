@@ -186,8 +186,9 @@ src_unpack() {
 #@@ /usr/lib/squeezeboxserver/CPAN/arch
 src_compile() {
 	einfo "Building bundled Perl modules (some warnings are normal here)..."
-	cd "${WORKDIR}"
-	"${FILESDIR}/build-modules.sh" || die "Unable to build Perl modules"
+	#@@TODO@@ need to pass in distfiles location to find the tarballs
+	einfo "distfiles: ${DISTDIR}"
+	"${FILESDIR}/build-modules.sh" "${DISTDIR}" || die "Unable to build Perl modules"
 	#@@TODO@@ install built files
 }
 

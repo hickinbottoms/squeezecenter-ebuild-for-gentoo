@@ -181,15 +181,10 @@ src_unpack() {
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
 }
 
-#@@TODO@@ need to build EV/Audio::Scan. Destination:
-#@@ /usr/share/squeezeboxserver/CPAN
-#@@ /usr/lib/squeezeboxserver/CPAN/arch
+# Build Audio::Scan and EV present because of bug#287264 and bug#287857.
 src_compile() {
 	einfo "Building bundled Perl modules (some warnings are normal here)..."
-	cd "${WORKDIR}"
-	#@@TODO@@ need to pass in distfiles location to find the tarballs
-	"${FILESDIR}/build-modules.sh" || die "Unable to build Perl modules"
-	#@@TODO@@ install built files
+	"${FILESDIR}/build-modules.sh" "${DISTDIR}" || die "Unable to build Perl modules"
 }
 
 src_install() {
@@ -233,6 +228,10 @@ src_install() {
 	# Architecture-dependent static files
 	dodir "${LIBDIR}"
 	cp -r lib/* "${D}/${LIBDIR}" || die "Unable to install architecture-dependent files"
+
+#@@TODO@@ install Audio::Scan and EV outputs from compile stage
+#@@ /usr/share/squeezeboxserver/CPAN
+#@@ /usr/lib/squeezeboxserver/CPAN/arch
 
 	# Strings and version identification
 	insinto "${SHAREDIR}"

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 #
 # $Id$
 #
@@ -14,6 +15,8 @@
 #   Under 10.5, builds Universal Binaries for i386/ppc
 #   Under 10.6, builds Universal Binaries for i386/x86_64
 # FreeBSD 7.2 (Perl 5.8.9)
+
+DISTDIR="$1"; shift
 
 OS=`uname`
 
@@ -89,14 +92,14 @@ fi
 
 # Clean up
 # XXX command-line flag to skip cleanup
-rm -rf $BUILD
+#rm -rf $BUILD
 
-mkdir $BUILD
+#mkdir $BUILD
 
 # $1 = module to build
 # $2 = Makefile.PL arg(s)
 function build_module {
-    tar zxvf $1.tar.gz
+    tar zxvf $DISTDIR/SqueezeboxServer-$1.tar.gz || exit 1
     cd $1
 #    cp -R ../hints .
     if [ $PERL_58 ]; then
@@ -117,8 +120,8 @@ function build_module {
             fi
             exit $?
         fi
-        make install
-        make clean
+        make install || exit 1
+        make clean || exit 1
     fi
     if [ $PERL_510 ]; then
         # Running 5.10
@@ -138,7 +141,7 @@ function build_module {
             fi
             exit $?
         fi
-        make install
+        make install || exit 1
     fi
     cd ..
     rm -rf $1

@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 #
 # $Id$
 #
@@ -551,16 +550,6 @@ fi
 # Reset PERL5LIB
 export PERL5LIB=
 
-if [ $OS = 'Darwin' ]; then
-    # strip -S on all bundle files
-    find $BUILD -name '*.bundle' -exec chmod u+w {} \;
-    find $BUILD -name '*.bundle' -exec strip -S {} \;
-elif [ $OS = 'Linux' -o $OS = "FreeBSD" ]; then
-    # strip all so files
-    find $BUILD -name '*.so' -exec chmod u+w {} \;
-    find $BUILD -name '*.so' -exec strip {} \;
-fi
-
 # clean out useless .bs/.packlist files, etc
 find $BUILD -name '*.bs' -exec rm -f {} \;
 find $BUILD -name '*.packlist' -exec rm -f {} \;
@@ -569,15 +558,15 @@ find $BUILD -name '*.packlist' -exec rm -f {} \;
 # XXX there is still some crap left in here by some modules such as DBI, GD
 if [ $PERL_58 ]; then
     mkdir -p $BUILD/CPAN-arch/5.8/$ARCH
-    mkdir -p $BUILD/CPAN
+    mkdir -p $BUILD/CPAN-pm
     mv $BASE_58/lib/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.8/$ARCH/
-    mv $BASE_58/lib/perl5/site_perl/*/*/* $BUILD/CPAN
+    mv $BASE_58/lib/perl5/site_perl/*/*/* $BUILD/CPAN-pm
 fi
 if [ $PERL_510 ]; then
     mkdir -p $BUILD/CPAN-arch/5.10/$ARCH
-    mkdir -p $BUILD/CPAN
+    mkdir -p $BUILD/CPAN-pm
     mv $BASE_510/lib/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.10/$ARCH/
-    mv $BASE_510/lib/perl5/site_perl/*/*/* $BUILD/CPAN
+    mv $BASE_510/lib/perl5/site_perl/*/*/* $BUILD/CPAN-pm
 fi
 
 # could remove rest of build data, but let's leave it around in case

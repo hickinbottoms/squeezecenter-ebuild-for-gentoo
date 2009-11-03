@@ -229,9 +229,10 @@ src_install() {
 	dodir "${LIBDIR}"
 	cp -r lib/* "${D}/${LIBDIR}" || die "Unable to install architecture-dependent files"
 
-#@@TODO@@ install Audio::Scan and EV outputs from compile stage
-#@@ /usr/share/squeezeboxserver/CPAN
-#@@ /usr/lib/squeezeboxserver/CPAN/arch
+	# Install compiled Perl modules because of bug#287264 and bug#287857.
+	dodir "/usr/lib/squeezeboxserver/CPAN/arch"
+	cp -r CPAN-arch/* "${D}/usr/lib/squeezeboxserver/CPAN/arch" || die "Unable to install compiled CPAN modules"
+	cp -r CPAN-pm/* "${D}/usr/share/squeezeboxserver/CPAN" || die "Unable to install compiled CPAN modules"
 
 	# Strings and version identification
 	insinto "${SHAREDIR}"

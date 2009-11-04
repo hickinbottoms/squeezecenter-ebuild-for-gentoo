@@ -104,7 +104,7 @@ RDEPEND="
 		media-sound/sox
 		)
 	ogg? ( media-sound/sox )
-	aac? ( media-video/mplayer )
+	aac? ( media-libs/faad2 )
 	"
 
 S="${WORKDIR}/${MY_P_BUILD_NUM}"

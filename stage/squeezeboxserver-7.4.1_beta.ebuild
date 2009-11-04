@@ -230,7 +230,6 @@ src_install() {
 	cp -r lib/* "${D}/${LIBDIR}" || die "Unable to install architecture-dependent files"
 
 	# Install compiled Perl modules because of bug#287264 and bug#287857.
-	tree
 	dodir "/usr/lib/squeezeboxserver/CPAN/arch"
 	cp -r CPAN-arch/* "${D}/usr/lib/squeezeboxserver/CPAN/arch" || die "Unable to install compiled CPAN modules"
 	cp -r CPAN-pm/* "${D}/usr/share/squeezeboxserver/CPAN" || die "Unable to install compiled CPAN modules"

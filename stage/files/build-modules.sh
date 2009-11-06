@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 #
 # $Id$
 #
@@ -559,14 +560,14 @@ find $BUILD -name '*.packlist' -exec rm -f {} \;
 if [ $PERL_58 ]; then
     mkdir -p $BUILD/CPAN-arch/5.8/$ARCH
     mkdir -p $BUILD/CPAN-pm
-    mv $BASE_58/lib/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.8/$ARCH/
-    mv $BASE_58/lib/perl5/site_perl/*/*/* $BUILD/CPAN-pm
+    mv $BASE_58/lib*/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.8/$ARCH/
+    mv $BASE_58/lib*/perl5/site_perl/*/*/* $BUILD/CPAN-pm
 fi
 if [ $PERL_510 ]; then
     mkdir -p $BUILD/CPAN-arch/5.10/$ARCH
     mkdir -p $BUILD/CPAN-pm
-    mv $BASE_510/lib/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.10/$ARCH/
-    mv $BASE_510/lib/perl5/site_perl/*/*/* $BUILD/CPAN-pm
+    mv $BASE_510/lib*/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.10/$ARCH/
+    mv $BASE_510/lib*/perl5/site_perl/*/*/* $BUILD/CPAN-pm
 fi
 
 # could remove rest of build data, but let's leave it around in case

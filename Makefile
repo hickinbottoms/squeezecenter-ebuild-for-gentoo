@@ -66,6 +66,7 @@ inject: stage
 	$(SSH) "grep -q 'dev-perl/Scope-Guard ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Scope-Guard ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Class-C3-XS ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3-XS ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Class-C3 ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3 ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/MRO-Compat ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/MRO-Compat ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Class-C3-Componentised ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3-Componentised ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/squeezeboxserver flac lame aac' >> /etc/portage/package.use"

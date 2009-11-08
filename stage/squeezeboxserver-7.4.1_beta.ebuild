@@ -2,9 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header$
 
-#@@TODO@@
-#Migration of SqueezeCenter-->SqueezeboxServer preferences if they exist
-
 inherit eutils
 
 MAJOR_VER="${PV:0:3}"
@@ -139,18 +136,24 @@ CPANKEEP="
 	PAR.pm
 	enum.pm
 	"
-#	Class/C3
-#	Class/C3.pm
 
-PREFS="/var/lib/squeezeboxserver/prefs/squeezeboxserver.prefs"
-LIVE_PREFS="/var/lib/squeezeboxserver/prefs/server.prefs"
+VARLIBSBS="/var/lib/squeezeboxserver"
+PREFSDIR="${VARLIBSBS}/prefs"
+PREFS="${PREFSDIR}/squeezeboxserver.prefs"
+LIVE_PREFS="${PREFSDIR}/server.prefs"
 DOCDIR="/usr/share/doc/squeezeboxserver-${PV}"
 SHAREDIR="/usr/share/squeezeboxserver"
 LIBDIR="/usr/lib/squeezeboxserver"
 OLDDBUSER="squeezecenter"
 DBUSER="squeezeboxserver"
+PLUGINSDIR="${VARLIBSBS}/Plugins"
+ETCDIR=/etc/squeezecenter
+
+# To support Migration
+OLDETCDIR=/etc/squeezecenter
+OLDPREFSDIR=/var/lib/squeezecenter/prefs
 OLDPLUGINSDIR=/var/lib/squeezecenter/Plugins
-NEWPLUGINSDIR=/var/lib/squeezeboxserver/Plugins
+MIGMARKER=.migrated
 
 pkg_setup() {
 	# Sox has optional OGG and FLAC support, so make sure it has that included
@@ -255,11 +258,13 @@ src_install() {
 	newconfd "${FILESDIR}/squeezeboxserver.conf.d" squeezeboxserver
 	newinitd "${FILESDIR}/squeezeboxserver.init.d" squeezeboxserver
 
-	# Install default preferences
-	insinto /var/lib/squeezeboxserver/prefs
-	newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
-	fowners squeezeboxserver:squeezeboxserver /var/lib/squeezeboxserver/prefs
-	fperms 770 /var/lib/squeezeboxserver/prefs
+	# Install preferences
+	insinto "${PREFSDIR}"
+	if [ ! -f "${PREFSDIR}/squeezeboxserver.prefs" ]; then
+		newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
+	fi
+	fowners squeezeboxserver:squeezeboxserver "${PREFSDIR}"
+	fperms 770 "${PREFSDIR}"
 
 	# Install the SQL configuration scripts
 	insinto "${SHAREDIR}/SQL/mysql"
@@ -288,7 +293,9 @@ src_install() {
 	fowners squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver/perfmon.log
 
 	# Initialise the user-installed plugins directory
-	dodir "${NEWPLUGINSDIR}"
+	dodir "${PLUGINSDIR}"
+	fowners squeezeboxserver:squeezeboxserver "${PLUGINSDIR}"
+	fperms 770 "${PLUGINSDIR}"
 
 	# Install logrotate support
 	insinto /etc/logrotate.d
@@ -362,6 +369,8 @@ pkg_postinst() {
 	elog "must be configured prior to use.  This can be done by running the"
 	elog "following command:"
 	elog "\temerge --config =${CATEGORY}/${PF}"
+	elog "This command will also migrate old SqueezeCenter preferences and"
+	elog "plugins (if present)."
 
 	# Remind user to configure Avahi if necessary
 	if use avahi; then
@@ -458,6 +467,40 @@ pkg_config() {
 	einfo "Creating Squeezebox Server MySQL user and database (${DBUSER}) ..."
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
 
+	# Migrate old preferences, if present.
+	if [ -d "${OLDPREFSDIR}" ]; then
+		if [ -f "${PREFSDIR}/${MIGMARKER}" ]; then
+			einfo ""
+			einfo "Old preferences are present, but they appear to have been"
+			einfo "migrated before. If you would like to re-migrate the old"
+			einfo "SqueezeCenter preferences remove the following file, and"
+			einfo "then restart the configuration."
+			einfo "\t${PREFSDIR}/${MIGMARKER}"
+		else
+			einfo "Migrating old SqueezeCenter preferences"
+			cp -r "${OLDPREFSDIR}" "${VARLIBSBS}"
+			chown -R squeezeboxserver:squeezeboxserver "${PREFSDIR}"
+			touch "${PREFSDIR}/${MIGMARKER}"
+		fi
+	fi
+
+	# Migrate old plugins, if present.
+	if [ -d "${OLDPLUGINSDIR}" ]; then
+		if [ -f "${PLUGINSDIR}/${MIGMARKER}" ]; then
+			einfo ""
+			einfo "Old plugins are present, but they appear to have been"
+			einfo "migrated before. If you would like to re-migrate the old"
+			einfo "SqueezeCenter preferences remove the following file, and"
+			einfo "then restart the configuration."
+			einfo "\t${PLUGINSDIR}/${MIGMARKER}"
+		else
+			einfo "Migrating old SqueezeCenter plugins"
+			cp -r "${OLDPLUGINSDIR}" "${VARLIBSBS}"
+			chown -R squeezeboxserver:squeezeboxserver "${PLUGINSDIR}"
+			touch "${PLUGINSDIR}/${MIGMARKER}"
+		fi
+	fi
+
 	# Remove the existing MySQL preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
 	[ -f "${LIVE_PREFS}" ] && sc_remove_db_prefs ${LIVE_PREFS}
@@ -473,13 +516,16 @@ pkg_config() {
 }
 
 pkg_preinst() {
-	# Warn the user if there are old plugins that he may need to migrate
-	if [ -d "${OLDPLUGINSDIR}" ]; then
-		if [ ! -z "$(ls ${OLDPLUGINSDIR})" ]; then
-			ewarn "Note: It appears that plugins are installed in the old location of:"
-			ewarn "${OLDPLUGINSDIR}"
-			ewarn "If these are to be used then they must be migrated to the new location:"
-			ewarn "${NEWPLUGINSDIR}"
+	# Warn the user if there are old preferences that may need migrating.
+	if [ -d "${OLDPREFSDIR}" -a ! -f "${PREFSDIR}/${MIGMARKER}" ]; then
+		if [ ! -z "$(ls ${OLDPREFSDIR})" ]; then
+			ewarn "Note: It appears that old SqueezeCenter preferences are
+installed at:"
+			ewarn "\t${OLDPREFSDIR}"
+			ewarn "These may be migrated by running the following command:"
+			ewarn "\temerge --config =${CATEGORY}/${PF}"
+			ewarn "(Please note that this will require your music collection to
+be rescanned.)"
 			ewarn ""
 		fi
 	fi

@@ -206,7 +206,9 @@ function build {
 #            build_module common-sense-2.0
 
             export PERL_MM_USE_DEFAULT=1
+            RUN_TESTS=0
             build_module EV-3.8
+            RUN_TESTS=1
             export PERL_MM_USE_DEFAULT=
             ;;
         

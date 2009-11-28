@@ -84,8 +84,7 @@ RDEPEND="
 	>=dev-perl/AnyEvent-5.2
 	>=dev-perl/Sub-Name-0.04
 	>=dev-perl/Module-Find-0.08
-	>=dev-perl/Class-XSAccessor-1.03
-	>=dev-perl/Class-XSAccessor-Array-1.04
+	>=dev-perl/Class-XSAccessor-1.05
 	>=dev-perl/AutoXS-Header-1.02
 	>=dev-perl/Scope-Guard-0.03
 	>=dev-perl/Class-C3-XS-0.13
@@ -109,9 +108,8 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # Selected contents of SqueezeCenter's local CPAN collection that we include
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
+#	Class/XSAccessor/Array.pm
 CPANKEEP="
-	Class/XSAccessor/Array.pm
-
 	JSON/XS/VersionOneAndTwo.pm
 	Class/Accessor/
 	Class/Accessor.pm

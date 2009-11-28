@@ -17,6 +17,7 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="lame wavpack musepack alac ogg flac avahi aac"
+EAPI="2"
 
 # Note: Audio::Scan and EV present because of bug#287264 and bug#287857.
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
@@ -97,9 +98,9 @@ RDEPEND="
 	bonjour? ( net-misc/mDNSResponder )
 	flac? (
 		media-libs/flac
-		media-sound/sox
+		media-sound/sox[flac]
 		)
-	ogg? ( media-sound/sox )
+	ogg? ( media-sound/sox[sox] )
 	aac? ( media-libs/faad2 )
 	"
 

@@ -193,9 +193,9 @@ src_install() {
 
 	# The main Perl executables
 	exeinto /usr/sbin
-	newexe slimserver.pl squeezeboxserver
-	newexe scanner.pl squeezeboxserver-scanner
-	newexe cleanup.pl squeezeboxserver-cleanup
+	newexe slimserver.pl squeezeboxserver		|| die "Failed to install server executable"
+	newexe scanner.pl squeezeboxserver-scanner	|| die "Failed to install scanner executable"
+	newexe cleanup.pl squeezeboxserver-cleanup	|| die "Failed to install cleanup executable"
 
 	# Get the Perl package name and version
 	eval `perl '-V:package'`

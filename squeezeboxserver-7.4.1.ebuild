@@ -141,7 +141,7 @@ PREFS="${PREFSDIR}/squeezeboxserver.prefs"
 LIVE_PREFS="${PREFSDIR}/server.prefs"
 DOCDIR="/usr/share/doc/squeezeboxserver-${PV}"
 SHAREDIR="/usr/share/squeezeboxserver"
-LIBDIR="/usr/lib/squeezeboxserver"
+LIBDIR="/usr/$(get_libdir)/squeezeboxserver"
 OLDDBUSER="squeezecenter"
 DBUSER="squeezeboxserver"
 PLUGINSDIR="${VARLIBSBS}/Plugins"
@@ -204,12 +204,12 @@ src_install() {
 	cp "${FILESDIR}/gentoo-filepaths.pm" "Slim/Utils/OS/Custom.pm" || die "Unable to install Gentoo custom OS module"
 
 	# The server Perl modules
-	dodir "/usr/lib/${package}/vendor_perl/${version}"
-	cp -r Slim "${D}/usr/lib/${package}/vendor_perl/${version}" || die "Unable to install server Perl modules"
+	dodir "/usr/$(get_libdir)/${package}/vendor_perl/${version}"
+	cp -r Slim "${D}/usr/$(get_libdir)/${package}/vendor_perl/${version}" || die "Unable to install server Perl modules"
 
 	# Compiled CPAN module go under lib as they are arch-specific
-	dodir "/usr/lib/squeezeboxserver/CPAN"
-	cp -r CPAN/arch "${D}/usr/lib/squeezeboxserver/CPAN" || die "Unable to install compiled CPAN modules"
+	dodir "${LIBDIR}/CPAN"
+	cp -r CPAN/arch "${D}${LIBDIR}/CPAN" || die "Unable to install compiled CPAN modules"
 
 	# Preseve some of the Squeezebox Server-packaged CPAN modules that Gentoo
 	# doesn't provide ebuilds for.
@@ -228,12 +228,12 @@ src_install() {
 
 	# Architecture-dependent static files
 	dodir "${LIBDIR}"
-	cp -r lib/* "${D}/${LIBDIR}" || die "Unable to install architecture-dependent files"
+	cp -r lib/* "${D}${LIBDIR}" || die "Unable to install architecture-dependent files"
 
 	# Install compiled Perl modules because of bug#287264 and bug#287857.
-	dodir "/usr/lib/squeezeboxserver/CPAN/arch"
-	cp -r CPAN-arch/* "${D}/usr/lib/squeezeboxserver/CPAN/arch" || die "Unable to install compiled CPAN modules"
-	cp -r CPAN-pm/* "${D}/usr/share/squeezeboxserver/CPAN" || die "Unable to install compiled CPAN modules"
+	dodir "${LIBDIR}/CPAN/arch"
+	cp -r CPAN-arch/* "${D}${LIBDIR}/CPAN/arch" || die "Unable to install compiled CPAN modules"
+	cp -r CPAN-pm/* "${D}${LIBDIR}/CPAN" || die "Unable to install compiled CPAN modules"
 
 	# Strings and version identification
 	insinto "${SHAREDIR}"

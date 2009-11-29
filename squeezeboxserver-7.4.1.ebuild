@@ -136,23 +136,22 @@ CPANKEEP="
 	enum.pm
 	"
 
-VARLIBSBS="/var/lib/squeezeboxserver"
-PREFSDIR="${VARLIBSBS}/prefs"
-PREFS="${PREFSDIR}/squeezeboxserver.prefs"
-LIVE_PREFS="${PREFSDIR}/server.prefs"
+ETCDIR="/etc/squeezeboxserver"
+PREFS="${ETCDIR}/squeezeboxserver.prefs"
 DOCDIR="/usr/share/doc/squeezeboxserver-${PV}"
 SHAREDIR="/usr/share/squeezeboxserver"
 LIBDIR="/usr/$(get_libdir)/squeezeboxserver"
 OLDDBUSER="squeezecenter"
 DBUSER="squeezeboxserver"
+VARLIBSBS="/var/lib/squeezeboxserver"
 PLUGINSDIR="${VARLIBSBS}/Plugins"
-ETCDIR=/etc/squeezecenter
 
 # To support Migration
-OLDETCDIR=/etc/squeezecenter
-OLDPREFSDIR=/var/lib/squeezecenter/prefs
-OLDPLUGINSDIR=/var/lib/squeezecenter/Plugins
-MIGMARKER=.migrated
+OLDETCDIR="/etc/squeezecenter"
+OLDPREFSDIR="/var/lib/squeezecenter/prefs"
+OLDPREFSFILE="${OLDPREFSDIR}/server.prefs"
+OLDPLUGINSDIR="/var/lib/squeezecenter/Plugins"
+MIGMARKER=".migrated"
 
 pkg_setup() {
 	# Sox has optional OGG and FLAC support, so make sure it has that included
@@ -250,23 +249,16 @@ src_install() {
 	dodoc License*.txt
 	newdoc "${FILESDIR}/Gentoo-plugins-README.txt" Gentoo-plugins-README.txt
 
-	# Configuration files
+	# Configuration files and preferences
 	insinto /etc/squeezeboxserver
 	doins convert.conf
 	doins types.conf
 	doins modules.conf
+	newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
 
 	# Install init scripts
 	newconfd "${FILESDIR}/squeezeboxserver.conf.d" squeezeboxserver
 	newinitd "${FILESDIR}/squeezeboxserver.init.d" squeezeboxserver
-
-	# Install preferences
-	insinto "${PREFSDIR}"
-	if [ ! -f "${PREFSDIR}/squeezeboxserver.prefs" ]; then
-		newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
-	fi
-	fowners squeezeboxserver:squeezeboxserver "${PREFSDIR}"
-	fperms 770 "${PREFSDIR}"
 
 	# Install the SQL configuration scripts
 	insinto "${SHAREDIR}/SQL/mysql"
@@ -470,17 +462,18 @@ pkg_config() {
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
 
 	# Migrate old preferences, if present.
-	if [ -d "${OLDPREFSDIR}" ]; then
-		if [ -f "${PREFSDIR}/${MIGMARKER}" ]; then
+	if [ -d "${OLDPREFSFILE}" ]; then
+		if [ -f "${ETCDIR}/${MIGMARKER}" ]; then
 			einfo ""
 			einfo "Old preferences are present, but they appear to have been"
 			einfo "migrated before. If you would like to re-migrate the old"
 			einfo "SqueezeCenter preferences remove the following file, and"
 			einfo "then restart the configuration."
-			einfo "\t${PREFSDIR}/${MIGMARKER}"
+			einfo "\t${ETCDIR}/${MIGMARKER}"
 		else
 			einfo "Migrating old SqueezeCenter preferences"
 			cp -r "${OLDPREFSDIR}" "${VARLIBSBS}"
+			mv "${VARLIBSBS}/prefs/server.prefs" "/etc/squeezeboxserver/squeezeboxserver.prefs"
 			chown -R squeezeboxserver:squeezeboxserver "${PREFSDIR}"
 			touch "${PREFSDIR}/${MIGMARKER}"
 		fi
@@ -505,11 +498,9 @@ pkg_config() {
 
 	# Remove the existing MySQL preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
-	[ -f "${LIVE_PREFS}" ] && sc_remove_db_prefs ${LIVE_PREFS}
 
 	# Insert the external MySQL configuration into the preferences.
 	sc_update_prefs "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
-	[ -f "${LIVE_PREFS}" ] && sc_update_prefs "${LIVE_PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
 
 	# Phew - all done. Give some tips on what to do now.
 	einfo "Database configuration complete."

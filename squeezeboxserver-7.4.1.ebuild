@@ -181,12 +181,17 @@ src_unpack() {
 
 	# Apply patches
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
+
+	# Copy in the module builder - can't run it from the files directory in case
+	# Portage is mounted 'noexec'.
+	cp "${FILESDIR}/build-modules.sh" "${S}"	|| die
+	chmod 555 "${S}/build-modules.sh"			|| die
 }
 
 # Build Audio::Scan and EV present because of bug#287264 and bug#287857.
 src_compile() {
 	einfo "Building bundled Perl modules (some warnings are normal here)..."
-	"${FILESDIR}/build-modules.sh" "${DISTDIR}" || die "Unable to build Perl modules"
+	"./build-modules.sh" "${DISTDIR}" || die "Unable to build Perl modules"
 }
 
 src_install() {

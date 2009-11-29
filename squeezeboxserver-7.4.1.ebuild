@@ -202,16 +202,14 @@ src_install() {
 	newexe scanner.pl squeezeboxserver-scanner	|| die "Failed to install scanner executable"
 	newexe cleanup.pl squeezeboxserver-cleanup	|| die "Failed to install cleanup executable"
 
-	# Get the Perl package name and version
-	eval `perl '-V:package'`
-	eval `perl '-V:version'`
-
 	# The custom OS module for Gentoo - provides OS-specific path details
 	cp "${FILESDIR}/gentoo-filepaths.pm" "Slim/Utils/OS/Custom.pm" || die "Unable to install Gentoo custom OS module"
 
 	# The server Perl modules
-	dodir "/usr/$(get_libdir)/${package}/vendor_perl/${version}"
-	cp -r Slim "${D}/usr/$(get_libdir)/${package}/vendor_perl/${version}" || die "Unable to install server Perl modules"
+	local installvendorlib
+	eval `perl '-V:installvendorlib'`
+	dodir "${installvendorlib}"
+	cp -r Slim "${D}${installvendorlib}" || die "Unable to install server Perl modules"
 
 	# Compiled CPAN module go under lib as they are arch-specific
 	dodir "${LIBDIR}/CPAN"

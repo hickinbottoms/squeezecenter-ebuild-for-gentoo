@@ -15,7 +15,8 @@ scuser=squeezeboxserver
 scname=squeezeboxserver
 
 depend() {
-	need net mysql
+	need net
+	use mysql
 }
 
 start() {

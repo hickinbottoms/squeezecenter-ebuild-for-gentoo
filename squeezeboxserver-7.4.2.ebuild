@@ -138,6 +138,7 @@ CPANKEEP="
 
 ETCDIR="/etc/squeezeboxserver"
 PREFS="${ETCDIR}/squeezeboxserver.prefs"
+PREFSDIR="${ETCDIR}/prefs"
 DOCDIR="/usr/share/doc/squeezeboxserver-${PV}"
 SHAREDIR="/usr/share/squeezeboxserver"
 LIBDIR="/usr/$(get_libdir)/squeezeboxserver"
@@ -250,11 +251,16 @@ src_install() {
 	newdoc "${FILESDIR}/Gentoo-plugins-README.txt" Gentoo-plugins-README.txt
 
 	# Configuration files and preferences
-	insinto /etc/squeezeboxserver
+	insinto "${ETCDIR}"
 	doins convert.conf
 	doins types.conf
 	doins modules.conf
 	newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
+
+	# Preferences directory
+	dodir "${PREFSDIR}"
+	fowners squeezeboxserver:squeezeboxserver "${PREFSDIR}"
+	fperms 770 "${PREFSDIR}"
 
 	# Install init scripts
 	newconfd "${FILESDIR}/squeezeboxserver.conf.d" squeezeboxserver

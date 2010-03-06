@@ -8,8 +8,8 @@
 pidfile=/var/run/squeezeboxserver/squeezeboxserver.pid
 logdir=/var/log/squeezeboxserver
 varlibdir=/var/lib/squeezeboxserver
-prefsdir=${varlibdir}/prefs
 cachedir=${varlibdir}/cache
+prefsdir=/etc/squeezeboxserver/prefs
 prefsfile=/etc/squeezeboxserver/squeezeboxserver.prefs
 scuser=squeezeboxserver
 scname=squeezeboxserver

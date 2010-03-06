@@ -13,7 +13,7 @@ EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 PS=patch_source
 PD=patch_dest
 
-P1=squeezeboxserver-7.4.1
+P1=squeezeboxserver-7.4.2
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -21,7 +21,6 @@ FILES=dbdrop-gentoo.sql \
 	  squeezeboxserver.init.d \
 	  squeezeboxserver.conf.d \
 	  squeezeboxserver.logrotate.d \
-	  avahi-squeezeboxserver.service \
 	  Gentoo-plugins-README.txt \
 	  gentoo-filepaths.pm \
 	  build-modules.sh
@@ -67,16 +66,57 @@ inject: stage
 	$(SSH) "grep -q 'dev-perl/Class-C3-XS ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3-XS ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Class-C3 ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3 ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/MRO-Compat ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/MRO-Compat ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DBIx-Class ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DBIx-Class ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-Inspector ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Inspector ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DBD-SQLite ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DBD-SQLite ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-DBI-Plugin-DeepAbstractSearch ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-DBI-Plugin-DeepAbstractSearch ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-Accessor-Grouped ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Accessor-Grouped ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Hash-Merge ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Hash-Merge ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Carp-Clan ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Carp-Clan ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Date-Simple ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Date-Simple ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DateTime-Format-SQLite ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DateTime-Format-SQLite ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Data-Dumper-Concise ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Data-Dumper-Concise ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/JSON-Any ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-Any ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/SQL-Translator ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/SQL-Translator ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Data-Page ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Data-Page ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Time-Piece-MySQL ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Time-Piece-MySQL ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-Accessor-Chained ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Accessor-Chained ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Parse-RecDescent ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Parse-RecDescent ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Digest-SHA1 ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Digest-SHA1 ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-Base ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Base ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/File-ShareDir ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/File-ShareDir ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/JSON ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DateTime ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DateTime ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DateTime-Format-Builder ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DateTime-Format-Builder ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DateTime-Format-Strptime ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DateTime-Format-Strptime ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Params-Validate ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Params-Validate ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'virtual/perl-Module-Build ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-Module-Build ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'virtual/perl-ExtUtils-CBuilder ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-ExtUtils-CBuilder ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'perl-core/ExtUtils-CBuilder ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/ExtUtils-CBuilder ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/YAML-Tiny ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/YAML-Tiny ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'virtual/perl-ExtUtils-ParseXS ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-ExtUtils-ParseXS ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'perl-core/ExtUtils-ParseXS ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/ExtUtils-ParseXS ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'virtual/perl-Attribute-Handlers ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-Attribute-Handlers ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'perl-core/Attribute-Handlers ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/Attribute-Handlers ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/JSON-XS-VersionOneAndTwo ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/JSON-XS-VersionOneAndTwo ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/DateTime-TimeZone ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/DateTime-TimeZone ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-DBI-Plugin ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-DBI-Plugin ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'perl-core/Module-Build ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/Module-Build ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Class-C3-Componentised ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-C3-Componentised ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Audio-Scan ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Audio-Scan ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Context-Preserve ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Context-Preserve ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Path-Class ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Path-Class ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-db/sqlite ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-db/sqlite ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/squeezeboxserver flac lame aac' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/sox flac' >> /etc/portage/package.use"
+	$(SSH) "echo 'dev-db/sqlite extensions' >> /etc/portage/package.use"
 
 vmreset: vmstop
 	echo Resetting VM...
 	-rm $(VM_DIR)/$(HDA_IMG) 2>/dev/null
-	pv $(VM_DIR)/$(HDA_IMG).orig.bz2 | bzcat > $(VM_DIR)/$(HDA_IMG)
+	pv $(VM_DIR)/$(HDA_IMG).orig.xz | xzcat > $(VM_DIR)/$(HDA_IMG)
 
 vmstart:
 	echo Starting VM...

@@ -6,7 +6,7 @@ inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
-BUILD_NUM="28947"
+BUILD_NUM="30215"
 SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
 MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"
@@ -16,11 +16,11 @@ HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.h
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="lame wavpack musepack alac ogg flac avahi aac"
+IUSE="lame wavpack musepack alac ogg flac aac"
+EAPI="2"
 
 # Note: Audio::Scan and EV present because of bug#287264 and bug#287857.
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
-	mirror://gentoo/SqueezeboxServer-Audio-Scan-0.45.tar.gz
 	mirror://gentoo/SqueezeboxServer-EV-3.8.tar.gz"
 
 # Note: common-sense currently required due to bundled EV (Gentoo bug#287257)
@@ -28,7 +28,6 @@ DEPEND="
 	!media-sound/squeezecenter
 	virtual/logger
 	virtual/mysql
-	avahi? ( net-dns/avahi )
 	>=dev-perl/common-sense-2.01
 	"
 # Note: dev-perl/GD necessary because of SC bug#6143
@@ -37,7 +36,6 @@ RDEPEND="
 	dev-perl/File-Which
 	virtual/logger
 	virtual/mysql
-	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
 	>=dev-perl/GD-2.41
 	>=virtual/perl-IO-Compress-2.015
@@ -84,23 +82,25 @@ RDEPEND="
 	>=dev-perl/AnyEvent-5.2
 	>=dev-perl/Sub-Name-0.04
 	>=dev-perl/Module-Find-0.08
-	>=dev-perl/Class-XSAccessor-1.03
-	>=dev-perl/Class-XSAccessor-Array-1.04
+	>=dev-perl/Class-Accessor-0.31
+	>=dev-perl/Class-XSAccessor-1.05
 	>=dev-perl/AutoXS-Header-1.02
 	>=dev-perl/Scope-Guard-0.03
 	>=dev-perl/Class-C3-XS-0.13
 	>=dev-perl/Class-C3-0.21
 	>=dev-perl/Class-C3-Componentised-1.0006
 	>=dev-perl/File-ReadBackwards-1.04
+	>=dev-perl/DBIx-Class-0.08115
+	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
+	>=dev-perl/Audio-Scan-0.59
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
-	bonjour? ( net-misc/mDNSResponder )
 	flac? (
 		media-libs/flac
-		media-sound/sox
+		media-sound/sox[flac]
 		)
-	ogg? ( media-sound/sox )
+	ogg? ( media-sound/sox[sox] )
 	aac? ( media-libs/faad2 )
 	"
 
@@ -109,16 +109,15 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # Selected contents of SqueezeCenter's local CPAN collection that we include
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
+#	Class/XSAccessor/Array.pm
+#	Class/Accessor/
+#	Class/Accessor.pm
+#	DBIx/
+#	JSON/XS/VersionOneAndTwo.pm
 CPANKEEP="
-	Class/XSAccessor/Array.pm
-
-	JSON/XS/VersionOneAndTwo.pm
-	Class/Accessor/
-	Class/Accessor.pm
 	MRO/Compat.pm
 	Algorithm/C3.pm
 	Data/
-	DBIx/
 	File/BOM.pm
 	Net/UPnP/
 	Net/UPnP.pm
@@ -137,23 +136,22 @@ CPANKEEP="
 	enum.pm
 	"
 
-VARLIBSBS="/var/lib/squeezeboxserver"
-PREFSDIR="${VARLIBSBS}/prefs"
-PREFS="${PREFSDIR}/squeezeboxserver.prefs"
-LIVE_PREFS="${PREFSDIR}/server.prefs"
+ETCDIR="/etc/squeezeboxserver"
+PREFS="${ETCDIR}/squeezeboxserver.prefs"
 DOCDIR="/usr/share/doc/squeezeboxserver-${PV}"
 SHAREDIR="/usr/share/squeezeboxserver"
-LIBDIR="/usr/lib/squeezeboxserver"
+LIBDIR="/usr/$(get_libdir)/squeezeboxserver"
 OLDDBUSER="squeezecenter"
 DBUSER="squeezeboxserver"
+VARLIBSBS="/var/lib/squeezeboxserver"
 PLUGINSDIR="${VARLIBSBS}/Plugins"
-ETCDIR=/etc/squeezecenter
 
 # To support Migration
-OLDETCDIR=/etc/squeezecenter
-OLDPREFSDIR=/var/lib/squeezecenter/prefs
-OLDPLUGINSDIR=/var/lib/squeezecenter/Plugins
-MIGMARKER=.migrated
+OLDETCDIR="/etc/squeezecenter"
+OLDPREFSDIR="/var/lib/squeezecenter/prefs"
+OLDPREFSFILE="${OLDPREFSDIR}/server.prefs"
+OLDPLUGINSDIR="/var/lib/squeezecenter/Plugins"
+MIGMARKER=".migrated"
 
 pkg_setup() {
 	# Sox has optional OGG and FLAC support, so make sure it has that included
@@ -182,36 +180,39 @@ src_unpack() {
 
 	# Apply patches
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
+
+	# Copy in the module builder - can't run it from the files directory in case
+	# Portage is mounted 'noexec'.
+	cp "${FILESDIR}/build-modules.sh" "${S}"	|| die
+	chmod 555 "${S}/build-modules.sh"			|| die
 }
 
 # Build Audio::Scan and EV present because of bug#287264 and bug#287857.
 src_compile() {
 	einfo "Building bundled Perl modules (some warnings are normal here)..."
-	"${FILESDIR}/build-modules.sh" "${DISTDIR}" || die "Unable to build Perl modules"
+	"./build-modules.sh" "${DISTDIR}" || die "Unable to build Perl modules"
 }
 
 src_install() {
 
 	# The main Perl executables
 	exeinto /usr/sbin
-	newexe slimserver.pl squeezeboxserver
-	newexe scanner.pl squeezeboxserver-scanner
-	newexe cleanup.pl squeezeboxserver-cleanup
-
-	# Get the Perl package name and version
-	eval `perl '-V:package'`
-	eval `perl '-V:version'`
+	newexe slimserver.pl squeezeboxserver		|| die "Failed to install server executable"
+	newexe scanner.pl squeezeboxserver-scanner	|| die "Failed to install scanner executable"
+	newexe cleanup.pl squeezeboxserver-cleanup	|| die "Failed to install cleanup executable"
 
 	# The custom OS module for Gentoo - provides OS-specific path details
 	cp "${FILESDIR}/gentoo-filepaths.pm" "Slim/Utils/OS/Custom.pm" || die "Unable to install Gentoo custom OS module"
 
 	# The server Perl modules
-	dodir "/usr/lib/${package}/vendor_perl/${version}"
-	cp -r Slim "${D}/usr/lib/${package}/vendor_perl/${version}" || die "Unable to install server Perl modules"
+	local installvendorlib
+	eval `perl '-V:installvendorlib'`
+	dodir "${installvendorlib}"
+	cp -r Slim "${D}${installvendorlib}" || die "Unable to install server Perl modules"
 
 	# Compiled CPAN module go under lib as they are arch-specific
-	dodir "/usr/lib/squeezeboxserver/CPAN"
-	cp -r CPAN/arch "${D}/usr/lib/squeezeboxserver/CPAN" || die "Unable to install compiled CPAN modules"
+	dodir "${LIBDIR}/CPAN"
+	cp -r CPAN/arch "${D}${LIBDIR}/CPAN" || die "Unable to install compiled CPAN modules"
 
 	# Preseve some of the Squeezebox Server-packaged CPAN modules that Gentoo
 	# doesn't provide ebuilds for.
@@ -230,12 +231,12 @@ src_install() {
 
 	# Architecture-dependent static files
 	dodir "${LIBDIR}"
-	cp -r lib/* "${D}/${LIBDIR}" || die "Unable to install architecture-dependent files"
+	cp -r lib/* "${D}${LIBDIR}" || die "Unable to install architecture-dependent files"
 
 	# Install compiled Perl modules because of bug#287264 and bug#287857.
-	dodir "/usr/lib/squeezeboxserver/CPAN/arch"
-	cp -r CPAN-arch/* "${D}/usr/lib/squeezeboxserver/CPAN/arch" || die "Unable to install compiled CPAN modules"
-	cp -r CPAN-pm/* "${D}/usr/share/squeezeboxserver/CPAN" || die "Unable to install compiled CPAN modules"
+	dodir "${LIBDIR}/CPAN/arch"
+	cp -r CPAN-arch/* "${D}${LIBDIR}/CPAN/arch" || die "Unable to install compiled CPAN modules"
+	cp -r CPAN-pm/* "${D}${LIBDIR}/CPAN" || die "Unable to install compiled CPAN modules"
 
 	# Strings and version identification
 	insinto "${SHAREDIR}"
@@ -248,23 +249,16 @@ src_install() {
 	dodoc License*.txt
 	newdoc "${FILESDIR}/Gentoo-plugins-README.txt" Gentoo-plugins-README.txt
 
-	# Configuration files
+	# Configuration files and preferences
 	insinto /etc/squeezeboxserver
 	doins convert.conf
 	doins types.conf
 	doins modules.conf
+	newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
 
 	# Install init scripts
 	newconfd "${FILESDIR}/squeezeboxserver.conf.d" squeezeboxserver
 	newinitd "${FILESDIR}/squeezeboxserver.init.d" squeezeboxserver
-
-	# Install preferences
-	insinto "${PREFSDIR}"
-	if [ ! -f "${PREFSDIR}/squeezeboxserver.prefs" ]; then
-		newins "${FILESDIR}/squeezeboxserver.prefs" squeezeboxserver.prefs
-	fi
-	fowners squeezeboxserver:squeezeboxserver "${PREFSDIR}"
-	fperms 770 "${PREFSDIR}"
 
 	# Install the SQL configuration scripts
 	insinto "${SHAREDIR}/SQL/mysql"
@@ -300,12 +294,6 @@ src_install() {
 	# Install logrotate support
 	insinto /etc/logrotate.d
 	newins "${FILESDIR}/squeezeboxserver.logrotate.d" squeezeboxserver
-
-	# Install Avahi support (if USE flag is set)
-	if use avahi; then
-		insinto /etc/avahi/services
-		newins "${FILESDIR}/avahi-squeezeboxserver.service" squeezeboxserver.service
-	fi
 }
 
 sc_starting_instr() {
@@ -371,14 +359,6 @@ pkg_postinst() {
 	elog "\temerge --config =${CATEGORY}/${PF}"
 	elog "This command will also migrate old SqueezeCenter preferences and"
 	elog "plugins (if present)."
-
-	# Remind user to configure Avahi if necessary
-	if use avahi; then
-		elog ""
-		elog "Avahi support installed.  Remember to edit the folowing file if"
-		elog "you run Squeezebox Server's web interface on a port other than 9000:"
-		elog "\t/etc/avahi/services/squeezeboxserver.service"
-	fi
 
 	elog ""
 	sc_starting_instr
@@ -468,17 +448,18 @@ pkg_config() {
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
 
 	# Migrate old preferences, if present.
-	if [ -d "${OLDPREFSDIR}" ]; then
-		if [ -f "${PREFSDIR}/${MIGMARKER}" ]; then
+	if [ -d "${OLDPREFSFILE}" ]; then
+		if [ -f "${ETCDIR}/${MIGMARKER}" ]; then
 			einfo ""
 			einfo "Old preferences are present, but they appear to have been"
 			einfo "migrated before. If you would like to re-migrate the old"
 			einfo "SqueezeCenter preferences remove the following file, and"
 			einfo "then restart the configuration."
-			einfo "\t${PREFSDIR}/${MIGMARKER}"
+			einfo "\t${ETCDIR}/${MIGMARKER}"
 		else
 			einfo "Migrating old SqueezeCenter preferences"
 			cp -r "${OLDPREFSDIR}" "${VARLIBSBS}"
+			mv "${VARLIBSBS}/prefs/server.prefs" "/etc/squeezeboxserver/squeezeboxserver.prefs"
 			chown -R squeezeboxserver:squeezeboxserver "${PREFSDIR}"
 			touch "${PREFSDIR}/${MIGMARKER}"
 		fi
@@ -503,11 +484,9 @@ pkg_config() {
 
 	# Remove the existing MySQL preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
-	[ -f "${LIVE_PREFS}" ] && sc_remove_db_prefs ${LIVE_PREFS}
 
 	# Insert the external MySQL configuration into the preferences.
 	sc_update_prefs "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
-	[ -f "${LIVE_PREFS}" ] && sc_update_prefs "${LIVE_PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
 
 	# Phew - all done. Give some tips on what to do now.
 	einfo "Database configuration complete."

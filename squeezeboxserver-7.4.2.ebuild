@@ -6,7 +6,7 @@ inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
-BUILD_NUM="28947"
+BUILD_NUM="30215"
 SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
 MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"
@@ -16,12 +16,11 @@ HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.h
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="lame wavpack musepack alac ogg flac avahi aac"
+IUSE="lame wavpack musepack alac ogg flac aac"
 EAPI="2"
 
 # Note: Audio::Scan and EV present because of bug#287264 and bug#287857.
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
-	mirror://gentoo/SqueezeboxServer-Audio-Scan-0.45.tar.gz
 	mirror://gentoo/SqueezeboxServer-EV-3.8.tar.gz"
 
 # Note: common-sense currently required due to bundled EV (Gentoo bug#287257)
@@ -29,7 +28,6 @@ DEPEND="
 	!media-sound/squeezecenter
 	virtual/logger
 	virtual/mysql
-	avahi? ( net-dns/avahi )
 	>=dev-perl/common-sense-2.01
 	"
 # Note: dev-perl/GD necessary because of SC bug#6143
@@ -38,7 +36,6 @@ RDEPEND="
 	dev-perl/File-Which
 	virtual/logger
 	virtual/mysql
-	avahi? ( net-dns/avahi )
 	>=dev-lang/perl-5.8.8
 	>=dev-perl/GD-2.41
 	>=virtual/perl-IO-Compress-2.015
@@ -85,6 +82,7 @@ RDEPEND="
 	>=dev-perl/AnyEvent-5.2
 	>=dev-perl/Sub-Name-0.04
 	>=dev-perl/Module-Find-0.08
+	>=dev-perl/Class-Accessor-0.31
 	>=dev-perl/Class-XSAccessor-1.05
 	>=dev-perl/AutoXS-Header-1.02
 	>=dev-perl/Scope-Guard-0.03
@@ -92,10 +90,12 @@ RDEPEND="
 	>=dev-perl/Class-C3-0.21
 	>=dev-perl/Class-C3-Componentised-1.0006
 	>=dev-perl/File-ReadBackwards-1.04
+	>=dev-perl/DBIx-Class-0.08115
+	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
+	>=dev-perl/Audio-Scan-0.59
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
-	bonjour? ( net-misc/mDNSResponder )
 	flac? (
 		media-libs/flac
 		media-sound/sox[flac]
@@ -110,14 +110,14 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
 #	Class/XSAccessor/Array.pm
+#	Class/Accessor/
+#	Class/Accessor.pm
+#	DBIx/
+#	JSON/XS/VersionOneAndTwo.pm
 CPANKEEP="
-	JSON/XS/VersionOneAndTwo.pm
-	Class/Accessor/
-	Class/Accessor.pm
 	MRO/Compat.pm
 	Algorithm/C3.pm
 	Data/
-	DBIx/
 	File/BOM.pm
 	Net/UPnP/
 	Net/UPnP.pm
@@ -294,12 +294,6 @@ src_install() {
 	# Install logrotate support
 	insinto /etc/logrotate.d
 	newins "${FILESDIR}/squeezeboxserver.logrotate.d" squeezeboxserver
-
-	# Install Avahi support (if USE flag is set)
-	if use avahi; then
-		insinto /etc/avahi/services
-		newins "${FILESDIR}/avahi-squeezeboxserver.service" squeezeboxserver.service
-	fi
 }
 
 sc_starting_instr() {
@@ -365,14 +359,6 @@ pkg_postinst() {
 	elog "\temerge --config =${CATEGORY}/${PF}"
 	elog "This command will also migrate old SqueezeCenter preferences and"
 	elog "plugins (if present)."
-
-	# Remind user to configure Avahi if necessary
-	if use avahi; then
-		elog ""
-		elog "Avahi support installed.  Remember to edit the folowing file if"
-		elog "you run Squeezebox Server's web interface on a port other than 9000:"
-		elog "\t/etc/avahi/services/squeezeboxserver.service"
-	fi
 
 	elog ""
 	sc_starting_instr

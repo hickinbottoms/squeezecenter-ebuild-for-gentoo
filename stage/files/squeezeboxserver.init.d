@@ -10,12 +10,13 @@ logdir=/var/log/squeezeboxserver
 varlibdir=/var/lib/squeezeboxserver
 prefsdir=${varlibdir}/prefs
 cachedir=${varlibdir}/cache
-prefsfile=${prefsdir}/squeezeboxserver.prefs
+prefsfile=/etc/squeezeboxserver/squeezeboxserver.prefs
 scuser=squeezeboxserver
 scname=squeezeboxserver
 
 depend() {
-	need net mysql
+	need net
+	use mysql
 }
 
 start() {

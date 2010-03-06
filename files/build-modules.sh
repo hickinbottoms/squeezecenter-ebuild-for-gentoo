@@ -158,7 +158,7 @@ function build_module {
 }
 
 function build_all {
-    build Audio::Scan
+#    build Audio::Scan
 #    build AutoXS::Header
 #    build Class::C3::XS
 #    build Class::XSAccessor

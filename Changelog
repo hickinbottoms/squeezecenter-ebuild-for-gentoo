@@ -1,0 +1,11 @@
+Updated for Squeezebox Server 7.4.2
+
+Includes Audio::Scan (bug#287264)
+
+Bonjour/Avahi support removed (bug#307099)
+
+Class-XSAccessor-Array no longer required (bug#275520)
+
+Uses EAPI2 and use flag dependencies (a tidying up)
+
+Fewer hardiwred paths in ebauild (get_libdir and Perl installvendorlib)

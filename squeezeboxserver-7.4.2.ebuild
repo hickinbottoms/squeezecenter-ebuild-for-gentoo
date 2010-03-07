@@ -19,7 +19,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="lame wavpack musepack alac ogg flac aac"
 EAPI="2"
 
-# Note: Audio::Scan and EV present because of bug#287264 and bug#287857.
+# Note: EV present because of bug#287857.
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
 	mirror://gentoo/SqueezeboxServer-EV-3.8.tar.gz"
 
@@ -100,7 +100,7 @@ RDEPEND="
 		media-libs/flac
 		media-sound/sox[flac]
 		)
-	ogg? ( media-sound/sox[sox] )
+	ogg? ( media-sound/sox[ogg] )
 	aac? ( media-libs/faad2 )
 	"
 
@@ -109,11 +109,6 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # Selected contents of SqueezeCenter's local CPAN collection that we include
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
-#	Class/XSAccessor/Array.pm
-#	Class/Accessor/
-#	Class/Accessor.pm
-#	DBIx/
-#	JSON/XS/VersionOneAndTwo.pm
 CPANKEEP="
 	MRO/Compat.pm
 	Algorithm/C3.pm
@@ -188,7 +183,7 @@ src_unpack() {
 	chmod 555 "${S}/build-modules.sh"			|| die
 }
 
-# Build Audio::Scan and EV present because of bug#287264 and bug#287857.
+# Building of EV present because of bug#287857.
 src_compile() {
 	einfo "Building bundled Perl modules (some warnings are normal here)..."
 	"./build-modules.sh" "${DISTDIR}" || die "Unable to build Perl modules"
@@ -234,7 +229,7 @@ src_install() {
 	dodir "${LIBDIR}"
 	cp -r lib/* "${D}${LIBDIR}" || die "Unable to install architecture-dependent files"
 
-	# Install compiled Perl modules because of bug#287264 and bug#287857.
+	# Install compiled Perl modules because of bug#287857.
 	dodir "${LIBDIR}/CPAN/arch"
 	cp -r CPAN-arch/* "${D}${LIBDIR}/CPAN/arch" || die "Unable to install compiled CPAN modules"
 	cp -r CPAN-pm/* "${D}${LIBDIR}/CPAN" || die "Unable to install compiled CPAN modules"

@@ -9,3 +9,5 @@ Class-XSAccessor-Array no longer required (bug#275520)
 Uses EAPI2 and use flag dependencies (a tidying up)
 
 Fewer hardiwred paths in ebauild (get_libdir and Perl installvendorlib)
+
+Supports Perl 5.10.1 for bundled EV build (bug#287257)

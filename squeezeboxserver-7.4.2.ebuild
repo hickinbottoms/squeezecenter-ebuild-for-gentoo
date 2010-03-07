@@ -150,21 +150,6 @@ OLDPLUGINSDIR="/var/lib/squeezecenter/Plugins"
 MIGMARKER=".migrated"
 
 pkg_setup() {
-	# Sox has optional OGG and FLAC support, so make sure it has that included
-	# if required
-	if use ogg; then
-		if ! built_with_use media-sound/sox ogg; then
-			eerror "media-sound/sox not built with USE=ogg"
-			die "Squeezebox Server needs media-sound/sox to be built with USE=ogg"
-		fi
-	fi
-	if use flac; then
-		if ! built_with_use media-sound/sox flac; then
-			eerror "media-sound/sox not built with USE=flac"
-			die "Squeezebox Server needs media-sound/sox to be built with USE=flac"
-		fi
-	fi
-
 	# Create the user and group if not already present
 	enewgroup squeezeboxserver
 	enewuser squeezeboxserver -1 -1 "/dev/null" squeezeboxserver
@@ -338,10 +323,10 @@ pkg_postinst() {
 	# Album art requires PNG and JPEG support from GD, so if it's not there
 	# then warn the user.  It's not mandatory as the user may not be using
 	# album art.
-	if ! built_with_use dev-perl/GD jpeg || \
-	   ! built_with_use dev-perl/GD png || \
-	   ! built_with_use media-libs/gd jpeg || \
-	   ! built_with_use media-libs/gd png; then
+	if ! has_version dev-perl/GD[jpeg] || \
+	   ! has_version dev-perl/GD[png] || \
+	   ! has_version media-libs/gd[jpeg] || \
+	   ! has_version media-libs/gd[png]; then
 		ewarn "For correct operation of album art through Squeezebox Server's web"
 		ewarn "interface the GD library and Perl module must be built with PNG"
 		ewarn "and JPEG support.  If necessary you can add the following lines"

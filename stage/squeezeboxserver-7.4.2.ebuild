@@ -92,6 +92,7 @@ RDEPEND="
 	>=dev-perl/File-ReadBackwards-1.04
 	>=dev-perl/DBIx-Class-0.08115
 	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
+	>=dev-perl/MRO-Compat-0.11
 	>=dev-perl/Audio-Scan-0.59
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
@@ -110,7 +111,6 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
 CPANKEEP="
-	MRO/Compat.pm
 	Algorithm/C3.pm
 	Data/
 	File/BOM.pm

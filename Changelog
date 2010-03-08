@@ -11,3 +11,5 @@ Uses EAPI2 and use flag dependencies (a tidying up)
 Fewer hardiwred paths in ebauild (get_libdir and Perl installvendorlib)
 
 Supports Perl 5.10.1 for bundled EV build (bug#287257)
+
+Uses dev-perl/MRO-Compat rather than bundling this

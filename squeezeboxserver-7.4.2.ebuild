@@ -37,6 +37,7 @@ RDEPEND="
 	virtual/logger
 	virtual/mysql
 	>=dev-lang/perl-5.8.8
+	>=dev-perl/Audio-Scan-0.59
 	>=dev-perl/GD-2.41
 	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
@@ -93,7 +94,7 @@ RDEPEND="
 	>=dev-perl/DBIx-Class-0.08115
 	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
 	>=dev-perl/MRO-Compat-0.11
-	>=dev-perl/Audio-Scan-0.59
+	>=dev-perl/PAR-0.994
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -126,8 +127,6 @@ CPANKEEP="
 	Tie/RegexpHash.pm
 	UUID/Tiny.pm
 	URI/Find.pm
-	PAR/
-	PAR.pm
 	enum.pm
 	"
 

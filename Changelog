@@ -1,5 +1,7 @@
 Updated for Squeezebox Server 7.4.2
 
+** ALSO CHECK 'git log' and a 'git diff 7.4.1-2'
+
 Bonjour/Avahi support removed (bug#307099)
 
 Class-XSAccessor-Array no longer required (bug#275520)
@@ -14,3 +16,4 @@ Fewer bundled Perl modules:
 	dev-perl/MRO-Compat
 	dev-perl/PAR (bug#275932)
 	dev-perl/Audio-Scan (bug#287264)
+	dev-perl/enum (bug#275931)

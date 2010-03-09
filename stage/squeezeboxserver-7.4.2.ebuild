@@ -95,6 +95,7 @@ RDEPEND="
 	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
 	>=dev-perl/MRO-Compat-0.11
 	>=dev-perl/PAR-0.994
+	>=dev-perl/enum-1.016
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -127,7 +128,6 @@ CPANKEEP="
 	Tie/RegexpHash.pm
 	UUID/Tiny.pm
 	URI/Find.pm
-	enum.pm
 	"
 
 ETCDIR="/etc/squeezeboxserver"

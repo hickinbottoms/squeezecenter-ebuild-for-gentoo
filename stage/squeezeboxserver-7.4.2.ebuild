@@ -96,6 +96,7 @@ RDEPEND="
 	>=dev-perl/MRO-Compat-0.11
 	>=dev-perl/PAR-0.994
 	>=dev-perl/enum-1.016
+	>=dev-perl/URI-Find-20100211
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -127,7 +128,6 @@ CPANKEEP="
 	Tie/LLHash.pm
 	Tie/RegexpHash.pm
 	UUID/Tiny.pm
-	URI/Find.pm
 	"
 
 ETCDIR="/etc/squeezeboxserver"

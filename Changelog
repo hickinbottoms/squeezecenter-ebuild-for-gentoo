@@ -13,7 +13,8 @@ Fewer hardiwred paths in ebuild (get_libdir and Perl installvendorlib)
 Supports Perl 5.10.1 for bundled EV build (bug#287257)
 
 Fewer bundled Perl modules:
-	dev-perl/MRO-Compat
 	dev-perl/PAR (bug#275932)
 	dev-perl/Audio-Scan (bug#287264)
 	dev-perl/enum (bug#275931)
+	dev-perl/MRO-Compat
+	dev-perl/URI-Find

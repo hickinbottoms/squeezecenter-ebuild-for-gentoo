@@ -97,6 +97,7 @@ RDEPEND="
 	>=dev-perl/PAR-0.994
 	>=dev-perl/enum-1.016
 	>=dev-perl/URI-Find-20100211
+	>=dev-perl/Algorithm-C3-0.08
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -114,7 +115,6 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
 CPANKEEP="
-	Algorithm/C3.pm
 	Data/
 	File/BOM.pm
 	Net/UPnP/

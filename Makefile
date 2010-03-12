@@ -110,6 +110,7 @@ inject: stage
 	$(SSH) "grep -q 'virtual/perl-AutoLoader ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'virtual/perl-AutoLoader ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'perl-core/AutoLoader ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'perl-core/AutoLoader ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/URI-Find ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/URI-Find ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Algorithm-C3 ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Algorithm-C3 ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-db/sqlite ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-db/sqlite ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/enum ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/enum ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"

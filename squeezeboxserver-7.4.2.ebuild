@@ -98,6 +98,7 @@ RDEPEND="
 	>=dev-perl/enum-1.016
 	>=dev-perl/URI-Find-20100211
 	>=dev-perl/Algorithm-C3-0.08
+	>=dev-perl/Text-Unidecode-0.04
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -121,8 +122,6 @@ CPANKEEP="
 	Net/UPnP.pm
 	Proc/Background/
 	Proc/Background.pm
-	Text/Unidecode/
-	Text/Unidecode.pm
 	Tie/Cache/LRU/
 	Tie/Cache/LRU.pm
 	Tie/LLHash.pm

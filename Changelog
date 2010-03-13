@@ -19,4 +19,5 @@ Fewer bundled Perl modules:
 	dev-perl/Text-Unidecode (bug#275939)
 	dev-perl/URI-Find (bug#275933)
 	dev-perl/Algorithm/C3 (bug#275529)
+	dev-perl/Net-UPnP (bug#275548)
 	dev-perl/MRO-Compat

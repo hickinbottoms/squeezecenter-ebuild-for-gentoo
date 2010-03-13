@@ -99,6 +99,7 @@ RDEPEND="
 	>=dev-perl/URI-Find-20100211
 	>=dev-perl/Algorithm-C3-0.08
 	>=dev-perl/Text-Unidecode-0.04
+	>=dev-perl/Net-UPnP-1.4.2
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -118,8 +119,6 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 CPANKEEP="
 	Data/
 	File/BOM.pm
-	Net/UPnP/
-	Net/UPnP.pm
 	Proc/Background/
 	Proc/Background.pm
 	Tie/Cache/LRU/

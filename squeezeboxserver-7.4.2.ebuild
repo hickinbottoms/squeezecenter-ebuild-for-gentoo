@@ -101,6 +101,7 @@ RDEPEND="
 	>=dev-perl/Text-Unidecode-0.04
 	>=dev-perl/Net-UPnP-1.4.2
 	>=dev-perl/File-BOM-0.14
+	>=dev-perl/Proc-Background-1.10
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -119,8 +120,6 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # bug #251494).
 CPANKEEP="
 	Data/
-	Proc/Background/
-	Proc/Background.pm
 	Tie/Cache/LRU/
 	Tie/Cache/LRU.pm
 	Tie/LLHash.pm

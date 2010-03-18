@@ -102,6 +102,8 @@ RDEPEND="
 	>=dev-perl/Net-UPnP-1.4.2
 	>=dev-perl/File-BOM-0.14
 	>=dev-perl/Proc-Background-1.10
+	>=dev-perl/Tie-Cache-LRU-20081023.2116
+	>=dev-perl/Tie-Cache-LRU-Expires-0.54
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -120,8 +122,6 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # bug #251494).
 CPANKEEP="
 	Data/
-	Tie/Cache/LRU/
-	Tie/Cache/LRU.pm
 	Tie/LLHash.pm
 	Tie/RegexpHash.pm
 	UUID/Tiny.pm

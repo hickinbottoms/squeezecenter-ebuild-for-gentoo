@@ -115,6 +115,8 @@ inject: stage
 	$(SSH) "grep -q 'dev-perl/Net-UPnP ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Net-UPnP ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/File-BOM ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/File-BOM ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Proc-Background ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Proc-Background ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Tie-Cache-LRU ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-Cache-LRU ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Tie-Cache-LRU-Expires ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-Cache-LRU-Expires ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-db/sqlite ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-db/sqlite ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/enum ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/enum ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"

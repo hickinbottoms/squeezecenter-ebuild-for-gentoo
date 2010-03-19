@@ -24,4 +24,5 @@ Fewer bundled Perl modules:
 	dev-perl/Proc-Background (bug#275940)
 	dev-perl/Tie-Cache-LRU (bug#275935)
 	dev-perl/Tie-Cache-LRU-Expires (bug#277335)
+	dev-perl/Data-Dump (bug#275942)
 	dev-perl/MRO-Compat

@@ -118,6 +118,7 @@ inject: stage
 	$(SSH) "grep -q 'dev-perl/Tie-Cache-LRU ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-Cache-LRU ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Tie-Cache-LRU-Expires ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-Cache-LRU-Expires ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Data-Dump ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Data-Dump ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Data-Page ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Data-Page ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-db/sqlite ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-db/sqlite ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/enum ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/enum ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"

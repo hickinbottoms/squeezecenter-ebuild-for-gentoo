@@ -126,7 +126,6 @@ CPANKEEP="
 	Data/URIEncode.pm
 	Tie/LLHash.pm
 	Tie/RegexpHash.pm
-	UUID/Tiny.pm
 	"
 
 ETCDIR="/etc/squeezeboxserver"

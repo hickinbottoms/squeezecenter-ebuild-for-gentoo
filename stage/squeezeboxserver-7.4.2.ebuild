@@ -108,6 +108,7 @@ RDEPEND="
 	>=dev-perl/Data-Page-2.02
 	>=dev-perl/Data-URIEncode-0.11
 	>=dev-perl/Tie-LLHash-1.003
+	>=dev-perl/Tie-RegexpHash-0.15
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -120,13 +121,6 @@ RDEPEND="
 	"
 
 S="${WORKDIR}/${MY_P_BUILD_NUM}"
-
-# Selected contents of SqueezeCenter's local CPAN collection that we include
-# in the installation. This removes duplication of CPAN modules. (See Gentoo
-# bug #251494).
-CPANKEEP="
-	Tie/RegexpHash.pm
-	"
 
 ETCDIR="/etc/squeezeboxserver"
 PREFS="${ETCDIR}/squeezeboxserver.prefs"
@@ -187,17 +181,6 @@ src_install() {
 	eval `perl '-V:installvendorlib'`
 	dodir "${installvendorlib}"
 	cp -r Slim "${D}${installvendorlib}" || die "Unable to install server Perl modules"
-
-	# Compiled CPAN module go under lib as they are arch-specific
-	dodir "${LIBDIR}/CPAN"
-	cp -r CPAN/arch "${D}${LIBDIR}/CPAN" || die "Unable to install compiled CPAN modules"
-
-	# Preseve some of the Squeezebox Server-packaged CPAN modules that Gentoo
-	# doesn't provide ebuilds for.
-	for ITEM in ${CPANKEEP}; do
-		dodir "/usr/share/squeezeboxserver/CPAN/$(dirname ${ITEM})"
-		cp -r "CPAN/${ITEM}" "${D}/usr/share/squeezeboxserver/CPAN/${ITEM}" || die "Unable to preserve CPAN item ${ITEM}"
-	done
 
 	# Various directories of architecture-independent static files
 	dodir "${SHAREDIR}"

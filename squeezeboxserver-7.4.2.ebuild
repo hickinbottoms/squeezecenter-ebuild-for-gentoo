@@ -107,6 +107,7 @@ RDEPEND="
 	>=dev-perl/Data-Dump-1.15
 	>=dev-perl/Data-Page-2.02
 	>=dev-perl/Data-URIEncode-0.11
+	>=dev-perl/Tie-LLHash-1.003
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -124,7 +125,6 @@ S="${WORKDIR}/${MY_P_BUILD_NUM}"
 # in the installation. This removes duplication of CPAN modules. (See Gentoo
 # bug #251494).
 CPANKEEP="
-	Tie/LLHash.pm
 	Tie/RegexpHash.pm
 	"
 

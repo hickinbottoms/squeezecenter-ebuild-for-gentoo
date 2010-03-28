@@ -16,7 +16,7 @@ HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.h
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="lame wavpack musepack alac ogg flac aac"
+IUSE="lame wavpack alac ogg flac aac"
 EAPI="2"
 
 # Note: EV present because of bug#287857.

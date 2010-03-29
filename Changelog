@@ -1,14 +1,8 @@
 Updated for Squeezebox Server 7.4.2
 
-** ALSO CHECK 'git log' and a 'git diff 7.4.1-2'
-
 Bonjour/Avahi support removed (bug#307099)
 
 Class-XSAccessor-Array no longer required (bug#275520)
-
-Uses EAPI2 and use flag dependencies (a tidying up)
-
-Fewer hardiwred paths in ebuild (get_libdir and Perl installvendorlib)
 
 Supports Perl 5.10.1 for bundled EV build (bug#287257)
 
@@ -28,5 +22,39 @@ Fewer bundled Perl modules:
 	dev-perl/Data-URIEncode (added through bug#277332)
 	dev-perl/Tie-LLHash (added through bug#275936)
 	dev-perl/Tie-RegexpHash (added through bug#275938)
+	dev-perl/Class-XSAccessor
 	dev-perl/MRO-Compat
 	dev-perl/Data-Page
+	dev-perl/Data-UUID
+
+Utilises Data::UUID rather than UUID::Tidy
+	A patch is included to use Data::UUID since this is in
+	Portage (UUID::Tiny isn't)
+
+Removed redundant musepack USE flag
+
+Allow an external SQL server
+	A small tweak from jaervosz@gentoo.org (see bug#287257) to allow an
+	external MySQL server by only depending on it if it's installed.
+
+For Torsten: prefs in /etc rather than in /var/lib/squeezeboxserver/prefs
+
+For Torsten: Uses EAPI2 and use flag dependencies (a tidying up)
+
+Fixed build-modules with 'noexec' portage
+	Now copies the script into the source directory during the build process
+	to avoid trying to execute a script in the FILES directory - this fails
+	on Portage trees mounted 'noexec' (comment#25 in bug#287257).
+
+For Torsten: failure checks on newexe's
+
+For Torsten: EAPI2 and USE dependencies
+
+For Torsten: Fewer hardiwred paths in ebuild
+	Uses get_libdir and Perl installvendorlib
+
+The following Gentoo bugs should be able to be closed with this update:
+	bug#300051 (Perl 5.10)
+	bug#307099 (bogus USE flags)
+	bug#275520 (dev-perl/Class-XSAccessor-Array phaseout)
+	bug#307119 (Squeezebox Server 7.4.2 bump)

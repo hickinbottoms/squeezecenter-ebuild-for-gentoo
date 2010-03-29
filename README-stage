@@ -2,10 +2,10 @@ The "stage" subdirectory contains an image of the ebuild tree. If you want to
 try this version of the ebuild out then installing this stage directory is the
 most convenient way of doing it.
 
-1. Copy "stage" to "/usr/local/portage/media-sound/squeezecenter"
+1. Copy "stage" to "/usr/local/portage/media-sound/squeezeboxserver"
 
 2. Generate the "manifest" file for the ebuild:
-      ebuild /usr/local/portage/media-sound/squeezecenter/sq* digest
+      ebuild /usr/local/portage/media-sound/squeezeboxserver/sq* digest
 
 3. Ensure that /etc/make.conf includes the local Portage tree so that this
    makefile is found. Do that with a line such as the following:
@@ -13,10 +13,10 @@ most convenient way of doing it.
 
 4. Unmask the ebuild (since it is probably marked as unstable) with a line
    like the following in /etc/portage/package.keywords:
-      /media-sound/squeezecenter ~x86
+      /media-sound/squeezeboxserver ~x86
 
 5. Install the package as normal with a command such as:
-      emerge -aDvt squeezecenter  
+      emerge -aDvt squeezeboxserver  
 
 Once you have done this once you can update to later versions of the ebuild by
 just redoing steps 1 and 2.

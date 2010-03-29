@@ -25,7 +25,7 @@ FILES=dbdrop-gentoo.sql \
 	  gentoo-filepaths.pm \
 	  build-modules.sh
 
-all: stage
+all: inject
 
 stage: patches
 	-rm -r stage/*

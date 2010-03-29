@@ -16,7 +16,7 @@ HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.h
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="lame wavpack musepack alac ogg flac aac"
+IUSE="lame wavpack alac ogg flac aac"
 EAPI="2"
 
 # Note: EV present because of bug#287857.
@@ -109,6 +109,7 @@ RDEPEND="
 	>=dev-perl/Data-URIEncode-0.11
 	>=dev-perl/Tie-LLHash-1.003
 	>=dev-perl/Tie-RegexpHash-0.15
+	>=dev-perl/Data-UUID-1.202
 	lame? ( media-sound/lame )
 	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
@@ -152,6 +153,7 @@ src_unpack() {
 
 	# Apply patches
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
+	epatch "${FILESDIR}/${P}-uuid-gentoo.patch"
 
 	# Copy in the module builder - can't run it from the files directory in case
 	# Portage is mounted 'noexec'.

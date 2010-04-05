@@ -5,8 +5,9 @@
 
 DIR=$1
 DEST_HOST=$2
+IDENT_HOST=$3
 
 cd $DIR
 for FILE in *.gz; do
-	scp -i ~/.ssh/$DEST_HOST $FILE root@$DEST_HOST:/usr/portage/distfiles/$FILE
+	scp -i ~/.ssh/$IDENT_HOST $FILE root@$DEST_HOST:/usr/portage/distfiles/$FILE
 done

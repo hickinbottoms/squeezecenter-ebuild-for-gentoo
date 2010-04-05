@@ -2,9 +2,11 @@ VM_DIR=/var/vm/squeezeboxserver
 HDA_IMG=gentoo.cow
 HDB_IMG=media.cow
 VM_MEM=256
-VMHOST=chandra
-SSH=ssh root@$(VMHOST)
-SCP=scp
+#VMHOST=chandra
+VMHOST=192.168.100.17
+IDENT_HOST=chandra
+SSH=ssh root@$(VMHOST) -i ~/.ssh/$(IDENT_HOST)
+SCP=scp -i ~/.ssh/$(IDENT_HOST)
 
 LOCAL_PORTAGE=/usr/local/portage
 EBUILD_PREFIX=squeezeboxserver
@@ -37,7 +39,7 @@ stage: patches
 
 inject: stage
 	echo Injecting vendor source...
-	./inject-vendor-src vendor-src $(VMHOST)
+	./inject-vendor-src vendor-src $(VMHOST) $(IDENT_HOST)
 	echo Injecting ebuilds...
 	$(SSH) "rm -r $(EBUILD_DIR)/* >/dev/null 2>&1 || true"
 	$(SSH) mkdir -p $(EBUILD_DIR) $(EBUILD_DIR)/files

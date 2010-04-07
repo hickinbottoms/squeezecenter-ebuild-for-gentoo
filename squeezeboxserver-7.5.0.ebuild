@@ -6,7 +6,7 @@ inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
-BUILD_NUM="30215"
+BUILD_NUM="30464"
 SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
 MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"

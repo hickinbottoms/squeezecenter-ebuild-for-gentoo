@@ -1,0 +1,73 @@
+SQUEEZEBOX SERVER EBUILDS FOR GENTOO
+
+This Git repository contains development versions of Squeezebox Server ebuilds
+for Gentoo Linux. This generally contains development or soon-to-be-released
+versions of the ebuild that will later be in the official Portage tree, and can
+be tracked to get early access to those ebuilds before they go through review
+and commit to Portage. Because of this, however, these ebuilds are definitely
+to be considered experimental as they are often broken.
+
+
+BRANCHES
+
+The following branches will be of interest to you:
+
+master - this is generally where the latest releases of ebuilds are committed
+  at the same time that I submit them for review and inclusion in Portage.
+  Ebuilds committed here should work because I only submit them for review and
+  inclusion when I've given them some level of local testing. Releases
+  committed here are tagged to identify their version numbers (see below). Only
+  the latest ebuilds for the most recent server versions are committed here -
+  eg once Squeezebox Server 7.4 was released there were no more 7.3.3 ebuilds
+  committed to master (these remained on the develop-7.3 branches).
+
+develop-xxx (eg "develop-7.4") - these branches are where development for a
+  particular server release occurs. There will generally be a number of commits
+  during the development of a particular ebuild version and, therefore, the
+  ebuild is often broken during this process. It's therefore wise not to simply
+  track the latest commits on these branches (unless you like some excitement),
+  but instead look at when releases are merged back to master and tagged.
+  Updated ebuilds for 'old' versions remain on these branches (and are tagged
+  on these branches) to avoid the master from jumping backwards and forwards
+  between ebuild versions.
+
+
+TAGS
+
+I tag the releases on master (and updates to old ebuilds on their development
+branch as discussed above), when they are submitted for review and inclusion in
+Portage. Tagged releases are generally more reliable than any intermediate
+committed version you may come across because I will give them some level of
+local testing before tagging and release.
+
+
+USING THESE EBUILDS
+
+The "stage" subdirectory contains an image of the ebuild tree. If you want to
+try this version of the ebuild out then installing this stage directory is the
+most convenient way of doing it.
+
+1. Copy "stage" to "/usr/local/portage/media-sound/squeezeboxserver"
+
+2. Generate the "manifest" file for the ebuild:
+      ebuild /usr/local/portage/media-sound/squeezeboxserver/sq* digest
+
+3. Ensure that /etc/make.conf includes the local Portage tree so that this
+   makefile is found. Do that with a line such as the following:
+      PORTDIR_OVERLAY="$PORTDIR_OVERLAY /usr/local/portage"
+
+4. Unmask the ebuild (since it is probably marked as unstable) with a line
+   like the following in /etc/portage/package.keywords:
+      /media-sound/squeezeboxserver ~x86
+
+5. Install the package as normal with a command such as:
+      emerge -aDvt squeezeboxserver  
+
+Once you have done this once you can update to later versions of the ebuild by
+just redoing steps 1 and 2.
+
+
+Enjoy.
+
+Stuart Hickinbottom
+stuart@hickinbottom.com

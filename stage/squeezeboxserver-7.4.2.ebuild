@@ -154,6 +154,7 @@ src_unpack() {
 	# Apply patches
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
 	epatch "${FILESDIR}/${P}-uuid-gentoo.patch"
+	epatch "${FILESDIR}/${P}-squeezeslave.patch"
 
 	# Copy in the module builder - can't run it from the files directory in case
 	# Portage is mounted 'noexec'.

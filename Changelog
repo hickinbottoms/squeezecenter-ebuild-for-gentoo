@@ -59,3 +59,6 @@ The following Gentoo bugs should be able to be closed with this update:
 	bug#275520 (dev-perl/Class-XSAccessor-Array phaseout)
 	bug#307119 (Squeezebox Server 7.4.2 bump)
 	bug#287257 (another Squeezebox Server bump request)
+
+Added backported 7.6 patch for squeezeslave hang (Logitech bug#14740)
+	http://bugs.slimdevices.com/show_bug.cgi?id=14740#c32

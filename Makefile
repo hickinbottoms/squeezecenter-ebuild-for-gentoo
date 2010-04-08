@@ -2,8 +2,8 @@ VM_DIR=/var/vm/squeezeboxserver
 HDA_IMG=gentoo.cow
 HDB_IMG=media.cow
 VM_MEM=256
-VMHOST=chandra
-#VMHOST=192.168.100.17
+#VMHOST=chandra
+VMHOST=192.168.100.17
 IDENT_HOST=chandra
 SSH=ssh root@$(VMHOST) -i ~/.ssh/$(IDENT_HOST)
 SCP=scp -i ~/.ssh/$(IDENT_HOST)
@@ -157,10 +157,13 @@ uninstall:
 	-$(SSH) rm -f /etc/init.d/sqeezecenter /etc/conf.d/squeezeboxserver /etc/logrotate.d/squeezeboxserver /etc/squeezeboxserver.prefs
 	-$(SSH) rm -fr /var/log/squeezeboxserver /var/cache/squeezeboxserver /var/lib/squeezeboxserver/cache /var/lib/squeezeboxserver/prefs /etc/squeezeboxserver
 
-patches: $(PD)/$(P1)-build-perl-modules-gentoo.patch $(PD)/$(P1)-uuid-gentoo.patch
+patches: $(PD)/$(P1)-build-perl-modules-gentoo.patch $(PD)/$(P1)-uuid-gentoo.patch $(PD)/$(P1)-squeezeslave.patch
 
 $(PD)/$(P1)-build-perl-modules-gentoo.patch: $(PS)/Slim/bootstrap.pm
 	./mkpatch $@ $^
 
 $(PD)/$(P1)-uuid-gentoo.patch: $(PS)/slimserver.pl
+	./mkpatch $@ $^
+
+$(PD)/$(P1)-squeezeslave.patch: $(PS)/Slim/Web/HTTP.pm
 	./mkpatch $@ $^

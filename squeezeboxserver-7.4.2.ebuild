@@ -1,6 +1,8 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header$
+
+EAPI="2"
 
 inherit eutils
 
@@ -17,7 +19,6 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="lame wavpack alac ogg flac aac"
-EAPI="2"
 
 # Note: EV present because of bug#287857.
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
@@ -211,7 +212,8 @@ src_install() {
 	dodoc Changelog*.html
 	dodoc Installation.txt
 	dodoc License*.txt
-	newdoc "${FILESDIR}/Gentoo-plugins-README.txt" Gentoo-plugins-README.txt
+	dodoc "${FILESDIR}/Gentoo-plugins-README.txt"
+	dodoc "${FILESDIR}/Gentoo-detailed-changelog.txt"
 
 	# Configuration files and preferences
 	insinto "${ETCDIR}"
@@ -330,6 +332,15 @@ pkg_postinst() {
 	elog "plugins (if present)."
 
 	elog ""
+
+	ewarn "Note: If Squeezebox Server dies after the initial configuration"
+	ewarn "      after an upgrade from a previous installation, try removing"
+	ewarn "      /var/lib/squeezeboxserver and /etc/squeezeboxserver and"
+	ewarn "      then reinstalling the package (note that old preferences"
+	ewarn "      and plugins will be lost).  See bug #307119."
+
+	elog ""
+
 	sc_starting_instr
 }
 

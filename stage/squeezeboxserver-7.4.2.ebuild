@@ -332,6 +332,15 @@ pkg_postinst() {
 	elog "plugins (if present)."
 
 	elog ""
+
+	ewarn "Note: If Squeezebox Server dies after the initial configuration"
+	ewarn "      after an upgrade from a previous installation, try removing"
+	ewarn "      /var/lib/squeezeboxserver and /etc/squeezeboxserver and"
+	ewarn "      then reinstalling the package (note that old preferences"
+	ewarn "      and plugins will be lost).  See bug #307119."
+
+	elog ""
+
 	sc_starting_instr
 }
 

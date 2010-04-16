@@ -194,7 +194,7 @@ src_install() {
 	cp -r IR "${D}/${SHAREDIR}"			|| die "Unable to install IR"
 	cp -r SQL "${D}/${SHAREDIR}"		|| die "Unable to install SQL"
 
-# Remove bundled modified AnyEvent - we depend on a newer version now
+	# Remove bundled modified AnyEvent - we depend on a newer version now
 	rm -r lib/AnyEvent.pm lib/AnyEvent || die "Unable to remove bundled AnyEvent"
 
 	# Architecture-dependent static files

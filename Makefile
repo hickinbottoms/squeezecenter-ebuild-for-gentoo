@@ -25,7 +25,8 @@ FILES=dbdrop-gentoo.sql \
 	  squeezeboxserver.logrotate.d \
 	  Gentoo-plugins-README.txt \
 	  gentoo-filepaths.pm \
-	  build-modules.sh
+	  build-modules.sh \
+	  Gentoo-detailed-changelog.txt
 
 all: inject
 

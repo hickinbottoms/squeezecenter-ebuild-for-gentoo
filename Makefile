@@ -152,6 +152,9 @@ vmkill:
 	echo Killing VM...
 	-sudo pkill kvm
 
+vmsq:
+	ssh -i ~/.ssh/chandra root@chandra "/etc/init.d/squeezeboxserver stop; /etc/init.d/squeezeboxserver zap; rm /var/log/squeezeboxserver/server.log; rm /var/log/squeezeboxserver/scanner.log; touch /var/log/squeezeboxserver/server.log /var/log/squeezeboxserver/scanner.log; chown squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver/scanner.log /var/log/squeezeboxserver/server.log; /etc/init.d/squeezeboxserver start; sleep 5; tail -F /var/log/squeezeboxserver/server.log"
+
 uninstall:
 	-$(SSH) /etc/init.d/squeezeboxserver stop
 	-$(SSH) emerge --unmerge squeezeboxserver

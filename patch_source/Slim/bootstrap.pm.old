@@ -1,6 +1,6 @@
 package Slim::bootstrap;
 
-# $Id: bootstrap.pm 28872 2009-10-15 20:53:57Z andy $
+# $Id: bootstrap.pm 30040 2010-02-05 19:58:44Z andy $
 #
 # Squeezebox Server Copyright 2001-2009 Logitech.
 # This program is free software; you can redistribute it and/or
@@ -57,7 +57,6 @@ my @default_required_modules = qw(version Time::HiRes DBI DBD::mysql EV XML::Par
 my @default_optional_modules = qw(Locale::Hebrew);
 
 my $d_startup                = (grep { /d_startup/ } @ARGV) ? 1 : 0;
-my $noweb                    = (grep { /noweb/ }     @ARGV) ? 1 : 0;
 
 my $sigINTcalled             = 0;
 
@@ -200,9 +199,9 @@ sub loadModules {
 NOTE:
 
 Please use the buildme.sh script located here:
-http://svn.slimdevices.com/repos/slim/7.4/trunk/vendor/CPAN/
+http://svn.slimdevices.com/repos/slim/7.5/trunk/vendor/CPAN/
 
-If 7.4 is outdated by the time you read this, Replace "7.4" with the major version
+If 7.5 is outdated by the time you read this, Replace "7.5" with the major version
 of Squeezebox Server you are running.
 
 *******
@@ -386,7 +385,7 @@ sub check_valid_versions {
 
 	for my $line ( split /\n/, $modules ) {
 		
-		next if $noweb && $line =~ /Template/;
+		next if !main::WEBUI && $line =~ /Template/;
 		
 		next unless $line =~ /^\w+/;
 		chomp $line;

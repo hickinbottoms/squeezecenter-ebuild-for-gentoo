@@ -15,7 +15,7 @@ EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 PS=patch_source
 PD=patch_dest
 
-P1=squeezeboxserver-7.4.2
+P1=squeezeboxserver-7.5.0
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -25,7 +25,8 @@ FILES=dbdrop-gentoo.sql \
 	  squeezeboxserver.logrotate.d \
 	  Gentoo-plugins-README.txt \
 	  gentoo-filepaths.pm \
-	  build-modules.sh
+	  build-modules.sh \
+	  Gentoo-detailed-changelog.txt
 
 all: inject
 
@@ -150,6 +151,9 @@ vmstop:
 vmkill:
 	echo Killing VM...
 	-sudo pkill kvm
+
+vmsq:
+	ssh -i ~/.ssh/chandra root@chandra "/etc/init.d/squeezeboxserver stop; /etc/init.d/squeezeboxserver zap; rm /var/log/squeezeboxserver/server.log; rm /var/log/squeezeboxserver/scanner.log; touch /var/log/squeezeboxserver/server.log /var/log/squeezeboxserver/scanner.log; chown squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver/scanner.log /var/log/squeezeboxserver/server.log; /etc/init.d/squeezeboxserver start; sleep 5; tail -F /var/log/squeezeboxserver/server.log"
 
 uninstall:
 	-$(SSH) /etc/init.d/squeezeboxserver stop

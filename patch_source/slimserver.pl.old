@@ -23,6 +23,7 @@ use constant PERFMON      => ( grep { /--perfwarn/ } @ARGV ) ? 1 : 0;
 use constant DEBUGLOG     => ( grep { /--no(?:debug|info)log/ } @ARGV ) ? 0 : 1;
 use constant INFOLOG      => ( grep { /--noinfolog/ } @ARGV ) ? 0 : 1;
 use constant SB1SLIMP3SYNC=> ( grep { /--nosb1slimp3sync/ } @ARGV ) ? 0 : 1;
+use constant WEBUI        => ( grep { /--noweb/ } @ARGV ) ? 0 : 1;
 use constant ISWINDOWS    => ( $^O =~ /^m?s?win/i ) ? 1 : 0;
 use constant ISMAC        => ( $^O =~ /darwin/i ) ? 1 : 0;
 
@@ -184,6 +185,8 @@ use Slim::Menu::GenreInfo;
 use Slim::Menu::YearInfo;
 use Slim::Menu::SystemInfo;
 use Slim::Menu::PlaylistInfo;
+use Slim::Menu::FolderInfo;
+use Slim::Menu::GlobalSearch;
 use Slim::Music::Info;
 use Slim::Music::Import;
 use Slim::Utils::OSDetect;
@@ -249,7 +252,7 @@ our @AUTHORS = (
 
 my $prefs        = preferences('server');
 
-our $VERSION     = '7.4.2';
+our $VERSION     = '7.5.0';
 our $REVISION    = undef;
 our $BUILDDATE   = undef;
 our $audiodir    = undef;
@@ -375,6 +378,9 @@ sub init {
 
 		save_pid_file();
 	}
+	
+	# leave a mark for external tools
+	$failsafe ? $prefs->set('failsafe', 1) : $prefs->remove('failsafe');
 
 	# Change UID/GID after the pid & logfiles have been opened.
 	unless (Slim::Utils::OSDetect::getOS->dontSetUserAndGroup() || defined($user) eq "root") {
@@ -476,11 +482,9 @@ sub init {
 		Slim::Player::TranscodingHelper::init();
 	}
 
-	if (!$nosetup && !$noweb) {
-
-		require Slim::Web::Setup;
-
+	if (WEBUI && !$nosetup) {
 		main::INFOLOG && $log->info("Squeezebox Server Web Settings init...");
+		require Slim::Web::Setup;
 		Slim::Web::Setup::initSetup();
 	}
 	
@@ -492,6 +496,8 @@ sub init {
 	Slim::Menu::YearInfo->init();
 	Slim::Menu::SystemInfo->init();
 	Slim::Menu::PlaylistInfo->init();
+	Slim::Menu::FolderInfo->init();
+	Slim::Menu::GlobalSearch->init();
 
 	main::INFOLOG && $log->info('Squeezebox Server Alarms init...');
 	Slim::Utils::Alarm->init();
@@ -646,7 +652,7 @@ Usage: $0 [--diag] [--daemon] [--stdio]
           [--prefsdir <prefspath> [--pidfile <pidfilepath>]]
           [--perfmon] [--perfwarn=<threshold> | --perfwarn <warn options>]
           [--checkstrings] [--charset <charset>]
-          [--notranscoding] [--nosb1slimp3sync]
+          [--noweb] [--notranscoding] [--nosb1slimp3sync]
           [--logging <logging-spec>] [--noinfolog | --nodebuglog]
 
     --help           => Show this usage information.
@@ -687,6 +693,7 @@ Usage: $0 [--diag] [--daemon] [--stdio]
     --nosetup        => Disable setup via http.
     --noserver       => Disable web access server settings, but leave player settings accessible.
                         Settings changes are not preserved.
+    --noweb          => Disable web interface. JSON-RPC, Comet, and artwork web APIs are still enabled.
     --nosb1slimp3sync=> Disable support for SliMP3s, SB1s and associated synchronization
     --notranscoding  => Disable transcoding support.
     --noupnp         => Disable UPnP subsystem

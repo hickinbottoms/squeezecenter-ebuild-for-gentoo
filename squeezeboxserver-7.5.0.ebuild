@@ -65,7 +65,6 @@ RDEPEND="
 	>=dev-perl/TimeDate-1.16
 	>=dev-perl/Math-VecStat-0.08
 	>=dev-perl/Net-DNS-0.63
-	>=dev-perl/Net-IP-1.25
 	>=dev-perl/Path-Class-0.16
 	>=dev-perl/SQL-Abstract-1.56
 	>=dev-perl/SQL-Abstract-Limit-0.12

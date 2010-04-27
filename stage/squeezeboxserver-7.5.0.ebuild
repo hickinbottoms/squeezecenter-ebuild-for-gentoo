@@ -18,7 +18,7 @@ HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.h
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="lame wavpack alac ogg flac aac"
+IUSE="lame wavpack ogg flac aac"
 
 # Note: EV present because of bug#287857.
 SRC_URI="http://www.slimdevices.com/downloads/${SRC_DIR}/${MY_P}.tgz
@@ -65,7 +65,6 @@ RDEPEND="
 	>=dev-perl/TimeDate-1.16
 	>=dev-perl/Math-VecStat-0.08
 	>=dev-perl/Net-DNS-0.63
-	>=dev-perl/Net-IP-1.25
 	>=dev-perl/Path-Class-0.16
 	>=dev-perl/SQL-Abstract-1.56
 	>=dev-perl/SQL-Abstract-Limit-0.12
@@ -112,7 +111,6 @@ RDEPEND="
 	>=dev-perl/Tie-RegexpHash-0.15
 	>=dev-perl/Data-UUID-1.202
 	lame? ( media-sound/lame )
-	alac? ( media-sound/alac_decoder )
 	wavpack? ( media-sound/wavpack )
 	flac? (
 		media-libs/flac

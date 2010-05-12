@@ -139,10 +139,18 @@ vmreset: vmstop
 	pv $(VM_DIR)/$(HDA_IMG).orig.xz | xzcat > $(VM_DIR)/$(HDA_IMG)
 
 vmstart:
-	echo Starting VM...
-	sudo kvm -curses -boot c -m $(VM_MEM) -localtime \
+	sudo echo Starting VM...
+	-ping $(VMHOST) -w1 -q && exit 1
+	sudo nohup kvm -boot c -m $(VM_MEM) -localtime \
 		-hda $(VM_DIR)/$(HDA_IMG) -hdb $(VM_DIR)/$(HDB_IMG) \
-		-net nic,model=e1000 -net tap
+		-net nic,model=e1000 -net tap &
+#	sudo kvm -curses -boot c -m $(VM_MEM) -localtime \
+#		-hda $(VM_DIR)/$(HDA_IMG) -hdb $(VM_DIR)/$(HDB_IMG) \
+#		-net nic,model=e1000 -net tap
+	while ! ping -w1 -q $(VMHOST); do echo Waiting for host to come up...; sleep 1; done
+	echo Host up... Waiting for SSH server to start
+	sleep 10
+	ssh root@chandra
 
 vmstop:
 	echo Stopping VM...

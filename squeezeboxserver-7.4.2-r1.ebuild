@@ -38,7 +38,7 @@ RDEPEND="
 	virtual/logger
 	virtual/mysql
 	>=dev-lang/perl-5.8.8
-	>=dev-perl/Audio-Scan-0.59
+	~dev-perl/Audio-Scan-0.59
 	>=dev-perl/GD-2.41
 	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05

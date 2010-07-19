@@ -143,10 +143,7 @@ vmstart:
 	-ping $(VMHOST) -w1 -q && exit 1
 	sudo nohup kvm -boot c -m $(VM_MEM) -localtime \
 		-hda $(VM_DIR)/$(HDA_IMG) -hdb $(VM_DIR)/$(HDB_IMG) \
-		-net nic,model=e1000 -net tap &
-#	sudo kvm -curses -boot c -m $(VM_MEM) -localtime \
-#		-hda $(VM_DIR)/$(HDA_IMG) -hdb $(VM_DIR)/$(HDB_IMG) \
-#		-net nic,model=e1000 -net tap
+		-net nic,model=e1000 -net tap -vnc localhost:1 &
 	sleep 1
 	sudo rm nohup.out
 	while ! ping -w1 -q $(VMHOST); do echo Waiting for host to come up...; sleep 1; done

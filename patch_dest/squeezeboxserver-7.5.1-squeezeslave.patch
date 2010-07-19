@@ -1,5 +1,5 @@
---- Slim/Web/HTTP.pm.old	2010-06-10 13:15:09.050446973 +0100
-+++ Slim/Web/HTTP.pm	2010-06-10 13:15:09.046446912 +0100
+--- Slim/Web/HTTP.pm.old	2010-07-06 08:30:49.243499965 +0100
++++ Slim/Web/HTTP.pm	2010-07-06 08:30:49.243499965 +0100
 @@ -2214,9 +2214,10 @@
  		# only kill the timer if we were called for the active streaming connection;
  		# otherwise we might kill the timer related to the next connection too.

@@ -14,7 +14,7 @@ MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"
 
 DESCRIPTION="Logitech SqueezeboxServer music server"
-HOMEPAGE="http://www.logitechsqueezebox.com/support/download-squeezebox-server.html"
+HOMEPAGE="http://www.mysqueezebox.com/download"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"

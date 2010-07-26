@@ -15,7 +15,8 @@ EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 PS=patch_source
 PD=patch_dest
 
-P1=squeezeboxserver-7.5.1
+PV=7.5.1
+P1=squeezeboxserver-$(PV)
 
 FILES=dbdrop-gentoo.sql \
 	  dbcreate-gentoo.sql \
@@ -25,7 +26,7 @@ FILES=dbdrop-gentoo.sql \
 	  squeezeboxserver.logrotate.d \
 	  Gentoo-plugins-README.txt \
 	  gentoo-filepaths.pm \
-	  build-modules.sh \
+	  build-modules-$(PV).sh \
 	  Gentoo-detailed-changelog.txt
 
 all: inject

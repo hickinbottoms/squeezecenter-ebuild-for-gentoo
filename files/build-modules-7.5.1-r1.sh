@@ -3,122 +3,20 @@
 # $Id$
 #
 # This script builds all binary Perl modules required by Squeezebox Server.
-# 
-# Supported OSes:
-#
-# Linux (Perl 5.8.8 & 5.10.0 & 5.12.1)
-#   i386/x86_64 Linux
-#   ARM Linux
-#   PowerPC Linux
-# Mac OSX 10.5, 10.6, (Perl 5.8.8 & 5.10.0)
-#   Under 10.5, builds Universal Binaries for i386/ppc
-#   Under 10.6, builds Universal Binaries for i386/x86_64
-# FreeBSD 7.2 (Perl 5.8.9)
 
 DISTDIR="$1"; shift
+D="$1"; shift
 
-OS=`uname`
-
-# get system arch, stripping out extra -gnu on Linux
-ARCH=`/usr/bin/perl -MConfig -le 'print $Config{archname}' | sed 's/gnu-//' | sed 's/^i[3456]86-/i386-/' `
-
-if [ $OS = "Linux" -o $OS = "Darwin" -o $OS = "FreeBSD" ]; then
-    echo "Building for $OS / $ARCH"
-else
-    echo "Unsupported platform: $OS, please submit a patch or provide us with access to a development system."
-    exit
-fi
+echo DISTDIR=$DISTDIR
+echo D=$D
 
 # Build dir
 BUILD=$PWD
-
-# Path to Perl 5.8.x
-if [ -x "/usr/bin/perl5.8.8" ]; then
-    PERL_58=/usr/bin/perl5.8.8
-elif [ -x "/usr/local/bin/perl5.8.8" ]; then
-    PERL_58=/usr/local/bin/perl5.8.8
-elif [ -x "/usr/local/bin/perl5.8.9" ]; then # FreeBSD 7.2
-    PERL_58=/usr/local/bin/perl5.8.9
-fi
-
-if [ $PERL_58 ]; then
-    echo "Building with Perl 5.8.x at $PERL_58"
-fi
-
-# Install dir for 5.8
-BASE_58=$BUILD/5.8
-
-# Path to Perl 5.10.x
-if [ -x "/usr/bin/perl5.10.0" ]; then
-    PERL_510=/usr/bin/perl5.10.0
-elif [ -x "/usr/local/bin/perl5.10.0" ]; then
-    PERL_510=/usr/local/bin/perl5.10.0
-elif [ -x "/usr/bin/perl5.10.1" ]; then
-	PERL_510=/usr/bin/perl5.10.1
-elif [ -x "/usr/local/bin/perl5.10.1" ]; then
-	PERL_510=/usr/local/bin/perl5.10.1
-fi
-
-if [ $PERL_510 ]; then
-    echo "Building with Perl 5.10 at $PERL_510"
-fi
-
-# Install dir for 5.10
-BASE_510=$BUILD/5.10
-
-# Path to Perl 5.12.1
-if [ -x "/usr/bin/perl5.12.1" ]; then
-    PERL_512=/usr/bin/perl5.12.1
-elif [ -x "/usr/local/bin/perl5.12.1" ]; then
-    PERL_512=/usr/local/bin/perl5.12.1
-fi
-
-if [ $PERL_512 ]; then
-    echo "Building with Perl 5.12 at $PERL_512"
-fi
-
-# Install dir for 5.12
-BASE_512=$BUILD/5.12
-
-if [ ! "$PERL_58" -a ! "$PERL_510" -a ! "$PERL_512" ]; then
-	echo
-	echo "*** ERROR: Could not find Perl!"
-	echo
-	exit 1
-fi
 
 # Require modules to pass tests
 RUN_TESTS=1
 
 FLAGS=""
-# Mac-specific flags
-if [ $OS = "Darwin" ]; then
-    if [ $PERL_58 ]; then
-        # build 32-bit version 
-        FLAGS="-arch i386 -arch ppc -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.3"
-    elif [ $PERL_510 ]; then
-        # Build 64-bit version    
-        FLAGS="-arch x86_64 -arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk -mmacosx-version-min=10.5"
-    fi
-fi
-
-# FreeBSD's make sucks
-if [ $OS = "FreeBSD" ]; then
-    if [ !-x /usr/local/bin/gmake ]; then
-        echo "ERROR: Please install GNU make (gmake)"
-        exit
-    fi
-    export GNUMAKE=/usr/local/bin/gmake
-    export MAKE=/usr/local/bin/gmake
-else
-    export MAKE=/usr/bin/make
-fi
-
-# Clean up
-# XXX command-line flag to skip cleanup
-#rm -rf $BUILD
-
-#mkdir $BUILD
 
 # $1 = module to build
 # $2 = Makefile.PL arg(s)
@@ -126,11 +24,9 @@ function build_module {
     tar zxvf $DISTDIR/SqueezeboxServer-$1.tar.gz || exit 1
     cd $1
 #    cp -R ../hints .
-    if [ $PERL_58 ]; then
-        # Running 5.8
-        export PERL5LIB=$BASE_58/lib/perl5
         
-        $PERL_58 Makefile.PL PREFIX=$BASE_58 $2
+#        Makefile.PL PREFIX=$BASE_58 $2
+        perl Makefile.PL PREFIX=$D $2
         if [ $RUN_TESTS -eq 1 ]; then
             make test
         else
@@ -146,47 +42,7 @@ function build_module {
         fi
         make install || exit 1
         make clean || exit 1
-    fi
-    if [ $PERL_510 ]; then
-        # Running 5.10
-        export PERL5LIB=$BASE_510/lib/perl5
-        
-        $PERL_510 Makefile.PL PREFIX=$BASE_510 $2
-        if [ $RUN_TESTS -eq 1 ]; then
-            make test
-        else
-            make
-        fi
-        if [ $? != 0 ]; then
-            if [ $RUN_TESTS -eq 1 ]; then
-                echo "make test failed, aborting"
-            else
-                echo "make failed, aborting"
-            fi
-            exit $?
-        fi
-        make install || exit 1
-    fi
-	if [ $PERL_512 ]; then
-        # Running 5.12
-        export PERL5LIB=$BASE_512/lib/perl5
-        
-        $PERL_512 Makefile.PL PREFIX=$BASE_512 $2
-        if [ $RUN_TESTS -eq 1 ]; then
-            make test
-        else
-            make
-        fi
-        if [ $? != 0 ]; then
-            if [ $RUN_TESTS -eq 1 ]; then
-                echo "make test failed, aborting"
-            else
-                echo "make failed, aborting"
-            fi
-            exit $?
-        fi
-        make install || exit 1
-    fi
+
     cd ..
     rm -rf $1
 }
@@ -650,24 +506,12 @@ find $BUILD -name '*.packlist' -exec rm -f {} \;
 
 # create our directory structure
 # XXX there is still some crap left in here by some modules such as DBI, GD
-if [ $PERL_58 ]; then
-    mkdir -p $BUILD/CPAN-arch/5.8/$ARCH
-    mkdir -p $BUILD/CPAN-pm
-    mv $BASE_58/lib*/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.8/$ARCH/
-    mv $BASE_58/lib*/perl5/site_perl/*/*/* $BUILD/CPAN-pm
-fi
-if [ $PERL_510 ]; then
-    mkdir -p $BUILD/CPAN-arch/5.10/$ARCH
-    mkdir -p $BUILD/CPAN-pm
-    mv $BASE_510/lib*/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.10/$ARCH/
-    mv $BASE_510/lib*/perl5/site_perl/*/*/* $BUILD/CPAN-pm
-fi
-if [ $PERL_512 ]; then
-    mkdir -p $BUILD/CPAN-arch/5.12/$ARCH
-    mkdir -p $BUILD/CPAN-pm
-    mv $BASE_512/lib*/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.12/$ARCH/
-    mv $BASE_512/lib*/perl5/site_perl/*/*/* $BUILD/CPAN-pm
-fi
+#if [ $PERL_58 ]; then
+    #mkdir -p $BUILD/CPAN-arch/5.8/$ARCH
+    #mkdir -p $BUILD/CPAN-pm
+    #mv $BASE_58/lib*/perl5/site_perl/*/*/auto $BUILD/CPAN-arch/5.8/$ARCH/
+    #mv $BASE_58/lib*/perl5/site_perl/*/*/* $BUILD/CPAN-pm
+#fi
 
 # could remove rest of build data, but let's leave it around in case
 #rm -rf $BASE_58

@@ -15,7 +15,7 @@ EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 PS=patch_source
 PD=patch_dest
 
-PV=7.5.1-r1
+PV=7.5.2
 P1=squeezeboxserver-$(PV)
 
 FILES=dbdrop-gentoo.sql \
@@ -128,6 +128,8 @@ inject: stage
 	$(SSH) "grep -q 'dev-perl/enum ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/enum ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Tie-LLHash ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-LLHash ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Tie-RegexpHash ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Tie-RegexpHash ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Class-Load ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Load ~x86' >> /etc/portage/package.keywords"
+	$(SSH) "grep -q 'dev-perl/Getopt-Long-Descriptive ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Getopt-Long-Descriptive ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/squeezeboxserver flac lame aac' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"

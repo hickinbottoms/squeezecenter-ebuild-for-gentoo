@@ -44,6 +44,6 @@ start() {
 
 stop() {
 	ebegin "Stopping Squeezebox Server"
-	start-stop-daemon -o --stop --pidfile ${pidfile}
+	start-stop-daemon --oknodo --retry 10 --stop --pidfile ${pidfile}
 	eend $? "Failed to stop Squeezebox Server"
 }

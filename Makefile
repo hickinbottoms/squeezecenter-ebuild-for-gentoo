@@ -15,7 +15,7 @@ EBUILD_DIR=$(LOCAL_PORTAGE)/$(EBUILD_CATEGORY)
 PS=patch_source
 PD=patch_dest
 
-PV=7.5.2
+PV=7.5.3
 P1=squeezeboxserver-$(PV)
 
 FILES=dbdrop-gentoo.sql \

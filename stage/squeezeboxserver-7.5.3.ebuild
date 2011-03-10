@@ -80,7 +80,7 @@ RDEPEND="
 	>=dev-perl/Tie-IxHash-1.21
 	>=virtual/perl-Module-Pluggable-3.6
 	>=dev-perl/Archive-Zip-1.23
-	>=dev-perl/AnyEvent-5.2
+	~dev-perl/AnyEvent-5.2.5.1
 	>=dev-perl/Sub-Name-0.04
 	>=dev-perl/Module-Find-0.08
 	>=dev-perl/Class-Accessor-0.31

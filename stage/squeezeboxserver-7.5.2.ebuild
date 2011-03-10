@@ -89,7 +89,7 @@ RDEPEND="
 	>=dev-perl/Scope-Guard-0.03
 	>=dev-perl/Class-C3-XS-0.13
 	>=dev-perl/Class-C3-0.21
-	>=dev-perl/Class-C3-Componentised-1.0006
+	>=dev-perl/Class-C3-Componentised-1.0.800
 	>=dev-perl/File-ReadBackwards-1.04
 	~dev-perl/DBIx-Class-0.08120
 	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31

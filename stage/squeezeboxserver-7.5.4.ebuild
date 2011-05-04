@@ -8,7 +8,7 @@ inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
-BUILD_NUM="30836"
+BUILD_NUM="32171"
 SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
 MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"
@@ -38,7 +38,7 @@ RDEPEND="
 	virtual/logger
 	virtual/mysql
 	>=dev-lang/perl-5.8.8
-	~dev-perl/Audio-Scan-0.82
+	~dev-perl/Audio-Scan-0.870.0
 	>=dev-perl/GD-2.41
 	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
@@ -80,7 +80,7 @@ RDEPEND="
 	>=dev-perl/Tie-IxHash-1.21
 	>=virtual/perl-Module-Pluggable-3.6
 	>=dev-perl/Archive-Zip-1.23
-	>=dev-perl/AnyEvent-5.2
+	~dev-perl/AnyEvent-5.2.5.1
 	>=dev-perl/Sub-Name-0.04
 	>=dev-perl/Module-Find-0.08
 	>=dev-perl/Class-Accessor-0.31
@@ -89,7 +89,7 @@ RDEPEND="
 	>=dev-perl/Scope-Guard-0.03
 	>=dev-perl/Class-C3-XS-0.13
 	>=dev-perl/Class-C3-0.21
-	>=dev-perl/Class-C3-Componentised-1.0006
+	>=dev-perl/Class-C3-Componentised-1.0.800
 	>=dev-perl/File-ReadBackwards-1.04
 	~dev-perl/DBIx-Class-0.08120
 	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
@@ -110,6 +110,7 @@ RDEPEND="
 	>=dev-perl/Tie-LLHash-1.003
 	>=dev-perl/Tie-RegexpHash-0.15
 	>=dev-perl/Data-UUID-1.202
+	>=perl-core/Class-ISA-0.36
 	lame? ( media-sound/lame )
 	wavpack? ( media-sound/wavpack )
 	flac? (

@@ -1,5 +1,5 @@
 #!/sbin/runscript
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header$
 
@@ -24,12 +24,11 @@ start() {
 
 	cd /
 	start-stop-daemon \
-		--start --exec /usr/bin/perl /usr/sbin/${scname} \
-		--pidfile ${pidfile} \
-		--startas /usr/sbin/${scname} \
+		--start --exec /usr/sbin/${scname} \
 		--chuid ${scuser} \
+		--background \
 		-- \
-		--quiet --daemon \
+		--quiet \
 		--pidfile=${pidfile} \
 		--cachedir=${cachedir} \
 		--prefsfile=${prefsfile} \
@@ -44,6 +43,6 @@ start() {
 
 stop() {
 	ebegin "Stopping Squeezebox Server"
-	start-stop-daemon --oknodo --retry 10 --stop --pidfile ${pidfile}
+	start-stop-daemon --retry 10 --stop --pidfile ${pidfile}
 	eend $? "Failed to stop Squeezebox Server"
 }

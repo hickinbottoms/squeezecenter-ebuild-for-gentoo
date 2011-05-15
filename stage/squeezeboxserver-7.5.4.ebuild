@@ -34,7 +34,7 @@ DEPEND="
 # Note: dev-perl/GD necessary because of SC bug#6143
 # (http://bugs.slimdevices.com/show_bug.cgi?id=6143).
 RDEPEND="
-	>=sys-apps/baselayout-2.0.0
+	!prefix? ( >=sys-apps/baselayout-2.0.0 )
 	dev-perl/File-Which
 	!prefix? ( virtual/logger )
 	virtual/mysql

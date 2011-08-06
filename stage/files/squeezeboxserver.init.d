@@ -25,7 +25,8 @@ start() {
 	cd /
 	start-stop-daemon \
 		--start --exec /usr/sbin/${scname} \
-		--chuid ${scuser} \
+		--pidfile ${pidfile} \
+		--user ${scuser} \
 		--background \
 		-- \
 		--quiet \

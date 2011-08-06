@@ -25,6 +25,7 @@ start() {
 	cd /
 	start-stop-daemon \
 		--start --exec /usr/sbin/${scname} \
+		--pidfile ${pidfile} \
 		--chuid ${scuser} \
 		--background \
 		-- \

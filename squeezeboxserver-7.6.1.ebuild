@@ -31,31 +31,29 @@ DEPEND="
 	virtual/mysql
 	>=dev-perl/common-sense-2.01
 	"
-# Note: dev-perl/GD necessary because of SC bug#6143
-# (http://bugs.slimdevices.com/show_bug.cgi?id=6143).
 RDEPEND="
 	!prefix? ( >=sys-apps/baselayout-2.0.0 )
 	dev-perl/File-Which
 	!prefix? ( virtual/logger )
 	virtual/mysql
 	>=dev-lang/perl-5.8.8
-	~dev-perl/Audio-Scan-0.870.0
-	>=dev-perl/GD-2.41
+	~dev-perl/Audio-Scan-0.900.0
 	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
 	>=dev-perl/DBD-mysql-4.00.5
-	>=dev-perl/DBI-1.607
+	>=dev-perl/DBI-1.616
 	>=dev-perl/Digest-SHA1-2.11
 	>=dev-perl/Encode-Detect-1.01
 	>=dev-perl/HTML-Parser-3.56
-	>=dev-perl/JSON-XS-2.2.3.1
+	>=dev-perl/JSON-XS-2.300
 	>=dev-perl/Template-Toolkit-2.19
 	>=virtual/perl-Time-HiRes-1.97.15
 	>=dev-perl/XML-Parser-2.36
 	>=dev-perl/Cache-Cache-1.04
 	>=dev-perl/Class-Data-Inheritable-0.08
 	>=dev-perl/Class-Inspector-1.23
-	>=dev-perl/File-Next-1.02
+	>=dev-perl/Image-Scale-0.06
+	>=dev-perl/File-Next-1.06
 	>=virtual/perl-File-Temp-0.20
 	>=dev-perl/File-Which-0.05
 	>=perl-core/i18n-langtags-0.35
@@ -66,7 +64,7 @@ RDEPEND="
 	>=dev-perl/TimeDate-1.16
 	>=dev-perl/Math-VecStat-0.08
 	>=dev-perl/Net-DNS-0.63
-	>=dev-perl/Path-Class-0.16
+	>=dev-perl/Path-Class-0.17
 	>=dev-perl/SQL-Abstract-1.56
 	>=dev-perl/SQL-Abstract-Limit-0.12
 	>=dev-perl/URI-1.35
@@ -92,7 +90,7 @@ RDEPEND="
 	>=dev-perl/Class-C3-0.21
 	>=dev-perl/Class-C3-Componentised-1.0.800
 	>=dev-perl/File-ReadBackwards-1.04
-	~dev-perl/DBIx-Class-0.08120
+	~dev-perl/DBIx-Class-0.08112
 	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
 	>=dev-perl/MRO-Compat-0.11
 	>=dev-perl/PAR-0.994
@@ -108,7 +106,6 @@ RDEPEND="
 	>=dev-perl/Data-Dump-1.15
 	>=dev-perl/Data-Page-2.02
 	>=dev-perl/Data-URIEncode-0.11
-	>=dev-perl/Tie-LLHash-1.003
 	>=dev-perl/Tie-RegexpHash-0.15
 	>=dev-perl/Data-UUID-1.202
 	>=perl-core/Class-ISA-0.36
@@ -302,24 +299,6 @@ pkg_postinst() {
 		ewarn "required if you want to limit the bandwidth your Squeezebox or"
 		ewarn "Transporter uses when streaming audio."
 		ewarn "For maximum flexibility you are recommended to set the 'lame' USE flag".
-		ewarn ""
-	fi
-
-	# Album art requires PNG and JPEG support from GD, so if it's not there
-	# then warn the user.  It's not mandatory as the user may not be using
-	# album art.
-	if ! has_version dev-perl/GD[jpeg] || \
-	   ! has_version dev-perl/GD[png] || \
-	   ! has_version media-libs/gd[jpeg] || \
-	   ! has_version media-libs/gd[png]; then
-		ewarn "For correct operation of album art through Squeezebox Server's web"
-		ewarn "interface the GD library and Perl module must be built with PNG"
-		ewarn "and JPEG support.  If necessary you can add the following lines"
-		ewarn "to the file /etc/portage/package.use:"
-		ewarn "\tdev-perl/GD jpeg png"
-		ewarn "\tmedia-libs/gd jpeg png"
-		ewarn "And then rebuild those packages with:"
-		ewarn "\temerge --newuse dev-perl/GD media-libs/gd"
 		ewarn ""
 	fi
 

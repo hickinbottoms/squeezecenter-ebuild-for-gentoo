@@ -8,7 +8,7 @@ inherit eutils
 
 MAJOR_VER="${PV:0:3}"
 MINOR_VER="${PV:4:1}"
-BUILD_NUM="32171"
+BUILD_NUM="32671"
 SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
 MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"
@@ -157,7 +157,7 @@ src_prepare() {
 
 	# Copy in the module builder - can't run it from the files directory in case
 	# Portage is mounted 'noexec'.
-	cp "${FILESDIR}/build-modules-${PVR}.sh" "${S}/build-modules.sh"	|| die
+	cp "${FILESDIR}/build-modules-${PV}.sh" "${S}/build-modules.sh"	|| die
 	chmod 555 "${S}/build-modules.sh"			|| die
 }
 
@@ -186,12 +186,11 @@ src_install() {
 
 	# Various directories of architecture-independent static files
 	dodir "${SHAREDIR}"
-	cp -r Firmware "${ED}/${SHAREDIR}"      || die "Unable to install firmware"
-	cp -r Graphics "${ED}/${SHAREDIR}"      || die "Unable to install Graphics"
-	cp -r HTML "${ED}/${SHAREDIR}"          || die "Unable to install HTML"
-	cp -r IR "${ED}/${SHAREDIR}"            || die "Unable to install IR"
-	cp -r SQL "${ED}/${SHAREDIR}"           || die "Unable to install SQL"
-
+	cp -r Firmware "${ED}/${SHAREDIR}"		|| die "Unable to install Firmware"
+	cp -r Graphics "${ED}/${SHAREDIR}"		|| die "Unable to install Graphics"
+	cp -r HTML "${ED}/${SHAREDIR}"			|| die "Unable to install HTML"
+	cp -r IR "${ED}/${SHAREDIR}"			|| die "Unable to install IR"
+	cp -r SQL "${ED}/${SHAREDIR}"			|| die "Unable to install SQL"
 
 	# Remove bundled modified AnyEvent - we depend on a newer version now
 	rm -r lib/AnyEvent.pm lib/AnyEvent || die "Unable to remove bundled AnyEvent"

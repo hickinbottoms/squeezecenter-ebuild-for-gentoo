@@ -22,7 +22,7 @@ IUSE="lame wavpack ogg flac aac"
 
 # Note: EV present because of bug#287857.
 SRC_URI="http://downloads.slimdevices.com/${SRC_DIR}/${MY_P}.tgz
-	mirror://gentoo/SqueezeboxServer-EV-3.8.tar.gz"
+	mirror://gentoo/SqueezeboxServer-EV-4.03.tar.gz"
 
 # Note: common-sense currently required due to bundled EV (Gentoo bug#287257)
 DEPEND="

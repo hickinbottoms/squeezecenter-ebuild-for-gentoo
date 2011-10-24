@@ -45,7 +45,7 @@ function build_module {
 function build_all {
     export PERL_MM_USE_DEFAULT=1
     RUN_TESTS=0
-    build_module EV-3.8
+    build_module EV-4.03
     RUN_TESTS=1
     export PERL_MM_USE_DEFAULT=
 }

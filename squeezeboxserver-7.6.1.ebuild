@@ -52,7 +52,6 @@ RDEPEND="
 	>=dev-perl/Cache-Cache-1.04
 	>=dev-perl/Class-Data-Inheritable-0.08
 	>=dev-perl/Class-Inspector-1.23
-	>=dev-perl/Image-Scale-0.06
 	>=dev-perl/File-Next-1.06
 	>=virtual/perl-File-Temp-0.20
 	>=dev-perl/File-Which-0.05
@@ -90,7 +89,7 @@ RDEPEND="
 	>=dev-perl/Class-C3-0.21
 	>=dev-perl/Class-C3-Componentised-1.0.800
 	>=dev-perl/File-ReadBackwards-1.04
-	~dev-perl/DBIx-Class-0.08112
+	~dev-perl/DBIx-Class-0.08120
 	>=dev-perl/JSON-XS-VersionOneAndTwo-0.31
 	>=dev-perl/MRO-Compat-0.11
 	>=dev-perl/PAR-0.994
@@ -109,6 +108,7 @@ RDEPEND="
 	>=dev-perl/Tie-RegexpHash-0.15
 	>=dev-perl/Data-UUID-1.202
 	>=perl-core/Class-ISA-0.36
+	>=dev-perl/Image-Scale-0.06
 	lame? ( media-sound/lame )
 	wavpack? ( media-sound/wavpack )
 	flac? (

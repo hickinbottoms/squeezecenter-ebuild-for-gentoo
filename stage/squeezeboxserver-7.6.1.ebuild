@@ -128,17 +128,9 @@ PREFS2="${PREFSDIR}/server.prefs"
 DOCDIR="/usr/share/doc/squeezeboxserver-${PV}"
 SHAREDIR="/usr/share/squeezeboxserver"
 LIBDIR="/usr/$(get_libdir)/squeezeboxserver"
-OLDDBUSER="squeezecenter"
 DBUSER="squeezeboxserver"
 VARLIBSBS="/var/lib/squeezeboxserver"
 PLUGINSDIR="${VARLIBSBS}/Plugins"
-
-# To support Migration
-OLDETCDIR="/etc/squeezecenter"
-OLDPREFSDIR="/var/lib/squeezecenter/prefs"
-OLDPREFSFILE="${OLDPREFSDIR}/server.prefs"
-OLDPLUGINSDIR="/var/lib/squeezecenter/Plugins"
-MIGMARKER=".migrated"
 
 pkg_setup() {
 	# Create the user and group if not already present
@@ -307,8 +299,6 @@ pkg_postinst() {
 	elog "must be configured prior to use.  This can be done by running the"
 	elog "following command:"
 	elog "\temerge --config =${CATEGORY}/${PF}"
-	elog "This command will also migrate old SqueezeCenter preferences and"
-	elog "plugins (if present)."
 
 	elog ""
 
@@ -406,41 +396,6 @@ pkg_config() {
 	einfo "Creating Squeezebox Server MySQL user and database (${DBUSER}) ..."
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${EPREFIX}${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
 
-	# Migrate old preferences, if present.
-	if [ -d "${OLDPREFSFILE}" ]; then
-		if [ -f "${ETCDIR}/${MIGMARKER}" ]; then
-			einfo ""
-			einfo "Old preferences are present, but they appear to have been"
-			einfo "migrated before. If you would like to re-migrate the old"
-			einfo "SqueezeCenter preferences remove the following file, and"
-			einfo "then restart the configuration."
-			einfo "\t${ETCDIR}/${MIGMARKER}"
-		else
-			einfo "Migrating old SqueezeCenter preferences"
-			cp -r "${OLDPREFSDIR}" "${VARLIBSBS}"
-			mv "${VARLIBSBS}/prefs/server.prefs" "/etc/squeezeboxserver/squeezeboxserver.prefs"
-			chown -R squeezeboxserver:squeezeboxserver "${PREFSDIR}"
-			touch "${PREFSDIR}/${MIGMARKER}"
-		fi
-	fi
-
-	# Migrate old plugins, if present.
-	if [ -d "${OLDPLUGINSDIR}" ]; then
-		if [ -f "${PLUGINSDIR}/${MIGMARKER}" ]; then
-			einfo ""
-			einfo "Old plugins are present, but they appear to have been"
-			einfo "migrated before. If you would like to re-migrate the old"
-			einfo "SqueezeCenter preferences remove the following file, and"
-			einfo "then restart the configuration."
-			einfo "\t${PLUGINSDIR}/${MIGMARKER}"
-		else
-			einfo "Migrating old SqueezeCenter plugins"
-			cp -r "${OLDPLUGINSDIR}" "${VARLIBSBS}"
-			chown -R squeezeboxserver:squeezeboxserver "${PLUGINSDIR}"
-			touch "${PLUGINSDIR}/${MIGMARKER}"
-		fi
-	fi
-
 	# Remove the existing MySQL preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
 	sc_remove_db_prefs "${PREFS2}"
@@ -453,20 +408,4 @@ pkg_config() {
 	einfo "Database configuration complete."
 	einfo ""
 	sc_starting_instr
-}
-
-pkg_preinst() {
-	# Warn the user if there are old preferences that may need migrating.
-	if [ -d "${OLDPREFSDIR}" -a ! -f "${PREFSDIR}/${MIGMARKER}" ]; then
-		if [ ! -z "$(ls ${OLDPREFSDIR})" ]; then
-			ewarn "Note: It appears that old SqueezeCenter preferences are
-installed at:"
-			ewarn "\t${OLDPREFSDIR}"
-			ewarn "These may be migrated by running the following command:"
-			ewarn "\temerge --config =${CATEGORY}/${PF}"
-			ewarn "(Please note that this will require your music collection to
-be rescanned.)"
-			ewarn ""
-		fi
-	fi
 }

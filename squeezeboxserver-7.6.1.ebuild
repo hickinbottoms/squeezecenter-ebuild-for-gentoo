@@ -31,6 +31,7 @@ DEPEND="
 	virtual/mysql
 	>=dev-perl/common-sense-2.01
 	"
+#@@@@@@@@@TODO	>=dev-perl/Image-Scale-0.06
 RDEPEND="
 	!prefix? ( >=sys-apps/baselayout-2.0.0 )
 	dev-perl/File-Which
@@ -108,7 +109,6 @@ RDEPEND="
 	>=dev-perl/Tie-RegexpHash-0.15
 	>=dev-perl/Data-UUID-1.202
 	>=perl-core/Class-ISA-0.36
-	>=dev-perl/Image-Scale-0.06
 	lame? ( media-sound/lame )
 	wavpack? ( media-sound/wavpack )
 	flac? (
@@ -319,13 +319,13 @@ sc_remove_db_prefs() {
 	einfo "Configuring Squeezebox Server database preferences (${MY_PREFS}) ..."
 	TMPPREFS="${T}"/squeezeboxserver-prefs-$$
 	touch "${EROOT}${MY_PREFS}"
-	sed -e '/^dbusername:/d' -e '/^dbpassword:/d' -e '/^dbsource:/d' < "${EROOT}${MY_PREFS}" > "${TMPPREFS}"
+	sed -e '/^dbusername:/d' -e '/^dbpassword:/d' -e '/^dbsource:/d' -e '/^dbtype:/d' < "${EROOT}${MY_PREFS}" > "${TMPPREFS}"
 	mv "${TMPPREFS}" "${EROOT}${MY_PREFS}"
 	chown squeezeboxserver:squeezeboxserver "${EROOT}${MY_PREFS}"
 	chmod 660 "${EROOT}${MY_PREFS}"
 }
 
-sc_update_prefs() {
+sc_update_prefs_mysql() {
 	MY_PREFS=$1
 	MY_DBUSER=$2
 	MY_DBUSER_PASSWD=$3
@@ -333,6 +333,7 @@ sc_update_prefs() {
 	echo "dbusername: ${MY_DBUSER}" >> "${EROOT}${MY_PREFS}"
 	echo "dbpassword: ${MY_DBUSER_PASSWD}" >> "${EROOT}${MY_PREFS}"
 	echo "dbsource: dbi:mysql:database=${MY_DBUSER};mysql_socket=${EPREFIX}/var/run/mysqld/mysqld.sock" >> "${EROOT}${MY_PREFS}"
+	echo "dbtype: MySQL" >> "${EROOT}${MY_PREFS}"
 }
 
 pkg_config() {
@@ -401,8 +402,8 @@ pkg_config() {
 	sc_remove_db_prefs "${PREFS2}"
 
 	# Insert the external MySQL configuration into the preferences.
-	sc_update_prefs "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
-	sc_update_prefs "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
+	sc_update_prefs_mysql "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
+	sc_update_prefs_mysql "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
 
 	# Phew - all done. Give some tips on what to do now.
 	einfo "Database configuration complete."

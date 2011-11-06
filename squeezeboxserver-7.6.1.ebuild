@@ -142,7 +142,6 @@ src_prepare() {
 	# Apply patches
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
 	epatch "${FILESDIR}/${P}-uuid-gentoo.patch"
-	epatch "${FILESDIR}/${P}-squeezeslave.patch"
 
 	# Copy in the module builder - can't run it from the files directory in case
 	# Portage is mounted 'noexec'.
@@ -182,7 +181,7 @@ src_install() {
 	cp -r SQL "${ED}/${SHAREDIR}"			|| die "Unable to install SQL"
 
 	# Remove bundled modified AnyEvent - we depend on a newer version now
-	rm -r lib/AnyEvent.pm lib/AnyEvent || die "Unable to remove bundled AnyEvent"
+	rm -r lib/AnyEvent || die "Unable to remove bundled AnyEvent"
 
 	# Architecture-dependent static files
 	dodir "${LIBDIR}"

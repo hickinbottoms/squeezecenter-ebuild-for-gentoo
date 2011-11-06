@@ -175,13 +175,10 @@ uninstall:
 	-$(SSH) rm -f /etc/init.d/sqeezecenter /etc/conf.d/squeezeboxserver /etc/logrotate.d/squeezeboxserver /etc/squeezeboxserver.prefs
 	-$(SSH) rm -fr /var/log/squeezeboxserver /var/cache/squeezeboxserver /var/lib/squeezeboxserver/cache /var/lib/squeezeboxserver/prefs /etc/squeezeboxserver
 
-patches: $(PD)/$(P1)-build-perl-modules-gentoo.patch $(PD)/$(P1)-uuid-gentoo.patch $(PD)/$(P1)-squeezeslave.patch
+patches: $(PD)/$(P1)-build-perl-modules-gentoo.patch $(PD)/$(P1)-uuid-gentoo.patch
 
 $(PD)/$(P1)-build-perl-modules-gentoo.patch: $(PS)/Slim/bootstrap.pm
 	./mkpatch $@ $^
 
 $(PD)/$(P1)-uuid-gentoo.patch: $(PS)/slimserver.pl
-	./mkpatch $@ $^
-
-$(PD)/$(P1)-squeezeslave.patch: $(PS)/Slim/Web/HTTP.pm
 	./mkpatch $@ $^

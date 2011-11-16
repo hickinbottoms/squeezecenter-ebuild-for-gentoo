@@ -1,3 +1,4 @@
 dbusername: squeezeboxserver
-dbpassword: TBA
+dbpassword: __PASSWD__
 dbsource: dbi:mysql:database=squeezeboxserver;mysql_socket=/var/run/mysqld/mysqld.sock
+dbtype: __DBTYPE__

@@ -135,7 +135,7 @@ inject: stage
 	$(SSH) "grep -q 'dev-perl/Class-Method-Modifiers ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Class-Method-Modifiers ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "grep -q 'dev-perl/Moo ' /etc/portage/package.keywords >/dev/null 2>&1 || echo 'dev-perl/Moo ~x86' >> /etc/portage/package.keywords"
 	$(SSH) "echo 'dev-perl/GD jpeg png' >> /etc/portage/package.use"
-	$(SSH) "echo 'media-sound/squeezeboxserver flac lame aac' >> /etc/portage/package.use"
+	$(SSH) "echo 'media-sound/squeezeboxserver flac lame aac mysql sqlite' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-libs/gd jpeg png' >> /etc/portage/package.use"
 	$(SSH) "echo 'media-sound/sox flac' >> /etc/portage/package.use"
 	$(SSH) "echo 'dev-db/sqlite extensions' >> /etc/portage/package.use"

@@ -18,7 +18,7 @@ HOMEPAGE="http://www.mysqueezebox.com/download"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~x86-solaris"
-IUSE="lame wavpack ogg flac aac"
+IUSE="lame wavpack ogg flac aac mysql sqlite"
 
 # Note: EV present because of bug#287857.
 SRC_URI="http://downloads.slimdevices.com/${SRC_DIR}/${MY_P}.tgz
@@ -31,7 +31,6 @@ DEPEND="
 	virtual/mysql
 	>=dev-perl/common-sense-2.01
 	"
-#@@@@@@@@@TODO	>=dev-perl/Image-Scale-0.06
 RDEPEND="
 	!prefix? ( >=sys-apps/baselayout-2.0.0 )
 	dev-perl/File-Which
@@ -39,9 +38,9 @@ RDEPEND="
 	virtual/mysql
 	>=dev-lang/perl-5.8.8
 	~dev-perl/Audio-Scan-0.900.0
+	>=dev-perl/Image-Scale-0.06
 	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
-	>=dev-perl/DBD-mysql-4.00.5
 	>=dev-perl/DBI-1.616
 	>=dev-perl/Digest-SHA1-2.11
 	>=dev-perl/Encode-Detect-1.01
@@ -109,6 +108,8 @@ RDEPEND="
 	>=dev-perl/Tie-RegexpHash-0.15
 	>=dev-perl/Data-UUID-1.202
 	>=perl-core/Class-ISA-0.36
+	mysql? ( >=dev-perl/DBD-mysql-4.00.5 )
+	sqlite? ( >=dev-perl/DBD-sqlite-1.34 )
 	lame? ( media-sound/lame )
 	wavpack? ( media-sound/wavpack )
 	flac? (
@@ -292,6 +293,12 @@ pkg_postinst() {
 		ewarn "For maximum flexibility you are recommended to set the 'lame' USE flag".
 		ewarn ""
 	fi
+	if use mysql; then
+		einfo "Squeezebox Server is configured to use MySQL for database storage"
+	fi
+	if use sqlite; then
+		einfo "Squeezebox Server is configured to use SQLite for database storage"
+	fi
 
 	# Point user to database configuration step
 	elog "If this is a new installation of Squeezebox Server then the database"
@@ -335,7 +342,7 @@ sc_update_prefs_mysql() {
 	echo "dbtype: MySQL" >> "${EROOT}${MY_PREFS}"
 }
 
-pkg_config() {
+pkg_config_mysql() {
 	einfo "Press ENTER to create the Squeezebox Server database and set proper"
 	einfo "permissions on it.  You will be prompted for the MySQL 'root' user's"
 	einfo "password during this process (note that the MySQL 'root' user is"
@@ -395,14 +402,22 @@ pkg_config() {
 	# Drop and create the Squeezebox Server user and database.
 	einfo "Creating Squeezebox Server MySQL user and database (${DBUSER}) ..."
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${EPREFIX}${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
+}
+
+pkg_config() {
 
 	# Remove the existing MySQL preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
 	sc_remove_db_prefs "${PREFS2}"
 
-	# Insert the external MySQL configuration into the preferences.
-	sc_update_prefs_mysql "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
-	sc_update_prefs_mysql "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
+	if use mysql; then
+		# Insert the external MySQL configuration into the preferences.
+		sc_update_prefs_mysql "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
+		sc_update_prefs_mysql "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
+	fi
+
+	# Note - no extra configuration is needed for SQLite - the absence of
+	# settings in the preferences is enough.
 
 	# Phew - all done. Give some tips on what to do now.
 	einfo "Database configuration complete."

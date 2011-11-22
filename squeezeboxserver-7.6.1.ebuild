@@ -134,6 +134,19 @@ VARLIBSBS="/var/lib/squeezeboxserver"
 PLUGINSDIR="${VARLIBSBS}/Plugins"
 
 pkg_setup() {
+
+	# Must be explicit and unambiguous about which storage engine we're supposed
+	# to use.
+	if ! use mysql -a ! use sqlite; then
+		eerror "Media library database type not specified; please choose"
+		eerror "either MySQL or SQLite via USE flags. eg:"
+		die "echo '${CATEGORY}/${PN} sqlite -mysql' >> /etc/portage/package.use"
+	elif use mysql -a use sqlite; then
+		eerror "USE flags specify both MySQL and SQLite database type; please"
+		eerror "choose either one or the other. eg:"
+		die "echo '${CATEGORY}/${PN} sqlite -mysql' >> /etc/portage/package.use"
+	fi
+
 	# Create the user and group if not already present
 	enewgroup squeezeboxserver
 	enewuser squeezeboxserver -1 -1 "/dev/null" squeezeboxserver

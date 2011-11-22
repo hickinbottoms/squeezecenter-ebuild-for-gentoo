@@ -31,6 +31,8 @@ DEPEND="
 	virtual/mysql
 	>=dev-perl/common-sense-2.01
 	"
+#	~dev-perl/Audio-Scan-0.900.0
+#	sqlite? ( >=dev-perl/DBD-SQLite-1.340.0 )
 RDEPEND="
 	!prefix? ( >=sys-apps/baselayout-2.0.0 )
 	dev-perl/File-Which
@@ -38,7 +40,7 @@ RDEPEND="
 	virtual/mysql
 	>=dev-lang/perl-5.8.8
 	~dev-perl/Audio-Scan-0.900.0
-	>=dev-perl/Image-Scale-0.06
+	>=perl-gcpan/Image-Scale-0.08
 	>=virtual/perl-IO-Compress-2.015
 	>=dev-perl/YAML-Syck-1.05
 	>=dev-perl/DBI-1.616
@@ -109,7 +111,7 @@ RDEPEND="
 	>=dev-perl/Data-UUID-1.202
 	>=perl-core/Class-ISA-0.36
 	mysql? ( >=dev-perl/DBD-mysql-4.00.5 )
-	sqlite? ( >=dev-perl/DBD-sqlite-1.34 )
+	sqlite? ( >=dev-perl/DBD-SQLite-1.330.0 )
 	lame? ( media-sound/lame )
 	wavpack? ( media-sound/wavpack )
 	flac? (
@@ -137,18 +139,28 @@ pkg_setup() {
 
 	# Must be explicit and unambiguous about which storage engine we're supposed
 	# to use.
-	if ! use mysql -a ! use sqlite; then
+	DB_OK=1
+	if ! use mysql && ! use sqlite; then
 		eerror "Media library database type not specified; please choose"
-		eerror "either MySQL or SQLite via USE flags. eg:"
-		die "echo '${CATEGORY}/${PN} sqlite -mysql' >> /etc/portage/package.use"
-	elif use mysql -a use sqlite; then
+		eerror "either MySQL or SQLite via USE flags."
+		DB_OK=0
+	elif use mysql && use sqlite; then
 		eerror "USE flags specify both MySQL and SQLite database type; please"
-		eerror "choose either one or the other. eg:"
-		die "echo '${CATEGORY}/${PN} sqlite -mysql' >> /etc/portage/package.use"
+		eerror "choose either one or the other."
+		DB_OK=0
 	elif use mysql; then
 		einfo "Squeezebox Server is configured to use MySQL for music catalogue storage"
 	elif use sqlite; then
 		einfo "Squeezebox Server is configured to use SQLite for music catalogue storage"
+	fi
+
+	# If USE flags aren't right then give a hint and prevent installation.
+	if [ $DB_OK -eq 0 ]; then
+		eerror "eg:"
+		eerror "  echo '${CATEGORY}/${PN} sqlite -mysql' >> /etc/portage/package.use"
+		eerror ""
+
+		die "Database type must be correctly specified with USE flags"
 	fi
 
 	# Create the user and group if not already present
@@ -309,12 +321,6 @@ pkg_postinst() {
 		ewarn "Transporter uses when streaming audio."
 		ewarn "For maximum flexibility you are recommended to set the 'lame' USE flag".
 		ewarn ""
-	fi
-	if use mysql; then
-		einfo "Squeezebox Server is configured to use MySQL for music catalogue storage"
-	fi
-	if use sqlite; then
-		einfo "Squeezebox Server is configured to use SQLite for music catalogue storage"
 	fi
 
 	# Point user to database configuration step

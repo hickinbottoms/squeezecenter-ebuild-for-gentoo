@@ -13,7 +13,7 @@ SRC_DIR="SqueezeboxServer_v${MAJOR_VER}.${MINOR_VER}"
 MY_P="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-noCPAN"
 MY_P_BUILD_NUM="squeezeboxserver-${MAJOR_VER}.${MINOR_VER}-${BUILD_NUM}-noCPAN"
 
-DESCRIPTION="Logitech SqueezeboxServer music server"
+DESCRIPTION="Logitech Squeezebox Server music server"
 HOMEPAGE="http://www.mysqueezebox.com/download"
 LICENSE="GPL-2"
 SLOT="0"
@@ -145,6 +145,10 @@ pkg_setup() {
 		eerror "USE flags specify both MySQL and SQLite database type; please"
 		eerror "choose either one or the other. eg:"
 		die "echo '${CATEGORY}/${PN} sqlite -mysql' >> /etc/portage/package.use"
+	elif use mysql; then
+		einfo "Squeezebox Server is configured to use MySQL for music catalogue storage"
+	elif use sqlite; then
+		einfo "Squeezebox Server is configured to use SQLite for music catalogue storage"
 	fi
 
 	# Create the user and group if not already present
@@ -307,10 +311,10 @@ pkg_postinst() {
 		ewarn ""
 	fi
 	if use mysql; then
-		einfo "Squeezebox Server is configured to use MySQL for database storage"
+		einfo "Squeezebox Server is configured to use MySQL for music catalogue storage"
 	fi
 	if use sqlite; then
-		einfo "Squeezebox Server is configured to use SQLite for database storage"
+		einfo "Squeezebox Server is configured to use SQLite for music catalogue storage"
 	fi
 
 	# Point user to database configuration step

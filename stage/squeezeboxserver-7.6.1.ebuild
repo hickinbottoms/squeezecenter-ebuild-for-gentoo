@@ -140,12 +140,6 @@ pkg_setup() {
 	# Must be explicit and unambiguous about which storage engine we're supposed
 	# to use.
 	DB_OK=1
-	if use mysql; then
-		einfo "Squeezebox Server is configured to use MySQL for music catalogue storage"
-	fi
-	if use sqlite; then
-		einfo "Squeezebox Server is configured to use SQLite for music catalogue storage"
-	fi
 	if ! use mysql && ! use sqlite; then
 		eerror "Media library database type not specified; please choose"
 		eerror "either MySQL or SQLite via USE flags."
@@ -328,12 +322,6 @@ pkg_postinst() {
 		ewarn "For maximum flexibility you are recommended to set the 'lame' USE flag".
 		ewarn ""
 	fi
-	if use mysql; then
-		einfo "Squeezebox Server is configured to use MySQL for music catalogue storage"
-	fi
-	if use sqlite; then
-		einfo "Squeezebox Server is configured to use SQLite for music catalogue storage"
-	fi
 
 	# Point user to database configuration step
 	elog "If this is a new installation of Squeezebox Server then the database"
@@ -437,18 +425,20 @@ pkg_config_mysql() {
 	# Drop and create the Squeezebox Server user and database.
 	einfo "Creating Squeezebox Server MySQL user and database (${DBUSER}) ..."
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${EPREFIX}${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
+
+	# Insert the external MySQL configuration into the preferences.
+	sc_update_prefs_mysql "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
+	sc_update_prefs_mysql "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
 }
 
 pkg_config() {
 
-	# Remove the existing MySQL preferences from Squeezebox Server (if any).
+	# Remove the existing database preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
 	sc_remove_db_prefs "${PREFS2}"
 
 	if use mysql; then
-		# Insert the external MySQL configuration into the preferences.
-		sc_update_prefs_mysql "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
-		sc_update_prefs_mysql "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
+		pkg_config_mysql
 	fi
 
 	# Note - no extra configuration is needed for SQLite - the absence of

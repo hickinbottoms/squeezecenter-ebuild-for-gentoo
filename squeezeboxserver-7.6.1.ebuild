@@ -366,6 +366,7 @@ sc_update_prefs_mysql() {
 }
 
 pkg_config_mysql() {
+	einfo ""
 	einfo "Press ENTER to create the Squeezebox Server database and set proper"
 	einfo "permissions on it.  You will be prompted for the MySQL 'root' user's"
 	einfo "password during this process (note that the MySQL 'root' user is"
@@ -425,18 +426,20 @@ pkg_config_mysql() {
 	# Drop and create the Squeezebox Server user and database.
 	einfo "Creating Squeezebox Server MySQL user and database (${DBUSER}) ..."
 	sed -e "s/__DATABASE__/${DBUSER}/" -e "s/__DBUSER__/${DBUSER}/" -e "s/__DBPASSWORD__/${DBUSER_PASSWD}/" < "${EPREFIX}${SHAREDIR}/SQL/mysql/dbcreate-gentoo.sql" | mysql --user=root --password="${ROOT_PASSWD}" || die "Unable to create MySQL database and user"
+
+	# Insert the external MySQL configuration into the preferences.
+	sc_update_prefs_mysql "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
+	sc_update_prefs_mysql "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
 }
 
 pkg_config() {
 
-	# Remove the existing MySQL preferences from Squeezebox Server (if any).
+	# Remove the existing database preferences from Squeezebox Server (if any).
 	sc_remove_db_prefs "${PREFS}"
 	sc_remove_db_prefs "${PREFS2}"
 
 	if use mysql; then
-		# Insert the external MySQL configuration into the preferences.
-		sc_update_prefs_mysql "${PREFS}" "${DBUSER}" "${DBUSER_PASSWD}"
-		sc_update_prefs_mysql "${PREFS2}" "${DBUSER}" "${DBUSER_PASSWD}"
+		pkg_config_mysql
 	fi
 
 	# Note - no extra configuration is needed for SQLite - the absence of

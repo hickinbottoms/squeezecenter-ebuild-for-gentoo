@@ -20,10 +20,12 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86 ~x86-solaris"
 IUSE="lame wavpack ogg flac aac mysql sqlite"
 
+# @@TODO@@: remove EV and mark as OK in bug#251494
 # Note: EV present because of bug#287857.
 SRC_URI="http://downloads.slimdevices.com/${SRC_DIR}/${MY_P}.tgz
 	mirror://gentoo/SqueezeboxServer-EV-4.03.tar.gz"
 
+# @@TODO@@: remove common-sense if EV can come out
 # Note: common-sense currently required due to bundled EV (Gentoo bug#287257)
 DEPEND="
 	!media-sound/squeezecenter
@@ -170,6 +172,7 @@ pkg_setup() {
 
 src_prepare() {
 	# Apply patches
+	# @@TODO@@ remove build-perl-modules patch if we can use EV ebuild now.
 	epatch "${FILESDIR}/${P}-build-perl-modules-gentoo.patch"
 	epatch "${FILESDIR}/${P}-uuid-gentoo.patch"
 
@@ -179,6 +182,9 @@ src_prepare() {
 	chmod 555 "${S}/build-modules.sh"			|| die
 }
 
+# @@TODO@@ remove compilation step if EV can come out
+#          also remove build-perl-modules from packaged files and patch
+#          (including in Makefile)
 # Building of EV present because of bug#287857.
 src_compile() {
 	einfo "Building bundled Perl modules (some warnings are normal here)..."

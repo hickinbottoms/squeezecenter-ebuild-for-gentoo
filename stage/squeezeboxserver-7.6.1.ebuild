@@ -366,6 +366,7 @@ sc_update_prefs_mysql() {
 }
 
 pkg_config_mysql() {
+	einfo ""
 	einfo "Press ENTER to create the Squeezebox Server database and set proper"
 	einfo "permissions on it.  You will be prompted for the MySQL 'root' user's"
 	einfo "password during this process (note that the MySQL 'root' user is"

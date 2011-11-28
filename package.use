@@ -1,0 +1,5 @@
+dev-perl/GD jpeg png
+media-sound/squeezeboxserver flac lame aac -mysql sqlite
+media-libs/gd jpeg png
+media-sound/sox flac
+dev-db/sqlite extensions

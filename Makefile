@@ -1,9 +1,7 @@
-VM_DIR=/var/vm/squeezeboxserver
-HDA_IMG=gentoo.cow
-HDB_IMG=media.cow
-VM_MEM=256
+VIRSH_URI=qemu:///system
+VIRSH_DOMAIN=scebuild
+VIRSH_RESET_SNAPSHOT=clean-base-3
 VMHOST=chandra
-#VMHOST=192.168.100.17
 IDENT_HOST=chandra
 SSH=ssh root@$(VMHOST) -i ~/.ssh/$(IDENT_HOST)
 SCP=scp -i ~/.ssh/$(IDENT_HOST)
@@ -140,19 +138,14 @@ inject: stage
 	$(SSH) "echo 'media-sound/sox flac' >> /etc/portage/package.use"
 	$(SSH) "echo 'dev-db/sqlite extensions' >> /etc/portage/package.use"
 
-vmreset: vmstop
+vmreset:
 	echo Resetting VM...
-	-rm $(VM_DIR)/$(HDA_IMG) 2>/dev/null
-	pv $(VM_DIR)/$(HDA_IMG).orig.xz | xzcat > $(VM_DIR)/$(HDA_IMG)
+	sudo virsh snapshot-revert $(VIRSH_DOMAIN) $(VIRSH_RESET_SNAPSHOT)
 
 vmstart:
-	sudo echo Starting VM...
-	-ping $(VMHOST) -w1 -q && exit 1
-	sudo nohup kvm -boot c -m $(VM_MEM) -localtime \
-		-hda $(VM_DIR)/$(HDA_IMG) -hdb $(VM_DIR)/$(HDB_IMG) \
-		-net nic,model=e1000 -net tap -vnc localhost:1 &
+	echo Starting VM...
+	-virsh --connect $(VIRSH_URI) start $(VIRSH_DOMAIN)
 	sleep 1
-	sudo rm nohup.out
 	while ! ping -w1 -q $(VMHOST); do echo Waiting for host to come up...; sleep 1; done
 	echo Host up... Waiting for SSH server to start
 	sleep 10
@@ -160,11 +153,7 @@ vmstart:
 
 vmstop:
 	echo Stopping VM...
-	-ping $(VMHOST) -w1 -q && $(SSH) poweroff
-
-vmkill:
-	echo Killing VM...
-	-sudo pkill kvm
+	-virsh --connect $(VIRSH_URI) shutdown $(VIRSH_DOMAIN)
 
 vmsq:
 	ssh -i ~/.ssh/chandra root@chandra "/etc/init.d/squeezeboxserver stop; /etc/init.d/squeezeboxserver zap; rm /var/log/squeezeboxserver/server.log; rm /var/log/squeezeboxserver/scanner.log; touch /var/log/squeezeboxserver/server.log /var/log/squeezeboxserver/scanner.log; chown squeezeboxserver:squeezeboxserver /var/log/squeezeboxserver/scanner.log /var/log/squeezeboxserver/server.log; /etc/init.d/squeezeboxserver start; sleep 5; tail -F /var/log/squeezeboxserver/server.log"
